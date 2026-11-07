@@ -1,0 +1,30 @@
+project:
+  type: book
+  output-dir: _book
+book:
+  repo-url: "https://github.com/ricardosqzz/dissertacao-congonhas"
+  repo-branch: main
+  repo-subdir: artigo
+  repo-actions: [edit, issue, source]
+  title: "From attainment screening to spatial priorities for particulate matter management in Congonhas Brazil"
+  subtitle: "\u00b9 Department of Sanitary and Environmental Engineering, Federal University of Minas Gerais, Brazil. \u00b2 Federal University of Technology Paran\u00e1, Brazil. Correspondence ricard.squeiroz@gmail.com."
+  author: "Ricardo Silva Queiroz\u00b9, Emannuelly Aparecida Amaral\u00b9, Otavio Medeiros Sobrinho\u00b9, Anderson Rudke\u00b9, Amanda Karine Chaves Ribeiro\u00b9, Bruna Lima V\u00e9ras Maia\u00b9, Taciana Toledo de Almeida Albuquerque\u00b9, Leila Droprinchinski Martins\u00b2"
+  output-file: Artigo_CMAS_Congonhas
+  chapters:
+    - index.qmd
+    - secoes/01-introduction.qmd
+    - secoes/02-materials-methods.qmd
+    - secoes/03-results.qmd
+    - secoes/04-discussion.qmd
+    - secoes/05-conclusions.qmd
+    - secoes/06-references.qmd
+lang: en
+number-sections: true
+toc: false
+execute:
+  enabled: false
+format:
+  html:
+    theme: cosmo
+  docx:
+    reference-doc: ../modelos/referencia-artigo.docx

@@ -1,0 +1,54 @@
+name: Gerar Word e livro
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  documentos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: '1.11.9'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Gerar livro
+        run: quarto render --to html
+      - name: Preparar exportação editorial
+        run: pip install -r requirements-editoriais.txt
+      - name: Gerar Word
+        run: |
+          quarto render --to docx
+          python ferramentas/ajustar_word.py _book/Dissertacao_Congonhas.docx
+      - name: Gerar artigo
+        working-directory: artigo
+        run: |
+          quarto render --to html
+          quarto render --to docx
+          python ../ferramentas/ajustar_word.py _book/Artigo_CMAS_Congonhas.docx --artigo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Dissertacao-Word
+          path: _book/Dissertacao_Congonhas.docx
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Artigo-Word
+          path: artigo/_book/Artigo_CMAS_Congonhas.docx
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Livro-HTML
+          path: _book/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Artigo-HTML
+          path: artigo/_book/
+          if-no-files-found: error
+

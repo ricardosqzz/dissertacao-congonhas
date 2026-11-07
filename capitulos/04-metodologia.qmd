@@ -1,0 +1,97 @@
+# Material e métodos {#sec-4-metodologia}
+
+Os procedimentos foram organizados em duas etapas de preparação, dedicadas à caracterização regional e à modelagem, seguidas pelas etapas associadas aos quatro objetivos específicos. Essa sequência distingue a construção da evidência, os testes de sua estabilidade e a tradução dos resultados para a gestão. A comparação observado-modelado acompanha a interpretação dos campos, enquanto a avaliação sanitária mantém a escala de longa duração e depende de bases populacionais e desfechos compatíveis.
+
+## Caracterização da área de estudo
+
+A área de estudo compreende o município de Congonhas e o inventário regional necessário para representar contribuições externas. O enquadramento reúne as camadas de limites, zoneamento, fontes, vias, uso e cobertura da terra, população e estações. A caracterização deverá preservar a origem e a data de cada base, distinguindo o limite municipal validado da união do zoneamento utilizada no processamento atual. Essa conferência é necessária porque as duas representações apresentam pequenas diferenças nas bordas.
+
+As atividades minerárias e siderúrgicas serão apresentadas em ligação com seus processos emissores e a ocupação residencial. O relevo e a meteorologia serão descritos como condições de transporte. A rosa dos ventos representa a meteorologia processada para a modelagem, e não uma climatologia municipal completa construída com todas as estações. As informações locais de monitoramento meteorológico poderão complementar essa leitura após a conferência de seus períodos e instrumentos.
+
+Figura 1 - Área de estudo fontes estações e suporte dos receptores
+
+[Inserir Figura 1 após a revisão do cadastro territorial]
+
+## Modelagem de dispersão e avaliação do cenário de referência
+
+O cenário de referência foi produzido no AERMOD, modelo de dispersão desenvolvido no âmbito da American Meteorological Society e da United States Environmental Protection Agency. O inventário de ano-base 2023 foi aplicado aos anos meteorológicos de 2021-2023. O triênio representa condições de dispersão distintas sob esse inventário, não três inventários anuais reconstruídos. Foram preservados os parâmetros de liberação, a geometria das fontes, o tratamento do terreno e os identificadores efetivamente utilizados.
+
+A rede regional contém 1.497 receptores. Desses, 1.008 estão no suporte municipal adotado e 489 são externos. As coordenadas das estações foram vinculadas aos receptores para a comparação observado-modelado. As fontes de erosão eólica já possuem séries horárias, com 252 vínculos ao HOUREMIS. Essas séries permanecem separadas de novos fatores temporais, evitando aplicar duas vezes a mesma variabilidade.
+
+As médias diárias foram reconstruídas dos arquivos de pós-processamento (POST) de 1 h com calendário meteorológico independente. A soma horária utiliza o denominador de horas efetivas e o mínimo de 18 h da política de calmarias reproduzida no cenário. A reconstrução foi confrontada integralmente com o POST de 24 h. Os indicadores analíticos mantêm os filtros de qualidade existentes, enquanto as médias anuais são as nativas do modelo. O P98 é calculado por ano e depois promediado no triênio. Esse procedimento não retira os valores elevados para corrigir o viés.
+
+As comparações com o monitoramento devem utilizar as mesmas posições e períodos. O diagnóstico inclui média, viés, erro absoluto, raiz do erro quadrático médio, correlação e comportamento por hora, mês e condição meteorológica. O fuso e o significado do registro das estações continuam sujeitos à confirmação documental. A hipótese UTC para as observações, convertida ao relógio local da meteorologia, foi registrada separadamente e não deve ser escolhida por maximizar a correlação.
+
+### Cenário de sensibilidade temporal
+
+O cenário de sensibilidade será definido por processo emissor. Fontes contínuas podem conservar fator 1 quando sua taxa e sua operação sustentarem esse regime. Vias internas e urbanas exigem informações de tráfego, enquanto manuseio, correias e britagem devem ser relacionados à atividade efetiva. Núcleos urbanos agregados permanecem estáticos até que seus componentes sejam suficientemente desagregados.
+
+O levantamento nas estações reúne a concentração horária de cada grupo modelado, a curva observada e as distâncias às fontes. Os perfis normalizados permitem comparar a forma temporal, mas não constituem diretamente um perfil de emissão. Para investigar ajustes, devem ser isoladas as contribuições das fontes estáticas de cada grupo. As áreas vinculadas ao EMI permanecem como parcela fixa, e o fundo regional, quando documentado, deve ser tratado separadamente.
+
+O ajuste proposto utilizará poucos parâmetros horários ou grupos de horas, com suavização e limites operacionais, preservando fatores não negativos e massa anual. A normalização precisa considerar o calendário real. Sua forma básica é f(h) = a(h) / média anual de a(h), quando a taxa basal representa a média anual. Se a taxa já representa uma hora de operação, essa interpretação deve ser conciliada antes da aplicação. A massa conservada no arquivo de emissão será verificada por fonte e poluente.
+
+Os parâmetros serão ajustados em anos ou blocos temporais de treino e avaliados em períodos reservados, incluindo estações retiradas do ajuste quando houver informação suficiente. Perfis semelhantes de grupos diferentes podem impedir sua identificação individual. Nesse caso, os grupos devem ser reunidos por processo ou mantidos no regime anterior, sem produzir precisão aparente. O resultado só será considerado um cenário melhorado após a execução e a avaliação externa.
+
+## Objetivo 1 Caracterização territorial e agrupamentos
+
+Os indicadores de concentração são inicialmente examinados nos receptores. As médias anuais de cada poluente foram classificadas em cinco faixas pelos P20, P40, P60 e P80. A nomenclatura Q1-Q5 indica posição relativa no cenário. Não representa cumprimento de padrão nem cinco grupos de k-means. Os cortes serão mantidos fixos na comparação absoluta com o cenário de sensibilidade, acompanhados de uma segunda leitura com percentis recalculados.
+
+Ward e k-means foram comparados de dois a seis grupos usando médias anuais e P98 de MP~10~ e MP~2,5~. As quatro variáveis receberam transformação log(1+C) e padronização. Para k-means, foram testadas dez inicializações com semente registrada. A silhueta foi utilizada para comparar a separação interna. Como não entram coordenadas nesse ajuste, um grupo de perfil pode aparecer em partes descontínuas do território.
+
+Os valores dos receptores foram associados a células de Voronoi recortadas pelo suporte municipal. Essa divisão permite calcular proporções de área e realizar interseções. Não demonstra homogeneidade física dentro de cada célula. A tradução para o zoneamento preserva os percentuais de área em cada faixa e os indicadores médios, sem transformar a célula em uma nova zona legal.
+
+Figura 2 - Cinco faixas relativas de concentração anual de MP~10~ e MP~2,5~
+
+[Inserir Figura 2 a partir de Figura_PB1.svg]
+
+### Associação espacial e estabilidade
+
+O Moran global e o Moran local foram calculados sobre log(1+C). A referência utiliza os oito vizinhos municipais mais próximos e pesos padronizados por linha. O teste local emprega 999 permutações condicionais bilaterais, mantendo o valor focal fixo. A correção de Benjamini-Hochberg foi aplicada separadamente a cada campo para controlar a taxa nominal de falsas descobertas em 5%.
+
+As classes alto-alto, baixo-baixo, alto-baixo e baixo-alto descrevem o valor e sua vizinhança em relação à média padronizada. A classe não significativo foi preservada. As classificações foram comparadas com quatro e doze vizinhos, por sobreposição dos conjuntos prioritários e concordância dos rótulos. Essa avaliação procura identificar quais limites dependem da escolha da vizinhança, sem escolher o teste por produzir uma figura mais preenchida.
+
+Os correlogramas representam a associação global em bandas sucessivas de 750 m até 7,5 km. A distância aparece no eixo horizontal e o Moran no vertical. A análise descreve a dependência espacial e auxilia a definição de testes posteriores, sem estimar sozinha um alcance causal da emissão. A estabilidade da grade foi examinada por reamostragem do suporte existente. A nova grade candidata exige AERMAP e nova execução antes de ser usada como outro campo de concentrações.
+
+## Objetivo 2 Relação entre emissão e concentração
+
+A massa anual das fontes foi distribuída pelas interseções com as células. Fontes de área e volume com suporte poligonal receberam rateio pela fração de área. Fontes lineares receberam rateio pelo comprimento. Fontes pontuais foram atribuídas uma única vez. A conservação da massa dentro do suporte municipal foi verificada em relação à parcela independente de cada fonte que intersecta esse suporte. O volume cadastral não foi interpretado como uma superfície física de emissão comprovada.
+
+Foram avaliadas a massa em t/ano e a densidade em t/ano/km² da célula. Para cada corte de concentração P20, P40, P60 e P80, ajustou-se um corte crescente de emissão para separar valores acima e abaixo desse alvo. O ajuste maximiza a acurácia balanceada, que dá igual peso à sensibilidade e à especificidade. Cada lado precisa conter uma quantidade mínima de casos. A validação utilizou cinco partições em blocos de 2 e 4 km. Os alvos de concentração pertencem ao cenário de referência e permanecem fixos nessa avaliação.
+
+Os quatro cortes só formam cinco intervalos de emissão quando são finitos, distintos e crescentes. A variação entre partições e o desempenho fora do treino acompanham sua apresentação. As distribuições de emissão dentro de cada faixa de concentração mostram a sobreposição remanescente. Assim, os resultados expressam associação no suporte e no cenário considerados, não a massa que causaria necessariamente uma concentração ou que poderia ser autorizada em outro empreendimento.
+
+Na matriz binária, alta concentração corresponde a C > P80 e alta emissão ao corte associativo correspondente a esse alvo. As outras classes são denominadas demais concentrações e demais emissões, evitando presumir que estejam ambientalmente baixas. A classificação histórica de massa por fonte ou zona, incluindo o diagnóstico de 100 t/ano, permanece como informação separada.
+
+Figura 3 - Relação entre emissão e concentração e estabilidade dos cortes
+
+[Inserir Figura 3 a partir das figuras PB10 PB12 e PB13]
+
+### Envelopes por direção do vento
+
+As horas de 2021-2023 foram vinculadas à direção e à velocidade no arquivo meteorológico de superfície (SFC) utilizado pelo modelo. A identidade desse arquivo com a cópia em wrf foi conferida. As oito direções meteorológicas de origem foram definidas em setores de 45 graus centrados em N, NE, L, SE, S, SO, O e NO. Calmarias e horas meteorológicas inválidas permanecem fora da associação direcional.
+
+O produto principal é o maior valor de 1 h em cada receptor condicionado às horas de cada direção. A escolha horária evita atribuir a um dia inteiro uma direção que mudou durante o período. Os horários dos máximos foram preservados por receptor. O envelope não representa uma nuvem simultânea, pois cada ponto pode atingir seu máximo em uma hora distinta. Ele é utilizado como diagnóstico de sensibilidade meteorológica, sem comparação direta a padrão de partículas de outra duração.
+
+Como complemento, foram calculados envelopes das médias diárias completas em dias com direção persistente. O recorte exige ao menos 18 horas válidas, resultante circular mínima de 0,5 e pelo menos metade das horas no setor da direção média. Esses dois últimos cortes são escolhas exploratórias a serem submetidas a sensibilidade. Dias com mudanças intensas de direção não foram forçados a uma classe. O vento da SFC é um perfil de entrada do domínio e não um campo tridimensional reconstruído em cada zona.
+
+Como referência aos recortes direcionais, foi calculado um cenário geral com toda a meteorologia elegível do triênio. Os máximos de 1 h e 24 h foram obtidos sem filtro por direção ou hora do dia. A leitura anual conservou a média das três médias anuais nativas. Os testes espaciais foram repetidos nos seis campos, correspondentes às três durações e aos dois poluentes. O agrupamento complementar conjunto utilizou esses seis indicadores, com log(1+C) e padronização por variável, mantendo a análise anterior de médias anuais e P98 como comparação. Desse modo, a inclusão dos episódios de curta duração pode ser examinada sem redefinir retrospectivamente o indicador anual.
+
+## Objetivo 3 Contribuições e regiões de gestão
+
+A prioridade receptora foi definida pela faixa superior de concentração, acima de P80. As regiões de controle de fontes apresentam emissão acima do corte associado a P80 e concentração fora da faixa superior. As regiões de menor impacto relativo reúnem concentração até P40 e emissão até o corte associado a P40. As demais combinações permanecem em acompanhamento. O termo menor impacto é relativo ao campo calculado e não equivale a baixa exposição sanitária.
+
+As células de mesma classe foram reunidas quando compartilham um segmento de fronteira maior que 1 cm, evitando unir componentes apenas por um vértice. As regiões mantêm as estatísticas de área, concentração, confirmação por Moran local e interseção com as zonas. A evidência alto-alto acrescenta informação sobre estabilidade espacial, sem ser condição obrigatória para reconhecer uma prioridade descritiva.
+
+Na análise de longa duração, as contribuições utilizam as médias anuais nativas dos mesmos três anos. Nos envelopes de 1 h e 24 h, cada parcela é recuperada no horário ou dia do máximo ALL do mesmo receptor, e não no máximo independente do grupo. Empresas e Urbano Total formam a partição exclusiva conferida contra ALL. AEX e subgrupos urbanos não são somados novamente. A participação regional é a razão entre a contribuição ponderada pela área e a concentração total calculada com a mesma ponderação. A ABC é aplicada às regiões de prioridade receptora, ordenando os grupos por participação e mantendo o grupo que cruza 80% ou 95% na classe anterior.
+
+Figura 4 - Regiões propostas de gestão e contribuições dos grupos prioritários
+
+[Inserir Figura 4 a partir de Figura_PB11.svg e PB14]
+
+## Objetivo 4 Exposição e avaliação sanitária
+
+A população será relacionada ao zoneamento por meio da interseção dos setores censitários com informação residencial. Uso e cobertura da terra, domicílios e outras bases de ocupação devem restringir a distribuição a locais em que exista evidência de residência. Uma zona rural não será automaticamente excluída, pois pode conter população. Da mesma forma, uma zona industrial não receberá moradores apenas por intersectar um setor censitário extenso.
+
+A avaliação sanitária manterá a abordagem de cenário baseada em concentração-resposta, com fundamentação na aplicação de Andreão et al. (2020). Para uma função log-linear compatível, a fração potencialmente evitável pode ser expressa por 1 - exp(-β × ΔC), e β decorre do risco relativo para o incremento de concentração informado no estudo original. A escolha exige verificar desfecho, idade e intervalo de exposição. O mesmo coeficiente não será aplicado indiscriminadamente às duas frações ou a todas as doenças.
+
+Os cenários PI-2, PI-3, PI-4 e PF poderão representar diferentes reduções, com sua natureza explicitada. A conversão de frações em eventos exige taxas basais locais compatíveis e população elegível. Essa etapa permanece condicionada à conferência das bases residenciais e de saúde. Os resultados atuais não quantificam novos óbitos evitáveis por zona.

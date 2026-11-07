@@ -1,0 +1,5 @@
+# Conclusions {#sec-article-05-conclusions}
+
+Receptor-based regionalization added spatial information to the existing attainment-oriented assessment of Congonhas. Quintiles, concentration-profile groups and local spatial association provided complementary descriptions, while source-group attribution connected the selected receiving regions to the simulated contributing activities. The procedure preserved all zoning identifiers and expressed their internal heterogeneity through area shares.
+
+The analysis also demonstrated limits that matter for the proposed public application. Local boundaries depended on neighbourhood choice, emission–concentration splits retained substantial unexplained variation, and the cadastral geometry contained near-zero-area fragments. These findings favour an auditable set of analyses and sensitivities rather than a single unqualified severity label. Final consolidation requires checking source timing, meteorological behaviour, residential support and revised simulation results. The current contribution is a reproducible framework and a quantified exploratory diagnosis, not evidence that the underlying model bias has been corrected.

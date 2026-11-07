@@ -1,0 +1,102 @@
+# Resultados e discussão {#sec-5-resultados-discussao}
+
+## Cobertura do suporte e significado das cinco faixas
+
+O processamento atribuiu indicadores aos 1.008 receptores municipais e manteve os 311 identificadores de zoneamento. A divisão de Voronoi cobre a união cadastral de aproximadamente 304,07 km². Isso demonstra a cobertura do suporte utilizado, sem certificar sua equivalência ao limite oficial. A conferência identificou 31 geometrias menores que 1 m², incluindo 18 menores que 0,01 m², já presentes na origem. Esses fragmentos exigem revisão cadastral e não são corrigidos apenas pela inserção de mais receptores.
+
+Os cortes da Tabela 3 produzem cinco faixas de concentração anual. Eles permitem reconhecer diferenças mesmo quando uma classificação por padrão apresenta grande parte do território na mesma classe. Essa informação, entretanto, continua sujeita ao desempenho do cenário. Um receptor em Q1 pode apresentar valor superior ao padrão legal, e uma mudança uniforme na magnitude pode preservar sua posição relativa.
+
+Tabela 3 - Cortes anuais trienais de concentração em µg/m³
+
+| Poluente | P20 | P40 | P60 | P80 |
+|---|---|---|---|---|
+| MP~10~ | 74,74 | 108,12 | 140,96 | 229,73 |
+| MP~2,5~ | 21,23 | 29,40 | 43,93 | 72,34 |
+
+O agrupamento multivariado produziu um resultado distinto dessa divisão. Ward com dois grupos apresentou silhueta de 0,533, superior às demais combinações testadas, com 200 receptores no menor grupo. Isso mostra que o campo tem uma estrutura de semelhança que não precisa coincidir com cinco partes. A adoção de quintis melhora a resolução descritiva pretendida, enquanto a comparação entre agrupamentos continua sendo utilizada para investigar essa estrutura, sem declarar cinco clusters apenas por conveniência gráfica.
+
+## O que a associação espacial acrescenta
+
+O Moran global foi 0,662 para MP~10~ e 0,754 para MP~2,5~. Depois da correção dos testes locais, 151 e 126 receptores, respectivamente, apresentaram associação alto-alto. Os resultados não significativos corresponderam a 736 e 794 receptores. O mapa local, portanto, identifica um subconjunto mais restrito do que as classes descritivas. Essa diferença é esperada porque o teste exige evidência sobre a vizinhança e aplica controle de múltiplas comparações.
+
+No correlograma, o Moran de MP~10~ diminuiu de aproximadamente 0,698 na primeira banda de até 750 m para 0,012 entre 4,5 e 5,25 km. Para MP~2,5~, a associação permaneceu positiva por distâncias maiores e se aproximou de zero na banda de 6,75 a 7,5 km. Esse contraste sugere organização espacial distinta entre as frações no cenário. Não representa a distância máxima de transporte de uma fonte nem demonstra que a fração fina foi formada secundariamente, pois o cenário representa as emissões incluídas no modelo.
+
+A estabilidade também limita a interpretação de um contorno único. A sobreposição alto-alto entre quatro e oito vizinhos foi de cerca de 0,252 para MP~10~ e 0,333 para MP~2,5~. Com doze vizinhos, alcançou 0,766 e 0,641. O resultado mais restrito do teste não deve ser preenchido artificialmente. Sua contribuição científica está em revelar onde a classificação é sustentada pela associação local e onde depende mais fortemente do critério escolhido.
+
+## Cortes de emissão e matriz territorial
+
+A distribuição espacial conservou 9.069,04 t/ano de MP~10~ e 3.330,93 t/ano de MP~2,5~ dentro do suporte municipal. As massas foram obtidas pelo rateio geométrico, e não pela soma de densidades sem ponderação. A unidade de t/ano/km² utilizada na comparação é a massa atribuída à célula dividida por sua área de suporte. Não deve ser confundida com a taxa superficial em g/s/m² de uma entrada do AERMOD.
+
+Os quatro cortes associativos de densidade de emissão foram crescentes para os dois poluentes, permitindo construir cinco intervalos de emissão. A Tabela 4 apresenta os valores ajustados com a base completa. A Tabela 5 mostra a acurácia balanceada média fora do treino. Os desempenhos são mais modestos nos cortes inferiores e maiores no alvo P80. Isso indica utilidade para discriminar a faixa superior, mas não uma correspondência determinística entre uma faixa de emissão e uma de concentração.
+
+Tabela 4 - Cortes associativos de emissão em t/ano/km²
+
+| Poluente | Alvo P20 | Alvo P40 | Alvo P60 | Alvo P80 |
+|---|---|---|---|---|
+| MP~10~ | 0,00055 | 0,09 | 4,03 | 28,13 |
+| MP~2,5~ | 1,15 | 2,05 | 7,06 | 8,50 |
+
+Tabela 5 - Acurácia balanceada média na validação espacial
+
+| Poluente | P20 | P40 | P60 | P80 |
+|---|---|---|---|---|
+| MP~10~ | 0,635 | 0,662 | 0,720 | 0,796 |
+| MP~2,5~ | 0,615 | 0,640 | 0,669 | 0,767 |
+
+As emissões das faixas de concentração se sobrepõem, e algumas células com pouca massa local recebem concentrações elevadas. A matriz explicita essa condição ao distinguir pressão emissora e condição receptora. Uma área com alta emissão e concentração fora da faixa superior exige investigar o transporte para outras regiões. Uma área com alta concentração e menor emissão local exige examinar contribuições externas à célula. Essas interpretações orientam hipóteses para os cenários, sem converter o corte estatístico em capacidade de suporte ou limite de licença.
+
+## Regiões propostas e prioridades de fontes
+
+As cinco faixas atribuem uma descrição a todo o suporte, e os papéis de gestão organizam as ações sem depender de significância local em cada célula. A Tabela 6 apresenta as regiões contíguas resultantes. As fronteiras são propostas analíticas que devem ser confrontadas com dados de ocupação, fontes, relevo e observações. Sua comunicação por zona mantém os percentuais internos de cada papel, permitindo que uma mesma zona reúna mais de uma condição.
+
+Tabela 6 - Regiões analíticas por papel de gestão
+
+| Poluente | Papel de gestão | Regiões | Receptores | Área km² |
+|---|---|---|---|---|
+| MP~10~ | Acompanhamento | 22 | 378 | 121,86 |
+| MP~10~ | Controle de fontes | 34 | 105 | 29,40 |
+| MP~10~ | Menor impacto relativo | 28 | 323 | 100,35 |
+| MP~10~ | Prioridade receptora | 22 | 202 | 52,47 |
+| MP~2,5~ | Acompanhamento | 22 | 373 | 119,93 |
+| MP~2,5~ | Controle de fontes | 30 | 82 | 21,37 |
+| MP~2,5~ | Menor impacto relativo | 15 | 351 | 110,38 |
+| MP~2,5~ | Prioridade receptora | 14 | 202 | 52,39 |
+
+A leitura das contribuições deve começar pela região receptora e depois alcançar as atividades predominantes. No recorte alto-alto de MP~2,5~ anteriormente delimitado, Gerdau correspondeu a 86,1% e Urbano Total a 12,3% da concentração anual ponderada. A nova ABC, calculada para as regiões acima de P80, está disponível separadamente. Os dois recortes não devem ser confundidos, pois selecionar regiões diferentes altera o denominador e as participações.
+
+A aproximação com as zonas de gestão discutidas na literatura é funcional. Os padrões ajudam a escolher onde aprofundar o controle e quais grupos investigar, mas a eficácia de uma medida depende da resposta a uma perturbação concreta. Essa distinção evita concluir que a redução de uma massa agregada produzirá, na mesma proporção, uma redução de todos os indicadores anuais ou de episódios. A distribuição espacial e temporal da medida precisa acompanhar o mecanismo emissor.
+
+## Condicionamento pelo vento e limites do cenário
+
+Foram associadas a direções 24.892 horas válidas do triênio, enquanto 1.388 horas ficaram fora desse recorte por calmaria ou outra invalidade meteorológica. O setor SE reuniu 9.671 horas, cerca de 36,8% do calendário completo. Apesar dessa predominância, os maiores valores condicionais não precisam ocorrer nessa direção. Uma direção menos frequente pode combinar condições de liberação e dispersão desfavoráveis junto a um receptor.
+
+Os envelopes horários registram esse potencial sem atribuir uma direção única ao dia. A seleção diária complementar preservou 463 dias persistentes sob os critérios exploratórios utilizados. A diferença entre os produtos é informativa. O máximo horário descreve um pico condicionado, enquanto o produto diário indica situações persistentes capazes de sustentar uma concentração média elevada. Nenhum dos mapas deve ser apresentado como reprodução simultânea de uma nuvem observada.
+
+A análise de Ribeiro et al. (2025) recomenda ampliar a interpretação além da direção, incorporando umidade, rajadas e períodos secos quando esses dados forem compatíveis. Os resultados atuais usam os parâmetros efetivamente disponíveis na meteorologia vinculada. Ainda não reproduzem uma erosão dinâmica local com umidade do solo observada, nem o campo de ventos que poderia ser investigado futuramente com CALMET.
+
+## Concordância e contribuição metodológica
+
+A reconstrução de 1 h para 24 h apresentou diferenças máximas inferiores a 0,000008 µg/m³, compatíveis com o arredondamento das saídas. Essa identidade confirma a consistência do processamento, mas não valida a magnitude ambiental. Nas séries pareadas, o cenário superestima as médias observadas e apresenta correlações diárias baixas. Normalizar o perfil facilita comparar sua forma, mas não altera esse diagnóstico.
+
+A contribuição metodológica é demonstrar separadamente a consistência numérica, a organização espacial e a concordância ambiental. Um mapa com todas as zonas preenchidas não garante suporte cadastral adequado. Um agrupamento com boa silhueta não confirma desempenho do AERMOD. Um corte de emissão com desempenho acima do acaso não demonstra causalidade. A integração permite examinar conjuntamente essas condições e transformar suas diferenças em testes verificáveis.
+
+O cenário de sensibilidade será avaliado inicialmente na mesma grade, separando seu efeito daquele associado ao desenho dos receptores. A comparação combinará métricas de magnitude, ciclos temporais e condições direcionais em períodos reservados, verificando a redução do desvio e a representação do comportamento regional.
+
+## Cenário geral e informação acrescentada pelos recortes direcionais
+
+A avaliação com a meteorologia completa contemplou os 1.008 receptores municipais e as 311 zonas em cada campo. Os resultados mostraram associação espacial positiva nas três durações, com diferenças entre os poluentes e entre as escalas de exposição. A síntese abaixo compara os indicadores obtidos com o mesmo suporte. Os agrupamentos alto-alto permanecem evidência complementar à posição relativa de concentração, sem redefinir as áreas cinzas como ausentes de poluição.
+
+| Indicador | Moran MP~10~ | Moran MP~2,5~ | Alto-alto MP~10~ | Alto-alto MP~2,5~ |
+| --- | --- | --- | --- | --- |
+| Máximo de 1 h | 0.694 | 0.768 | 140 | 125 |
+| Máximo de 24 h | 0.675 | 0.757 | 157 | 104 |
+| Média anual trienal | 0.662 | 0.754 | 151 | 126 |
+
+
+O agrupamento complementar de seis indicadores selecionou k-means com dois grupos, com silhueta de 0,481. A solução de referência, baseada nas médias anuais e nos P98 dos dois poluentes, havia favorecido Ward com dois grupos e silhueta de 0,533. Esses valores dizem respeito a conjuntos de variáveis diferentes e não medem melhora do AERMOD. O contraste permite avaliar quanto a descrição dos episódios altera a separação interna, em vez de escolher uma partição apenas pela aparência do mapa. Essa distinção mantém a classificação por quintis, os perfis estatísticos e a associação espacial como perguntas complementares.
+
+Os 24.892 registros horários elegíveis foram distribuídos entre oito direções de origem. A leitura diária exigiu persistência e reteve 463 dias, enquanto a referência geral incluiu 1.075 dias elegíveis. A união dos envelopes direcionais de 1 h reproduziu o máximo horário geral. Em 24 h, porém, os dias sem direção persistente produziram máximos superiores em 574 receptores para MP~10~ e 749 para MP~2,5~. Portanto, o recorte direcional é útil para investigar condições de transporte, mas não substitui a leitura com toda a meteorologia.
+
+Esse resultado acrescenta uma condição de interpretação à regionalização discutida por Vienneau e Briggs (2013), Liu et al. (2018) e Akhtar e Han (2026). As regiões derivadas dos dados também dependem do suporte temporal escolhido. A comparação com a referência completa torna essa dependência explícita e evita interpretar um recorte persistente como diagnóstico exaustivo. Os mapas pareados dos dois poluentes, a distribuição das horas por setor e os códigos dos eventos permanecem como produtos separados para revisão. O vento de entrada é um perfil do domínio e não comprova trajetórias tridimensionais entre cada fonte e cada zona.
+
+[Inserir os mapas pareados e a síntese de recortes meteorológicos após a revisão final das figuras.]

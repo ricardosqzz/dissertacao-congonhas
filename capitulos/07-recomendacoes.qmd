@@ -1,0 +1,5 @@
+# Recomendações para continuidade {#sec-7-recomendacoes}
+
+A revisão seguinte deve confirmar a geometria oficial, os fragmentos cadastrais e os metadados temporais antes de consolidar números por zona. O diagnóstico dos perfis por grupo e estação deve orientar a coleta de dados operacionais e a seleção de um número identificável de parâmetros. A avaliação fora da amostra precisa acompanhar a escolha do perfil, preservando o cenário de referência e documentando cada modificação.
+
+Os mapas serão mantidos como arquivos separados, com índice de visualização e legendas completas. Após a revisão textual e analítica, poderão ser incorporados ao documento nos locais indicados. Essa organização conserva a qualidade vetorial e evita tornar o arquivo Word excessivamente grande durante o desenvolvimento.

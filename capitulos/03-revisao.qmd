@@ -1,0 +1,90 @@
+# Revisão da literatura {#sec-3-revisao}
+
+## Poluição atmosférica e avaliação ambiental
+
+A qualidade do ar é uma propriedade do ambiente receptor. Embora as emissões sejam sua origem, as concentrações dependem também da ventilação, da estabilidade atmosférica, do relevo e, em determinados poluentes, de reações químicas. Poluentes primários são emitidos diretamente, enquanto os secundários se formam na atmosfera a partir de precursores. O material particulado pode apresentar as duas origens. O ozônio, por sua vez, exige uma interpretação fotoquímica que não pode ser substituída pela simulação de uma pluma de partículas primárias.
+
+Os instrumentos de avaliação precisam acompanhar essas diferenças. Uma série de concentração caracteriza as condições em um ponto, um inventário descreve as atividades e as massas emitidas, e um modelo representa os mecanismos incluídos em sua formulação. A interpretação se fortalece quando essas informações são confrontadas. Divergências não devem ser tratadas apenas como um problema de escala gráfica, pois podem indicar inadequação temporal das emissões, limitações meteorológicas, componentes não representados ou diferenças entre o processo modelado e o observado.
+
+O interesse sanitário também impede que o atendimento a um padrão seja interpretado como ausência absoluta de risco. A Organização Mundial da Saúde (OMS, 2021) apresentou diretrizes apoiadas em evidências de efeitos em concentrações inferiores às consideradas anteriormente. A legislação e as diretrizes sanitárias cumprem funções relacionadas, mas distintas. No presente trabalho, os referenciais legais orientam o diagnóstico normativo, enquanto os cenários sanitários explicitam o nível de redução considerado e a população à qual a estimativa se aplica.
+
+## Características do material particulado
+
+O material particulado é uma mistura de partículas sólidas e líquidas suspensas. A classificação por diâmetro aerodinâmico considera o comportamento de uma partícula em relação a uma esfera de referência e não corresponde apenas ao seu diâmetro geométrico. As frações MP~10~ e MP~2,5~ são convenções operacionais de seleção por tamanho. MP~2,5~ está contido em MP~10~, de modo que somar suas massas produz dupla contagem. A fração grossa pode ser representada aproximadamente pelo intervalo entre 2,5 e 10 µm.
+
+Partículas grossas apresentam participação frequente de processos mecânicos. As finas incluem produtos de combustão e componentes secundários, além de contribuições minerais cuja intensidade depende do processo. Partículas ultrafinas têm relevância por número, área superficial e composição, embora a massa não descreva integralmente suas propriedades. A concentração mássica, portanto, não informa sozinha a toxicidade ou a composição química da mistura (US EPA, 2019).
+
+Tabela 1 - Síntese das frações de material particulado
+
+| Fração | Diâmetro | Origem frequente | Permanência indicativa | Alcance | Efeito de interesse |
+|---|---|---|---|---|---|
+| Grossa | 2,5 a 10 µm | Fragmentação e ressuspensão | Horas a dias | Sobretudo local | Agravos respiratórios |
+| Fina MP~2,5~ | Até 2,5 µm | Combustão e formação secundária | Dias a semanas | Local a regional | Efeitos cardiopulmonares e mortalidade |
+| Ultrafina | Usualmente até 0,1 µm | Nucleação e combustão | Transformação rápida, de minutos a dias | Próxima às fontes e variável | Interesse inflamatório e sistêmico |
+| MP~10~ | Até 10 µm | Mistura das frações fina e grossa | Depende da composição | Local a regional | Efeitos respiratórios e cardiovasculares |
+
+Fonte: síntese conceitual de US EPA (2019) e OMS (2021). Os intervalos são ordens de grandeza, não tempos fixos. Remoção, deposição, coagulação e precipitação alteram a permanência e o alcance. As frações não são classes mutuamente exclusivas.
+
+## Fontes e processos de geração
+
+A tipologia da fonte deve ser distinguida de sua representação numérica. Um empreendimento fixo pode conter chaminés, pátios, correias e vias, com mecanismos de emissão diferentes. No modelo, esses processos podem ser representados por pontos, áreas, volumes ou linhas. A escolha geométrica descreve a forma de liberação e suas dimensões, mas não define por si o horário de funcionamento nem transforma uma emissão difusa em emissão de chaminé.
+
+Na mineração, perfuração, desmonte, escavação, transporte e beneficiamento podem liberar partículas por fragmentação e movimentação. Nas superfícies expostas, a disponibilidade de material e as condições de umidade interagem com o vento. Nas vias, a passagem de veículos ressuspende partículas depositadas, coexistindo com desgaste e combustão. Nas atividades siderúrgicas, processos de alta temperatura, manuseio de matérias-primas e transporte interno acrescentam fontes com diferentes características físicas e químicas. O inventário precisa reconhecer essas etapas para permitir a revisão de um fator temporal sem modificar indevidamente outra atividade.
+
+Tabela 2 - Relação entre fontes processos e características indicativas
+
+| Fonte ou atividade | Processo | Fração frequente | Escala de influência | Marcadores possíveis |
+|---|---|---|---|---|
+| Mineração | Perfuração e desmonte | MP~10~ e fração grossa | Local | Si, Al e Fe |
+| Pátios e pilhas | Manuseio e erosão eólica | MP~10~ com fração fina variável | Local | Elementos minerais do material |
+| Tráfego | Ressuspensão e desgaste | MP~10~ e MP~2,5~ | Local e urbana | Ca, Fe, Cu e Zn |
+| Veículos e fornos | Combustão | Predomínio fino | Local a regional | Carbono elementar e espécies de combustão |
+| Processos siderúrgicos | Fusão e manuseio | Fina e grossa | Local a regional | Fe, Mn e outros metais conforme o processo |
+| Queimadas | Combustão de biomassa | Predomínio fino | Local a regional | K e carbono orgânico |
+| Atmosfera | Formação secundária | Predomínio fino | Regional | Sulfato, nitrato e amônio |
+
+Fonte: síntese conceitual de US EPA (2019) para orientar a interpretação do inventário e a revisão das fontes. Os marcadores são indicativos, podem ter origens compartilhadas e não substituem uma campanha química ou um modelo receptor. Não foram medidos como parte dos resultados apresentados.
+
+Essa distinção é relevante para os grupos urbanos do inventário. O agregado Urbano Total reúne vias, ferrovias e núcleos urbanos. A ressuspensão em vias pode incluir material relacionado ao tráfego e à movimentação industrial da região. Por isso, a contribuição desse grupo não deve ser interpretada automaticamente como responsabilidade exclusiva de uma atividade municipal, nem atribuída integralmente à ressuspensão sem a abertura dos subgrupos.
+
+## Efeitos à saúde e susceptibilidade
+
+A inalação constitui a via de exposição de interesse para as concentrações atmosféricas avaliadas. A deposição no trato respiratório e as respostas inflamatórias dependem do tamanho e das características das partículas. Os efeitos agudos se relacionam à variação em curtos períodos e incluem agravamento respiratório, atendimentos e eventos cardiovasculares. A exposição crônica se associa a desfechos como mortalidade, doença cardiovascular, doença pulmonar obstrutiva crônica e câncer de pulmão. Diabetes e alterações cognitivas também são temas relevantes, com diferenças na certeza e na forma de quantificação das evidências (OMS, 2024; US EPA, 2019).
+
+As estimativas de impacto precisam respeitar a população e o desfecho da função epidemiológica utilizada. Crianças, idosos, pessoas com doenças prévias e grupos socialmente vulneráveis podem apresentar maior susceptibilidade ou menor capacidade de reduzir a exposição. Essa condição não autoriza, por si, aplicar a mesma função a todas as idades. A síntese de Chen e Hoek (2020) e a aplicação brasileira de Andreão et al. (2020) mostram a necessidade de especificar o poluente, o período de exposição, o evento e a população elegível.
+
+Uma estimativa sanitária agregada não identifica o evento individual causado pela poluição. Ela compara cenários populacionais sob hipóteses epidemiológicas explícitas. Internações e óbitos também não devem ser somados como se fossem desfechos independentes do mesmo processo. No caso municipal, a primeira etapa é localizar adequadamente a população e conferir a compatibilidade entre a exposição utilizada e a base de eventos de saúde.
+
+## Marco normativo e gestão da qualidade do ar
+
+A Política Nacional de Qualidade do Ar foi instituída pela Lei nº 14.850/2024. A Resolução Conama nº 506/2024 estabelece os referenciais nacionais de concentração e sua progressão. O uso atual do PI-2 deve ser distinguido de uma leitura histórica ou de cenários sanitários futuros. A classificação relativa por percentis não altera esses referenciais (Brasil, 2024a, 2024b).
+
+A Resolução Conama nº 513/2026 incorpora as Regiões de Controle da Qualidade do Ar (RCQA) aos instrumentos de gestão. Sua delimitação estadual considera informações ambientais e territoriais. O prazo para o plano estadual é de até dois anos após o inventário estadual, e o prazo de três anos citado na norma se refere ao inventário após os guias orientativos. Os prazos estão vinculados à publicação dos instrumentos previstos e não a uma data municipal única (Brasil, 2026).
+
+A ligação com o uso do solo também encontra fundamento no Estatuto da Cidade. A Lei nº 10.257/2001 orienta a ordenação territorial para evitar poluição e degradação ambiental. Esse fundamento permite discutir a inclusão da qualidade do ar no Plano Diretor, mantendo a atribuição técnica dos órgãos competentes e a necessidade de atualização dos dados.
+
+## Regiões ambientais e prioridades de controle
+
+A regionalização pode cumprir finalidades diferentes. As zonas de afinidade de Vienneau e Briggs (2013) expressam condições ambientais semelhantes. O procedimento de Liu et al. (2018) combina semelhança temporal e construção territorial. Akhtar e Han (2026) empregam agrupamento para rever zonas usadas em modelos de previsão. Badach et al. (2020) aproximam a delimitação ambiental do planejamento urbano. Esses trabalhos fundamentam a investigação de padrões anteriores ao zoneamento, sem definir um único número de grupos aplicável a qualquer município.
+
+Entre as aplicações recentes, Morawiec et al. (2026) usaram séries de estações polonesas e uma medida de semelhança temporal para identificar macrorregiões de poluição. Esse resultado reforça a possibilidade de que áreas com comportamento semelhante ultrapassem fronteiras administrativas. Para Congonhas, porém, o agrupamento atual utiliza quatro indicadores simulados, e não toda a forma das séries temporais. A comparação com a literatura deve explicitar essa diferença.
+
+O termo região de controle, nesta pesquisa, designa uma proposta de organização das ações. Ele não corresponde a um grupo testemunha sem poluição, nem formaliza uma RCQA estadual. Dentro desse recorte proposto, a prioridade receptora descreve concentrações relativamente elevadas. O controle de fontes destaca pressão emissora elevada com concentração local fora da faixa superior. A região de menor impacto relativo reúne valores menores de ambos os indicadores. Uma faixa de acompanhamento mantém explícitas as combinações intermediárias que não atendem a esses critérios.
+
+## Métodos estatísticos e informação espacial
+
+Os percentis ordenam um indicador e fornecem cortes descritivos. As cinco faixas adotadas correspondem aos valores até P20, entre P20 e P40, entre P40 e P60, entre P60 e P80 e acima de P80. Não existe ajuste de um algoritmo de aprendizado de máquina nessa divisão. Empates permanecem juntos, de modo que a quantidade de receptores em uma faixa pode diferir de 20% do total.
+
+O k-means, por outro lado, ajusta centroides para reduzir a dispersão dentro dos grupos no espaço das variáveis fornecidas. O agrupamento de Ward também procura semelhança, mas constrói uma hierarquia de fusões. A transformação e a padronização influenciam o peso dos indicadores. A silhueta compara separação interna e proximidade entre grupos, auxiliando a escolha do número de agrupamentos. Ela não mede a concordância do modelo com as estações (Rousseeuw, 1987).
+
+O Moran global descreve a associação entre valores e vizinhanças. O indicador local identifica associações ou contrastes em cada posição. Após o controle dos múltiplos testes, uma área pode manter concentração elevada e não apresentar evidência local suficiente. Não significativo é um resultado do teste, não uma lacuna do mapa. O correlograma apresenta o Moran em função da distância, normalmente como gráfico. Ele auxilia a leitura da escala da dependência espacial e não produz diretamente outro mapa de classes (Anselin, 1995).
+
+A relação emissão-concentração também precisa ser avaliada fora da amostra utilizada no ajuste. Partições aleatórias podem misturar vizinhos muito semelhantes entre treino e teste. Blocos espaciais reduzem esse problema e permitem observar a variação dos cortes ajustados, embora os limites entre blocos não garantam independência completa (Roberts et al., 2017). A comparação entre atribuição de fontes e resposta a cenários de controle continua necessária, pois as duas análises respondem a perguntas diferentes (Clappier et al., 2017).
+
+## Poeira e perfis temporais das emissões
+
+Ribeiro et al. (2025) investigaram episódios de partículas totais em suspensão em uma região minerária do Sudeste brasileiro. O estudo relacionou os eventos a condições meteorológicas e superficiais, com destaque para umidade do solo, rajadas e períodos secos. Esse resultado fundamenta a avaliação de situações condicionadas pelo vento, mas seus limiares não devem ser transferidos diretamente para as duas frações de partículas analisadas aqui.
+
+Sooktawee et al. (2020) analisaram uma região com mineração e britagem na Tailândia. O uso conjunto de horários, concentrações e vento permitiu distinguir fontes próximas e mais distantes. Sua aplicação mostra que o perfil observado em uma estação expressa a atuação das fontes sob transporte variável. Reproduzir essa curva por meio de um fator horário único, baseado somente na distância, pode atribuir à emissão um efeito que pertence à meteorologia.
+
+A inversão de emissões precisa representar essa relação de transporte e avaliar o que a rede consegue distinguir. Vardag e Maiwald (2024) demonstram essa preocupação em um experimento com traçadores urbanos, cuja aplicação específica difere do particulado. Em Congonhas, a proposta é utilizar contribuições modeladas por grupo e estação como informação de resposta, preservar as fontes já horárias e testar perfis regularizados em períodos não usados no ajuste. A distância participa da interpretação geométrica, sem substituir a resposta calculada pelo modelo.

@@ -1,0 +1,41 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  repo-url: "https://github.com/ricardosqzz/dissertacao-congonhas"
+  repo-branch: main
+  repo-actions: [edit, issue, source]
+  title: "Integração territorial de emissões e concentrações de material particulado para a gestão da qualidade do ar em Congonhas Minas Gerais"
+  author: "Ricardo Silva Queiroz"
+  output-file: Dissertacao_Congonhas
+  chapters:
+    - index.qmd
+    - capitulos/02-objetivos.qmd
+    - capitulos/03-revisao.qmd
+    - capitulos/04-metodologia.qmd
+    - capitulos/05-resultados-discussao.qmd
+    - capitulos/06-conclusoes.qmd
+    - capitulos/07-recomendacoes.qmd
+    - capitulos/08-referencias.qmd
+  sidebar:
+    style: docked
+    search: true
+
+lang: pt-BR
+number-sections: true
+toc: true
+toc-depth: 3
+execute:
+  enabled: false
+
+format:
+  html:
+    theme: cosmo
+    css: estilos.css
+    toc-location: right
+  docx:
+    reference-doc: modelos/referencia-smarh.docx
+    toc-title: Sumário
+    link-citations: true
+

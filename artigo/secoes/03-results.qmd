@@ -1,0 +1,75 @@
+# Results {#sec-article-03-results}
+
+## Spatial discrimination beyond benchmark screening
+
+The annual receptor quintile cutoffs were 74.74, 108.12, 140.96 and 229.73 µg/m³ for PM~10~ and 21.23, 29.40, 43.93 and 72.34 µg/m³ for PM~2.5~. These values describe the existing model scenario, whose magnitude is subject to the previously identified performance limitations. The quintile maps provide spatial discrimination without relabelling their classes as regulatory attainment. Figure 1 shows the resulting patterns.
+
+Figure 1 — Relative annual concentration quintiles for PM~10~ and PM~2.5~
+
+[Insert figure here from ../figuras/Figura_PB1.svg]
+
+The global Moran statistic was 0.662 for PM~10~ and 0.754 for PM~2.5~, with conditional analysis subsequently locating the patterns. Global permutation pseudo-p-values were 0.001. After false-discovery adjustment, 151 PM~10~ receptors and 126 PM~2.5~ receptors were classified as high–high. Low–low outcomes comprised 109 and 87 receptors, respectively. Most locations remained locally non-significant, a result that should not be read as absence of elevated concentrations. The local maps are presented in Figure 2.
+
+Figure 2 — Local concentration clusters and outliers after false discovery adjustment
+
+[Insert figure here from ../figuras/Figura_PB2.svg]
+
+## Dependence on neighbourhood and classification choice
+
+The high–high support cells formed seven contiguous regions for PM~10~, covering 37.0 km², and five for PM~2.5~, covering 33.6 km². These areas describe model-support geometry. They are not residential exposure areas or entire zoning polygons.
+
+Ward clustering with two groups achieved the highest mean silhouette among the ten tested combinations, 0.533; the smaller group contained 200 receptors. A four-group solution was retained for comparison rather than declared optimal in advance. The concentration-profile groups and the local Moran classes answer different questions: the former summarize multivariate similarity, whereas the latter test local spatial association. Figure 3 compares the internal separation obtained across group counts.
+
+Figure 3 — Internal separation of Ward and k means solutions
+
+[Insert figure here from ../figuras/PB7_agrupamentos.svg]
+
+Neighbourhood choices materially affected the high–high boundaries. Jaccard overlap between the eight- and four-neighbour high–high sets was approximately 0.252 for PM~10~ and 0.333 for PM~2.5~. With twelve neighbours, overlap increased to approximately 0.766 and 0.641. These differences support retaining the sensitivity results beside the reference map. A single neighbourhood should not be selected solely because it produces the most visually coherent pattern.
+
+## Emissions and contributions
+
+The allocated municipal annual mass was 9069.04 t/year for PM~10~ and 3330.93 t/year for PM~2.5~. Allocation conserved the independently calculated mass inside the municipal footprint, with absolute errors below 10⁻⁶ t/year. These totals differ from the full regional inventory because source fractions outside the footprint are retained outside municipal allocation.
+
+The four full-data associative emission-density cuts were 0.00055, 0.094, 4.03 and 28.13 t/year/km² for PM~10~ and 1.15, 2.05, 7.06 and 8.50 t/year/km² for PM~2.5~. They were ordered for both pollutants, permitting five candidate intervals. Spatial-test balanced accuracy ranged from 0.635 to 0.796 across the four PM~10~ targets and from 0.615 to 0.767 for PM~2.5~. The highest target was better distinguished than the lower targets. Emission distributions overlapped among concentration bands, including high received concentrations in support cells with little in-place emission. Figure 4 shows the point distributions, and the fold variability is retained in the separate figure set.
+
+Figure 4 - Five concentration bands and fitted emission cutoffs
+
+[Insert figure here from ../figuras/PB12_cinco_faixas_emissao.svg]
+
+In PM~2.5~ high–high regions, the area-weighted contribution ratio was approximately 86.1% for Gerdau and 12.3% for Urban Total. Those percentages refer to the selected receiving regions under this scenario; they are neither company-wide emission shares nor estimates of population exposure. The principal contributions for both pollutants are presented in Figure 5.
+
+Figure 5 — Main source group contributions in high high receiving regions
+
+[Insert figure here from ../figuras/PB9_contribuicoes_HH.svg]
+
+## Administrative geometry and remaining model scenarios
+
+All 311 zoning identifiers were retained in the translation table. However, 31 records have area below 1 m², including 18 below 0.01 m². These records require verification against the original planning dataset. Their presence explains why preserving the number of identifiers is not sufficient evidence of a well-defined spatial support. The area-fraction fields allow extensive zones to be described by their internal pattern rather than by a single whole-polygon label.
+
+A candidate 500 m Cartesian grid combined with internal zone points and the existing external design contains 2,025 receptors, compared with the current 1,497. It is an input proposal requiring AERMAP and a new model execution. Likewise, the temporal emission alternatives are prepared sensitivity inputs. No improvement in concentration prediction is claimed from either preparation step.
+
+## Wind-conditioned results and proposed regions
+
+The directional analysis included 24,892 valid hours of the 26,280-hour calendar. The southeast wind-from sector contained 9,671 hours, or 36.8% of the full calendar. The daily persistence selection retained 463 days. Sector frequency does not identify the sector with the highest concentration peak. All directional envelopes use the same existing dispersion scenario and therefore retain its source and meteorological limitations.
+
+Each pollutant had 202 receptors above P80. Among them, 118 PM~10~ and 117 PM~2.5~ receptors also met the reference local high–high criterion. Retaining both outcomes separates descriptive priority from statistical local support. Source-control roles identified 105 PM~10~ and 82 PM~2.5~ receptors with elevated in-place emission outside the highest concentration band. These are candidates for investigating exported contributions rather than evidence that their emissions are harmless. Figure 6 presents the management roles, while the attribute tables retain their overlap with each zoning record. For PM~2.5~, the 202 receiving-priority receptors formed 14 regions covering 52.39 km² and intersecting 137 zoning records. Across this selected receiving support, the ratio of area-weighted concentration contributions was 74.7% for Gerdau, 16.5% for Urban Total and 8.9% for other groups. Urban Total combines railways, urban nuclei and urban roads, where road resuspension is a major included process. These shares differ from the high–high-only result because the receiving domain is different; neither result estimates the share of locally emitted mass.
+
+Figure 6 - Proposed management roles from concentration and associated emission classes
+
+[Insert figure here from ../figuras/Figura_PB11.svg]
+
+The hourly directional envelopes for PM~10~ and PM~2.5~ are presented in Figures 7 and 8. They retain the maximum at each receptor within each wind-from sector, with the contributing date and hour available in the separate tables. Daily persistent-direction envelopes remain supplementary outputs.
+
+Figure 7 - Wind-conditioned hourly concentration envelopes for PM~10~
+
+[Insert figure here from ../figuras/Figura_PB15_PM10_1h.svg]
+
+Figure 8 - Wind-conditioned hourly concentration envelopes for PM~2.5~
+
+[Insert figure here from ../figuras/Figura_PB15_PM25_1h.svg]
+
+## Complete meteorology and temporal support
+
+The reference analysis retained all 311 zoning records for each of the six concentration fields. Hourly envelopes used 24,892 valid hours. Daily analysis with complete meteorology retained 1,075 days, compared with 463 days meeting the directional-persistence criteria. Global Moran statistics for hourly maxima were 0.694 for PM~10~ and 0.768 for PM~2.5~, compared with 0.675 and 0.757 for daily maxima. Annual-mean values remained 0.662 and 0.754. Conditional local tests identified 140/125 high-high receptors in the hourly fields, 157/104 in the daily fields and 151/126 in the annual fields for PM~10~/PM~2.5~, respectively.
+
+The joint six-indicator comparison favoured k-means with two groups and an internal silhouette of 0.481. This cannot be interpreted as an improvement or deterioration relative to the four-indicator Ward solution because the features differ. The hourly reference equalled the union of the eight directional envelopes. The complete daily reference exceeded the union of persistent-direction daily envelopes at 574 PM~10~ and 749 PM~2.5~ municipal receptors. Variable-direction days therefore contributed information that would have been lost if the directional subset had been treated as the complete daily scenario.

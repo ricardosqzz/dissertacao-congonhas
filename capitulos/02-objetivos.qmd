@@ -1,0 +1,15 @@
+# Objetivos {#sec-2-objetivos}
+
+## Objetivo geral
+
+Avaliar a distribuição territorial do material particulado em Congonhas por meio da integração de monitoramento, modelagem de dispersão e inventário de emissões, identificando regiões e fontes prioritárias para a gestão municipal da qualidade do ar e para a avaliação sanitária da população.
+
+## Objetivos específicos
+
+Caracterizar a qualidade do ar e classificar seus padrões territoriais, articulando o diagnóstico por referenciais de concentração com classes relativas e agrupamentos anteriores à agregação por zona municipal.
+
+Examinar a relação entre emissões e concentrações nesses padrões, avaliando limiares associativos, estabilidade espacial e condições meteorológicas relacionadas aos cenários de maior concentração.
+
+Identificar as contribuições dos grupos emissores nas regiões prioritárias e organizar prioridades de investigação e controle, preservando a relação entre áreas emissoras, áreas receptoras e zoneamento.
+
+Avaliar a distribuição da exposição e os benefícios sanitários potenciais de cenários de redução do material particulado, considerando população, elegibilidade dos dados e funções concentração-resposta compatíveis.

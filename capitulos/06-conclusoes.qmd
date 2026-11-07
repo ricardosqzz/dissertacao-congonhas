@@ -1,0 +1,9 @@
+# Conclusões {#sec-6-conclusoes}
+
+A classificação por cinco faixas acrescentou resolução à descrição do campo de concentrações, mantendo sua interpretação distinta do atendimento normativo e do agrupamento multivariado. As regiões de gestão puderam ser propostas sobre todo o suporte analisado, enquanto o Moran local permaneceu como evidência complementar de associação e estabilidade.
+
+A relação emissão-concentração apresentou cortes ordenados e capacidade discriminatória variável entre os alvos. Os melhores resultados ocorreram para a faixa superior. A sobreposição entre as distribuições e a presença de contribuições transportadas impedem interpretar esses cortes como limites permissíveis. Seu uso proposto é orientar a seleção de fontes, regiões e cenários a investigar.
+
+Os envelopes direcionais acrescentaram uma leitura dos picos condicionados pelo vento e de dias com direção persistente. A interpretação desses produtos depende de manter explícita sua duração e de reconhecer que os máximos dos receptores não ocorrem necessariamente juntos. A análise poderá ser complementada por dados locais de umidade, rajadas e atividade quando sua disponibilidade permitir.
+
+A consolidação quantitativa permanece vinculada à revisão das entradas, à confirmação do relógio das estações e à execução dos cenários temporais. A etapa sanitária exige ainda o refinamento residencial e bases de eventos compatíveis. O resultado disponível é uma estrutura reprodutível para distinguir prioridades territoriais e suas incertezas, com rastreabilidade ao zoneamento e condições explícitas para sua continuidade científica e pública.
