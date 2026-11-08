@@ -63,3 +63,5 @@ Os mapas e os dados permanecem nas pastas analíticas de `E:/projeto`. Este repo
 
 Documentação: [livros e Word no Quarto](https://quarto.org/docs/books/book-output.html), [edição no GitHub](https://docs.github.com/en/repositories/working-with-files/managing-files/editing-files), [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages).
 
+
+[Guia detalhado do pôster e dos grupos contribuintes](poster/guia-detalhado.md) e [roteiro ampliado em inglês](poster/roteiro-detalhado-em-ingles.md).

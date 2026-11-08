@@ -8,4 +8,7 @@ Arquivos correntes: `E:/projeto/output/13_cmas_posters/Congonhas/Poster_CMAS_Ses
 
 O projeto paralelo de estações de tratamento de esgoto permanece separado e não foi alterado nesta revisão.
 
-A revisão de 08/11/2026 mantém a avaliação sanitária fora do pôster e inclui o agradecimento do Mover Program, Linha V, processo [27192*83], conforme o resumo expandido. Os mapas da metodologia não exibem coordenadas e preservam a escala nativa de 1:440.000. Os quatro mapas principais usam ampliação de 44/17 e escala de 1:170.000 no pôster de 120 × 90 cm, a serem conferidas pela largura física dos encartes. A folha de apresentação está em [apresentacao-em-ingles.md](apresentacao-em-ingles.md).
+A revisão de 08/11/2026 mantém a avaliação sanitária fora do pôster e inclui o agradecimento do Mover Program, Linha V, processo [27192*83], conforme o resumo expandido. Os mapas da metodologia não exibem coordenadas e preservam a escala nativa de 1:440.000. Os seis mapas de resultados usam escala física de 1:200.000 no pôster de 120 × 90 cm; o enquadramento foi preservado. A revisão inclui densidade de emissão zonal, fração de área em alta emissão e hachura de sensibilidade aos cortes de validação espacial. As legendas ficam dentro da largura dos respectivos encartes. O agradecimento CAPES Finance Code 001 acompanha o apoio Mover. A folha de apresentação está em [apresentacao-em-ingles.md](apresentacao-em-ingles.md).
+
+
+Material de estudo detalhado: [guia-detalhado.md](guia-detalhado.md). Roteiro ampliado em inglês: [roteiro-detalhado-em-ingles.md](roteiro-detalhado-em-ingles.md). A folha curta anterior permanece como resumo de apresentação.
