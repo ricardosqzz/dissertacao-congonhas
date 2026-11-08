@@ -197,6 +197,8 @@ Urbano Total inclui vias, núcleos urbanos e ferrovias. As vias incluem ressuspe
 
 ## Moran, correlograma e incerteza
 
+O correlograma anual de MP2,5 apresentou Moran de aproximadamente 0,785 na banda de 0 a 750 m, diminuindo até cerca de -0,002 na banda de 6,75 a 7,50 km. A curva se aproxima de ausência de associação nessa última banda. Esse resultado descreve a escala da semelhança espacial do campo analisado e não estabelece a distância de transporte de uma fonte. O gráfico preserva o pequeno valor negativo final, sem cortá-lo no zero.
+
 O Moran global anual de MP2,5 foi aproximadamente 0,754, com p de 0,001. Isso indica organização espacial no teste especificado, sem demonstrar a precisão do AERMOD ou identificar a empresa responsável pelo padrão. O Moran local distingue associações alto-alto, baixo-baixo e contrastes, aplicando correção de falsas descobertas. Uma célula não significativa não equivale a baixa concentração.
 
 O correlograma é um gráfico, não uma pluma espacial. Ele apresenta a associação em função da distância e ajuda a reconhecer escalas de semelhança. A estabilidade dos conjuntos alto-alto foi examinada trocando oito vizinhos por quatro e doze. Os Jaccard de MP2,5 foram aproximadamente 33,3% e 64,1%, respectivamente. A diferença evidencia que os limites locais dependem da vizinhança. Isso recomenda evitar fronteiras operacionais rígidas sem avaliação adicional.
