@@ -32,14 +32,16 @@ Cada alteração na branch `main` aciona a geração do Word e dos livros HTML. 
 Localmente, com Quarto instalado, execute:
 
 ```text
-quarto render --to html
-quarto render --to docx
-python ferramentas/ajustar_word.py _book/Dissertacao_Congonhas.docx
+quarto render --to html --output-dir _book/html
+quarto render --to docx --output-dir _book/word
+python ferramentas/ajustar_word.py _book/word/Dissertacao_Congonhas.docx
 ```
 
-O Word fica em `_book/Dissertacao_Congonhas.docx`. O modelo de estilos em `modelos/referencia-smarh.docx` deriva do documento atual, que foi preparado a partir do `instrdt` do programa. Mantém A4, margens de 3 cm à esquerda e acima e 2 cm à direita e abaixo, Arial 12 e espaçamento de 1,5 no corpo. A paginação, elementos pré-textuais, referências cruzadas e diagramação final devem ser conferidos antes do depósito. A exportação não substitui essa conferência.
+O Word fica em `_book/word/Dissertacao_Congonhas.docx`. O modelo de estilos em `modelos/referencia-smarh.docx` deriva do documento atual, que foi preparado a partir do `instrdt` do programa. Mantém A4, margens de 3 cm à esquerda e acima e 2 cm à direita e abaixo, Arial 12 e espaçamento de 1,5 no corpo. A paginação, elementos pré-textuais, referências cruzadas e diagramação final devem ser conferidos antes do depósito. A exportação não substitui essa conferência.
 
 O Word exportado pode ser editado para entrega, mas suas mudanças não retornam automaticamente aos capítulos. Para continuar a escrita compartilhada, incorpore essas mudanças ao texto-fonte. O Word não deve virar uma segunda versão editorial independente.
+
+Para gerar os quatro produtos de uma vez, use `python ferramentas/gerar.py` após instalar `requirements-editoriais.txt`. Nesta máquina, o atalho local é `E:/projeto/codigo/exportar_textos.ps1`. Os livros ficam em `_book/html/index.html` e `artigo/_book/html/index.html`; os Word ficam nas respectivas pastas `_book/word/`.
 
 ## Publicação do livro
 
@@ -47,11 +49,13 @@ Um repositório privado já permite escrita compartilhada e geração dos arquiv
 
 Os links de edição estão configurados para este repositório. Se o endereço mudar, execute `python ferramentas/vincular_github.py https://github.com/CONTA/REPOSITORIO`. Isso configura os links dos capítulos e, quando houver uma cópia Git local autenticada, sua origem remota. A integração do Codex também pode ler e editar os arquivos diretamente pela conexão com o GitHub, sem depender da autenticação do Git no terminal.
 
+[Pôster CMAS](poster/README.md)
+
 ## Organização e rastreabilidade
 
 `capitulos/` e `index.qmd` são o texto corrente. `modelos/` contém o modelo de Word; `ferramentas/` contém apenas as rotinas editoriais. `_book/` contém exportações regeneráveis e não entra no histórico Git. O manifesto de migração registra a base, seus hashes e a correspondência dos capítulos.
 
-Os mapas e os dados permanecem nas pastas analíticas de `E:/projeto`. Este repositório não carrega os arquivos POST, EMI, os inventários integrais, as bases de monitoramento ou PDFs de artigos. Os originais do autor e o seminário concluído foram preservados. A cópia anterior do texto migrado fica em `E:/projeto/descontinuado/2026_11_07_migracao_editorial`, conforme o manifesto local.
+Os mapas e os dados permanecem nas pastas analíticas de `E:/projeto`. Este repositório não carrega os arquivos POST, EMI, os inventários integrais, as bases de monitoramento ou PDFs de artigos. Os originais do autor e o seminário concluído foram preservados. A cópia anterior do texto migrado fica em `E:/projeto/descontinuado/2026_11_08_editorial_e_poster`, conforme o manifesto local.
 
 Documentação: [livros e Word no Quarto](https://quarto.org/docs/books/book-output.html), [edição no GitHub](https://docs.github.com/en/repositories/working-with-files/managing-files/editing-files), [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages).
 

@@ -34,9 +34,9 @@ Os parâmetros serão ajustados em anos ou blocos temporais de treino e avaliado
 
 ## Objetivo 1 Caracterização territorial e agrupamentos
 
-Os indicadores de concentração são inicialmente examinados nos receptores. As médias anuais de cada poluente foram classificadas em cinco faixas pelos P20, P40, P60 e P80. A nomenclatura Q1-Q5 indica posição relativa no cenário. Não representa cumprimento de padrão nem cinco grupos de k-means. Os cortes serão mantidos fixos na comparação absoluta com o cenário de sensibilidade, acompanhados de uma segunda leitura com percentis recalculados.
+Os indicadores de concentração são inicialmente examinados nos receptores. As médias anuais de cada poluente foram classificadas em cinco faixas pelos P20, P40, P60 e P80. A nomenclatura Q1-Q5 indica posição relativa no cenário. Não representa cumprimento de padrão nem cinco grupos de *k-means*. Os cortes serão mantidos fixos na comparação absoluta com o cenário de sensibilidade, acompanhados de uma segunda leitura com percentis recalculados.
 
-Ward e k-means foram comparados de dois a seis grupos usando médias anuais e P98 de MP~10~ e MP~2,5~. As quatro variáveis receberam transformação log(1+C) e padronização. Para k-means, foram testadas dez inicializações com semente registrada. A silhueta foi utilizada para comparar a separação interna. Como não entram coordenadas nesse ajuste, um grupo de perfil pode aparecer em partes descontínuas do território.
+Ward e *k-means* foram comparados de dois a seis grupos usando médias anuais e P98 de MP~10~ e MP~2,5~. As quatro variáveis receberam transformação log(1+C) e padronização. Para *k-means*, foram testadas dez inicializações com semente registrada. A silhueta foi utilizada para comparar a separação interna. Como não entram coordenadas nesse ajuste, um grupo de perfil pode aparecer em partes descontínuas do território.
 
 Os valores dos receptores foram associados a células de Voronoi recortadas pelo suporte municipal. Essa divisão permite calcular proporções de área e realizar interseções. Não demonstra homogeneidade física dentro de cada célula. A tradução para o zoneamento preserva os percentuais de área em cada faixa e os indicadores médios, sem transformar a célula em uma nova zona legal.
 

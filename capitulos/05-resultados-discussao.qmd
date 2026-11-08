@@ -13,7 +13,7 @@ Tabela 3 - Cortes anuais trienais de concentração em µg/m³
 | MP~10~ | 74,74 | 108,12 | 140,96 | 229,73 |
 | MP~2,5~ | 21,23 | 29,40 | 43,93 | 72,34 |
 
-O agrupamento multivariado produziu um resultado distinto dessa divisão. Ward com dois grupos apresentou silhueta de 0,533, superior às demais combinações testadas, com 200 receptores no menor grupo. Isso mostra que o campo tem uma estrutura de semelhança que não precisa coincidir com cinco partes. A adoção de quintis melhora a resolução descritiva pretendida, enquanto a comparação entre agrupamentos continua sendo utilizada para investigar essa estrutura, sem declarar cinco clusters apenas por conveniência gráfica.
+O agrupamento multivariado produziu um resultado distinto dessa divisão. Ward com dois grupos apresentou silhueta de 0,533, superior às demais combinações testadas, com 200 receptores no menor grupo. Isso mostra que o campo tem uma estrutura de semelhança que não precisa coincidir com cinco partes. A adoção de quintis melhora a resolução descritiva pretendida, enquanto a comparação entre agrupamentos continua sendo utilizada para investigar essa estrutura, sem declarar cinco *clusters* apenas por conveniência gráfica.
 
 ## O que a associação espacial acrescenta
 
@@ -93,7 +93,7 @@ A avaliação com a meteorologia completa contemplou os 1.008 receptores municip
 | Média anual trienal | 0.662 | 0.754 | 151 | 126 |
 
 
-O agrupamento complementar de seis indicadores selecionou k-means com dois grupos, com silhueta de 0,481. A solução de referência, baseada nas médias anuais e nos P98 dos dois poluentes, havia favorecido Ward com dois grupos e silhueta de 0,533. Esses valores dizem respeito a conjuntos de variáveis diferentes e não medem melhora do AERMOD. O contraste permite avaliar quanto a descrição dos episódios altera a separação interna, em vez de escolher uma partição apenas pela aparência do mapa. Essa distinção mantém a classificação por quintis, os perfis estatísticos e a associação espacial como perguntas complementares.
+O agrupamento complementar de seis indicadores selecionou *k-means* com dois grupos, com silhueta de 0,481. A solução de referência, baseada nas médias anuais e nos P98 dos dois poluentes, havia favorecido Ward com dois grupos e silhueta de 0,533. Esses valores dizem respeito a conjuntos de variáveis diferentes e não medem melhora do AERMOD. O contraste permite avaliar quanto a descrição dos episódios altera a separação interna, em vez de escolher uma partição apenas pela aparência do mapa. Essa distinção mantém a classificação por quintis, os perfis estatísticos e a associação espacial como perguntas complementares.
 
 Os 24.892 registros horários elegíveis foram distribuídos entre oito direções de origem. A leitura diária exigiu persistência e reteve 463 dias, enquanto a referência geral incluiu 1.075 dias elegíveis. A união dos envelopes direcionais de 1 h reproduziu o máximo horário geral. Em 24 h, porém, os dias sem direção persistente produziram máximos superiores em 574 receptores para MP~10~ e 749 para MP~2,5~. Portanto, o recorte direcional é útil para investigar condições de transporte, mas não substitui a leitura com toda a meteorologia.
 

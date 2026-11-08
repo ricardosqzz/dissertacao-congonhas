@@ -36,6 +36,8 @@ Para o produto de 24 h, usa-se a média diária completa, reconstruída do POST 
 | O | 10 | 8 | 8 | 26 |
 | NO | 12 | 17 | 14 | 43 |
 
+A disponibilidade é desigual entre direções. O recorte diário de sudeste reúne 328 dias, enquanto sul e sudoeste possuem apenas um e dois dias, respectivamente. Esses mapas descrevem envelopes de eventos selecionados, sem igual representatividade temporal. Um máximo obtido de uma amostra maior tem mais oportunidades de incluir episódios elevados. A frequência, a estabilidade entre anos e os dias disponíveis devem acompanhar a comparação; a cor do mapa, isoladamente, não expressa probabilidade de ocorrência. A cobertura das estações é geométrica e baseada na elegibilidade do triênio, sem demonstrar observação válida em todos os eventos selecionados.
+
 ## Referência com a meteorologia completa
 
 O cenário geral não filtra por direção, hora do dia ou estação do ano. Ele utiliza todas as horas meteorologicamente válidas para o máximo de 1 h e todos os dias elegíveis para o máximo de 24 h. São 1.075 dias, distribuídos em 357, 359 e 359 dias nos três anos. Para longa duração, mantém-se a média das três médias anuais nativas, sem substituir esse indicador pelo maior ano.
