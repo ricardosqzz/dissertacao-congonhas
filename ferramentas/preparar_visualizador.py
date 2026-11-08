@@ -1,4 +1,4 @@
-"""Prepara o pacote privado de leitura sem executar o conteúdo das imagens."""
+"""Prepara as prévias para o site e para a leitura sem conexão."""
 from pathlib import Path
 import json,zipfile,shutil
 root=Path(__file__).resolve().parents[1];source=root/'visualizador';target=root/'_visualizador'
@@ -16,4 +16,4 @@ for name in ['index.html','dados.js','README.md']:shutil.copy2(source/name,targe
 data=json.loads((source/'catalogo.json').read_text(encoding='utf8'))
 assert len([x for x in data['catalog'] if x['mode']=='direcional'])==144
 for item in data['catalog']:assert (target/item['src']).is_file(),item['src']
-print('Visualizador privado preparado:',len(data['catalog']),'figuras')
+print('Visualizador preparado:',len(data['catalog']),'figuras')

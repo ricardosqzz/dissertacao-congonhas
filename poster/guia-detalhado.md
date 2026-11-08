@@ -115,7 +115,7 @@ Anselin (1995), Local Indicators of Spatial Association, Geographical Analysis, 
 
 O pôster utiliza MP2,5 como fio principal. O painel de k-means incorpora os seis indicadores dos dois poluentes, e essa informação está expressa em sua legenda. O título permanece exatamente igual ao resumo simples aceito. Sua expressão attainment-status screening registra a origem do trabalho, mas o desenvolvimento atual distingue esse diagnóstico das classes relativas introduzidas após a banca. Na apresentação, essa evolução deve ser explicada como aprofundamento do diagnóstico territorial, sem apresentar quintis como novos padrões legais.
 
-A leitura pode começar no objetivo e seguir os quatro passos do método. Depois, os seis mapas à direita são lidos por linha, da esquerda para a direita. A primeira linha descreve as concentrações e seus perfis conjuntos. A segunda apresenta a emissão por zona e a sensibilidade da identificação de alta emissão. A terceira relaciona emissão e concentração e traduz os resultados em papéis propostos de gestão. O gráfico de contribuição mostra quais grupos respondem pela concentração recebida nas regiões prioritárias, e a conclusão retoma a diferença entre gerar e receber poluição.
+A leitura pode começar no objetivo e seguir os quatro passos do método. Depois, os seis painéis da seção de resultados são lidos da esquerda para a direita. Eles apresentam concentrações anuais, perfis conjuntos, densidade de emissão, o painel numérico dos limiares de emissão, a matriz emissão-concentração e as regiões propostas de gestão. Abaixo deles aparecem as contribuições dos grupos e o correlograma. A conclusão encerra a sequência, antes das referências e dos agradecimentos. O gráfico de contribuição mostra quais grupos respondem pela concentração recebida nas regiões prioritárias, e a conclusão retoma a diferença entre gerar e receber poluição.
 
 ## Painel 1 Classes relativas de concentração anual
 
@@ -149,7 +149,11 @@ Também existem 31 fragmentos menores que 1 m² no cadastro. Eles permanecem ide
 
 É importante distinguir densidade em t/ano/km² da entrada superficial em g/s/m². A primeira descreve a massa anual atribuída a uma unidade territorial. A segunda é uma taxa usada na representação física de determinadas fontes do modelo. Elas não podem ser trocadas na interpretação. A emissão zonal também não equivale à concentração recebida pela zona, pois parte do material pode ser transportada para outros receptores.
 
-## Painel 4 Alta emissão e estabilidade
+## Painel 4 Limiares de alta emissão e sensibilidade
+
+O pôster apresenta o limiar de alta emissão como resultado numérico, com valor de 8,50 t/ano/km², e um gráfico dos quatro cortes associados a P20, P40, P60 e P80 da concentração. Os cortes são aproximadamente 1,15, 2,05, 7,06 e 8,50 t/ano/km². A faixa de 7,11 a 10,23 t/ano/km² resume os extremos encontrados nas partições espaciais para o alvo P80. Essa faixa não é um intervalo de confiança. Como o corte de referência é único para este cenário e suporte, ele não deve ser representado como se cada zona tivesse recebido um limiar independente.
+
+O mapa de fração de área em alta emissão e sua hachura de sensibilidade permanecem como produtos complementares na pasta do pôster, fora da composição principal. Os parágrafos seguintes explicam esses produtos para permitir sua leitura em conjunto com o painel numérico.
 
 O limiar apresentado, aproximadamente 8,49545 t/ano/km², foi ajustado para separar células acima ou abaixo do P80 da concentração anual de MP2,5. Seu ajuste foi feito no suporte original das células de análise. Não se trata de 100 t/ano, não é um limite permissível e não representa a massa adicional que poderia ser licenciada. Ele é uma associação empírica do cenário, poluente, escala e dados utilizados.
 
@@ -201,13 +205,13 @@ No estudo existem incertezas de inventário, geometria, tempo de emissão, meteo
 
 ## Escala, tamanho físico e qualidade
 
-O enquadramento geográfico foi preservado. A mudança de 1:170.000 para 1:200.000 nesta revisão decorre da redução física dos seis mapas de resultado para caberem em três linhas no pôster de 120 por 90 cm. Os mapas do método permanecem em 1:440.000 em seu tamanho físico. As escalas foram calculadas pela largura geodésica do encarte e pela largura real da figura no PPTX, evitando apenas trocar o texto da caixa.
+O enquadramento geográfico foi preservado. A escala de 1:200.000 corresponde ao tamanho físico dos cinco mapas principais na faixa de resultados do pôster de 120 por 90 cm. O sexto painel apresenta os limiares numéricos e não tem escala cartográfica. Os mapas do método permanecem em 1:440.000 em seu tamanho físico. As escalas foram calculadas pela largura geodésica do encarte e pela largura real da figura no PPTX, evitando apenas trocar o texto da caixa.
 
 A escala numérica vale quando o pôster é impresso no tamanho original e sem ajuste adicional à página. Se houver redução, a escala numérica muda novamente. A barra de distância acompanha a redução e continua utilizável. Os SVG preservam as geometrias e a tipografia vetorial no PDF. Ao apresentar uma imagem de prévia na tela, sua aparência não deve ser confundida com a resolução do PDF vetorial final.
 
 ## Padrão de apresentação oral
 
-Uma apresentação breve pode durar quatro minutos. Nos primeiros 35 segundos, explicar a necessidade de relacionar fontes, áreas receptoras e planejamento territorial. Nos 45 segundos seguintes, percorrer os quatro passos metodológicos sem detalhar fórmulas. Dedicar um minuto à primeira e à segunda linha de mapas, distinguindo concentração, massa e estabilidade. Usar mais um minuto para a matriz, as regiões propostas e o gráfico de contribuições. Encerrar em 40 segundos com aplicação, limites e próximos testes.
+Uma apresentação breve pode durar quatro minutos. Nos primeiros 35 segundos, explicar a necessidade de relacionar fontes, áreas receptoras e planejamento territorial. Nos 45 segundos seguintes, percorrer os quatro passos metodológicos sem detalhar fórmulas. Dedicar um minuto aos quatro primeiros painéis de resultados, distinguindo concentração, massa e cortes de emissão. Usar mais um minuto para a matriz, as regiões propostas e o gráfico de contribuições. Encerrar em 40 segundos com aplicação, limites e próximos testes.
 
 Na conversa ampliada, a ordem deve ser a mesma, mas cada mapa pode receber um a dois minutos. Comece dizendo o que foi calculado, mostre como ler a cor e somente depois explique o que o resultado permite concluir. Ao final de cada painel, conecte-o ao próximo. A densidade descreve geração de massa; o limiar testa sua associação com o campo modelado; a matriz distingue combinações; a análise de grupos investiga quem contribui para a concentração recebida.
 
@@ -265,7 +269,7 @@ Os resultados atuais de participação são atribuíveis ao cenário modelado e 
 
 ## Arquivos para consulta e reprodução
 
-Pôster editável e PDF em E:/projeto/output/13_cmas_posters/Congonhas/Poster_CMAS_Session12_Congonhas. O detalhamento das emissões está em Rateio_emissoes_MP25_por_fonte_zona.csv e Emissoes_densidade_sensibilidade_por_zona.csv, nessa mesma pasta. A auditoria e a base geográfica acompanham esses arquivos. Os cortes originais e a validação estão em E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv. O visualizador privado permanece na pasta visualizador dos resultados pós-banca.
+Pôster editável e PDF em E:/projeto/output/13_cmas_posters/Congonhas/Poster_CMAS_Session12_Congonhas. O detalhamento das emissões está em Rateio_emissoes_MP25_por_fonte_zona.csv e Emissoes_densidade_sensibilidade_por_zona.csv, nessa mesma pasta. A auditoria e a base geográfica acompanham esses arquivos. Os cortes originais e a validação estão em E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv. O visualizador está publicado em https://ricardosqzz.github.io/dissertacao-congonhas/visualizador/ e conserva uma versão local na pasta visualizador dos resultados pós-banca.
 
 ## Referências e apoio à apresentação
 

@@ -4,6 +4,15 @@ project:
 book:
   repo-url: "https://github.com/ricardosqzz/dissertacao-congonhas"
   repo-branch: main
+  site-url: "https://ricardosqzz.github.io/dissertacao-congonhas/artigo/"
+  navbar:
+    right:
+      - text: "Dissertação"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/"
+      - text: "Visualizador"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/visualizador/"
+      - text: "Baixar Word"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/downloads/Artigo_CMAS_Congonhas.docx"
   repo-subdir: artigo
   repo-actions: [edit, issue, source]
   title: "From attainment screening to spatial priorities for particulate matter management in Congonhas Brazil"

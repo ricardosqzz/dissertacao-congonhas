@@ -5,6 +5,15 @@ project:
 book:
   repo-url: "https://github.com/ricardosqzz/dissertacao-congonhas"
   repo-branch: main
+  site-url: "https://ricardosqzz.github.io/dissertacao-congonhas/"
+  navbar:
+    right:
+      - text: "Artigo"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/artigo/"
+      - text: "Visualizador"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/visualizador/"
+      - text: "Baixar Word"
+        href: "https://ricardosqzz.github.io/dissertacao-congonhas/downloads/Dissertacao_Congonhas.docx"
   repo-actions: [edit, issue, source]
   title: "Integração territorial de emissões e concentrações de material particulado para a gestão da qualidade do ar em Congonhas Minas Gerais"
   author: "Ricardo Silva Queiroz"

@@ -2,7 +2,7 @@
 
 Este é o local de escrita da dissertação de Ricardo Silva Queiroz e do artigo científico associado. Os capítulos editáveis geram livros de leitura e um único arquivo Word para cada documento. A base pós-banca foi preservada e complementada com a referência meteorológica completa e a organização metodológica pelos quatro objetivos.
 
-O repositório é privado: [ricardosqzz/dissertacao-congonhas](https://github.com/ricardosqzz/dissertacao-congonhas). A pasta local é `E:/projeto/dissertacao`. [O artigo fica em artigo/](artigo/README.md). [O relatório dos recortes de vento fica em metodologia/](metodologia/recortes-vento.md).
+O repositório é público: [ricardosqzz/dissertacao-congonhas](https://github.com/ricardosqzz/dissertacao-congonhas). A pasta local é `E:/projeto/dissertacao`. [O artigo fica em artigo/](artigo/README.md). [O relatório dos recortes de vento fica em metodologia/](metodologia/recortes-vento.md).
 
 ## Onde editar
 
@@ -43,17 +43,13 @@ O Word exportado pode ser editado para entrega, mas suas mudanças não retornam
 
 Para gerar os quatro produtos de uma vez, use `python ferramentas/gerar.py` após instalar `requirements-editoriais.txt`. Nesta máquina, o atalho local é `E:/projeto/codigo/exportar_textos.ps1`. Os livros ficam em `_book/html/index.html` e `artigo/_book/html/index.html`; os Word ficam nas respectivas pastas `_book/word/`.
 
-## Publicação do livro
+## Livro e visualizador na internet
 
-Um repositório privado já permite escrita compartilhada e geração dos arquivos. A publicação de um site de leitura é uma etapa separada. O fluxo **Publicar livro** é manual e exige a variável de repositório `PUBLICAR_LIVRO=true`; ele não publica automaticamente ao editar o texto. Antes de ativá-lo, devem ser escolhidos o público e as permissões. GitHub Pages em plano gratuito exige repositório público. Em repositórios privados, as condições dependem do plano, e a privacidade do site deve ser verificada separadamente.
+O autor autorizou a publicação em 08/11/2026. O livro fica em [Dissertação](https://ricardosqzz.github.io/dissertacao-congonhas/), o [artigo](https://ricardosqzz.github.io/dissertacao-congonhas/artigo/) tem sua própria navegação e o [visualizador](https://ricardosqzz.github.io/dissertacao-congonhas/visualizador/) permite consultar os mapas por direção do vento e indicador. Cada alteração na main aciona a publicação. Os botões de edição dos capítulos apontam para os respectivos textos-fonte no GitHub.
 
-Os links de edição estão configurados para este repositório. Se o endereço mudar, execute `python ferramentas/vincular_github.py https://github.com/CONTA/REPOSITORIO`. Isso configura os links dos capítulos e, quando houver uma cópia Git local autenticada, sua origem remota. A integração do Codex também pode ler e editar os arquivos diretamente pela conexão com o GitHub, sem depender da autenticação do Git no terminal.
+Os arquivos Word ficam disponíveis nos botões Baixar Word do livro e do artigo. Os pacotes de leitura sem conexão continuam em Actions. Somente o texto editorial, os modelos e as prévias dos mapas estão no repositório; os dados brutos de modelagem, inventários integrais e referências protegidas continuam fora dele.
 
-[Pôster CMAS](poster/README.md)
-
-[Visualizador privado dos resultados](visualizador/README.md). Na aba **Actions**, baixe **Visualizador-privado**, extraia o pacote e abra `index.html`. A rosa meteorológica permite selecionar a direção. O pacote funciona sem conexão e não publica os resultados. A opção do autor é manter todos os materiais privados.
-
-[Guia completo da metodologia](metodologia/guia-metodologia-completa.md) e [folha de apresentação do pôster em inglês](poster/apresentacao-em-ingles.md).
+[Pôster CMAS](poster/README.md), [guia detalhado](poster/guia-detalhado.md) e [roteiro ampliado em inglês](poster/roteiro-detalhado-em-ingles.md).
 
 ## Organização e rastreabilidade
 

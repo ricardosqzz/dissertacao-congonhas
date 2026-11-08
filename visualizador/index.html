@@ -13,7 +13,7 @@ header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(24px
 </style>
 </head>
 <body>
-<header><small>CONGONHAS · MINAS GERAIS</small><h1>Qualidade do ar no território</h1><p>Concentrações, padrões espaciais e contribuições das fontes · MP₁₀ e MP₂,₅</p></header>
+<header><small>CONGONHAS · MINAS GERAIS</small><h1>Qualidade do ar no território</h1><p>Concentrações, padrões espaciais e contribuições das fontes · MP₁₀ e MP₂,₅</p><nav aria-label="Navegação do projeto" style="margin-top:12px;display:flex;gap:20px"><a href="https://ricardosqzz.github.io/dissertacao-congonhas/" style="color:#126b7c">Dissertação</a><a href="https://ricardosqzz.github.io/dissertacao-congonhas/artigo/" style="color:#126b7c">Artigo</a><a href="https://github.com/ricardosqzz/dissertacao-congonhas" style="color:#126b7c">Repositório</a></nav></header>
 <main class="wrap">
 <section class="toolbar" aria-label="Seleção dos resultados">
 <div class="control"><label for="mode">RECORTE</label><select id="mode"><option value="direcional">Por direção do vento</option><option value="geral">Meteorologia completa</option><option value="sintese">Síntese e testes complementares</option></select></div>
@@ -29,7 +29,7 @@ header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(24px
 </aside>
 <section class="panel" aria-label="Figura selecionada"><div class="figure-head"><div><h2 id="figureTitle"></h2><p id="figureSub"></p></div><div class="tools"><button type="button" id="less" aria-label="Diminuir a ampliação">−</button><span id="zoomValue">100%</span><button type="button" id="more" aria-label="Aumentar a ampliação">+</button><a id="download" download>Baixar imagem</a></div></div><p id="status" role="status"></p><div class="canvas"><img id="map" alt="" decoding="async"></div><p class="caption" id="caption"></p></section>
 </div>
-</main><footer>Visualizador privado para leitura dos resultados do Projeto Congonhas. Funciona sem conexão após a extração do pacote. As prévias não substituem os arquivos vetoriais para impressão.</footer>
+</main><footer>Visualizador para leitura dos resultados do Projeto Congonhas. Funciona sem conexão após a extração do pacote. As prévias não substituem os arquivos vetoriais para impressão.</footer>
 <script src="dados.js"></script>
 <script>
 'use strict';
