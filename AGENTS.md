@@ -10,4 +10,5 @@
 - Gerar com `quarto render --to html --output-dir _book/html` e `quarto render --to docx --output-dir _book/word`; finalizar Word com `python ferramentas/ajustar_word.py _book/word/Dissertacao_Congonhas.docx`.
 - Nunca incluir credenciais, dados individuais de saúde, referências integrais protegidas, caches ou saídas pesadas da modelagem.
 - Arquivar produtos gerados substituídos em E:/projeto/descontinuado, com manifesto; preservar arquivos-base.
+- O visualizador deve permanecer privado e disponível para baixar. Não ativar publicação em GitHub Pages. Sua interface e o catálogo ficam em visualizador/; imagens.zip contém apenas prévias. _visualizador/ é uma exportação regenerável.
 

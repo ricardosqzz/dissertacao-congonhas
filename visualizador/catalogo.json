@@ -1,0 +1,1566 @@
+{
+  "catalog": [
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_N_Concentracoes.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_N_Quintis.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_N_Quintis_referencia_comum.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_N_Moran_local.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_N_Moran_bivariado.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_N_Emissao_concentracao.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_N_Regioes_gestao.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_N_Cobertura_prioridades.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_N_Grupo_predominante.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_NE_Concentracoes.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_NE_Quintis.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_NE_Quintis_referencia_comum.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_NE_Moran_local.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_NE_Moran_bivariado.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_NE_Emissao_concentracao.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_NE_Regioes_gestao.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_NE_Cobertura_prioridades.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_NE_Grupo_predominante.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_L_Concentracoes.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_L_Quintis.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_L_Quintis_referencia_comum.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_L_Moran_local.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_L_Moran_bivariado.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_L_Emissao_concentracao.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_L_Regioes_gestao.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_L_Cobertura_prioridades.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_L_Grupo_predominante.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_SE_Concentracoes.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_SE_Quintis.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_SE_Quintis_referencia_comum.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_SE_Moran_local.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_SE_Moran_bivariado.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_SE_Emissao_concentracao.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_SE_Regioes_gestao.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_SE_Cobertura_prioridades.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_SE_Grupo_predominante.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_S_Concentracoes.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_S_Quintis.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_S_Quintis_referencia_comum.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_S_Moran_local.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_S_Moran_bivariado.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_S_Emissao_concentracao.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_S_Regioes_gestao.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_S_Cobertura_prioridades.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_S_Grupo_predominante.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_SO_Concentracoes.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_SO_Quintis.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_SO_Quintis_referencia_comum.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_SO_Moran_local.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_SO_Moran_bivariado.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_SO_Emissao_concentracao.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_SO_Regioes_gestao.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_SO_Cobertura_prioridades.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_SO_Grupo_predominante.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_O_Concentracoes.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_O_Quintis.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_O_Quintis_referencia_comum.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_O_Moran_local.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_O_Moran_bivariado.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_O_Emissao_concentracao.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_O_Regioes_gestao.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_O_Cobertura_prioridades.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_O_Grupo_predominante.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_1h_NO_Concentracoes.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/direcional_1h_NO_Quintis.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_1h_NO_Quintis_referencia_comum.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_1h_NO_Moran_local.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_1h_NO_Moran_bivariado.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_1h_NO_Emissao_concentracao.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_1h_NO_Regioes_gestao.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_1h_NO_Cobertura_prioridades.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_1h_NO_Grupo_predominante.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_N_Concentracoes.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_N_Quintis.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_N_Quintis_referencia_comum.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_N_Moran_local.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_N_Moran_bivariado.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_N_Emissao_concentracao.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_N_Regioes_gestao.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_N_Cobertura_prioridades.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_N_Grupo_predominante.webp",
+      "direction": "N"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_NE_Concentracoes.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_NE_Quintis.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_NE_Quintis_referencia_comum.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_NE_Moran_local.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_NE_Moran_bivariado.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_NE_Emissao_concentracao.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_NE_Regioes_gestao.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_NE_Cobertura_prioridades.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_NE_Grupo_predominante.webp",
+      "direction": "NE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_L_Concentracoes.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_L_Quintis.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_L_Quintis_referencia_comum.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_L_Moran_local.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_L_Moran_bivariado.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_L_Emissao_concentracao.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_L_Regioes_gestao.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_L_Cobertura_prioridades.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_L_Grupo_predominante.webp",
+      "direction": "L"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_SE_Concentracoes.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_SE_Quintis.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_SE_Quintis_referencia_comum.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_SE_Moran_local.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_SE_Moran_bivariado.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_SE_Emissao_concentracao.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_SE_Regioes_gestao.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_SE_Cobertura_prioridades.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_SE_Grupo_predominante.webp",
+      "direction": "SE"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_S_Concentracoes.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_S_Quintis.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_S_Quintis_referencia_comum.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_S_Moran_local.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_S_Moran_bivariado.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_S_Emissao_concentracao.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_S_Regioes_gestao.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_S_Cobertura_prioridades.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_S_Grupo_predominante.webp",
+      "direction": "S"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_SO_Concentracoes.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_SO_Quintis.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_SO_Quintis_referencia_comum.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_SO_Moran_local.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_SO_Moran_bivariado.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_SO_Emissao_concentracao.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_SO_Regioes_gestao.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_SO_Cobertura_prioridades.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_SO_Grupo_predominante.webp",
+      "direction": "SO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_O_Concentracoes.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_O_Quintis.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_O_Quintis_referencia_comum.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_O_Moran_local.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_O_Moran_bivariado.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_O_Emissao_concentracao.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_O_Regioes_gestao.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_O_Cobertura_prioridades.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_O_Grupo_predominante.webp",
+      "direction": "O"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/direcional_24h_NO_Concentracoes.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/direcional_24h_NO_Quintis.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Quintis_referencia_comum",
+      "src": "imagens/direcional_24h_NO_Quintis_referencia_comum.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/direcional_24h_NO_Moran_local.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/direcional_24h_NO_Moran_bivariado.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/direcional_24h_NO_Emissao_concentracao.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/direcional_24h_NO_Regioes_gestao.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/direcional_24h_NO_Cobertura_prioridades.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "direcional",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/direcional_24h_NO_Grupo_predominante.webp",
+      "direction": "NO"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Concentracoes",
+      "src": "imagens/geral_Geral_1h_Concentracoes.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Quintis",
+      "src": "imagens/geral_Geral_1h_Quintis.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Moran_local",
+      "src": "imagens/geral_Geral_1h_Moran_local.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Moran_bivariado",
+      "src": "imagens/geral_Geral_1h_Moran_bivariado.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/geral_Geral_1h_Emissao_concentracao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Regioes_gestao",
+      "src": "imagens/geral_Geral_1h_Regioes_gestao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/geral_Geral_1h_Cobertura_prioridades.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Grupo_predominante",
+      "src": "imagens/geral_Geral_1h_Grupo_predominante.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Limiares",
+      "src": "imagens/geral_Geral_1h_Limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "1h",
+      "product": "Estabilidade_limiares",
+      "src": "imagens/geral_Geral_1h_Estabilidade_limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Concentracoes",
+      "src": "imagens/geral_Geral_24h_Concentracoes.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Quintis",
+      "src": "imagens/geral_Geral_24h_Quintis.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Moran_local",
+      "src": "imagens/geral_Geral_24h_Moran_local.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Moran_bivariado",
+      "src": "imagens/geral_Geral_24h_Moran_bivariado.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Emissao_concentracao",
+      "src": "imagens/geral_Geral_24h_Emissao_concentracao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Regioes_gestao",
+      "src": "imagens/geral_Geral_24h_Regioes_gestao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/geral_Geral_24h_Cobertura_prioridades.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Grupo_predominante",
+      "src": "imagens/geral_Geral_24h_Grupo_predominante.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Limiares",
+      "src": "imagens/geral_Geral_24h_Limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "24h",
+      "product": "Estabilidade_limiares",
+      "src": "imagens/geral_Geral_24h_Estabilidade_limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Concentracoes",
+      "src": "imagens/geral_Geral_anual_Concentracoes.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Quintis",
+      "src": "imagens/geral_Geral_anual_Quintis.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Moran_local",
+      "src": "imagens/geral_Geral_anual_Moran_local.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Moran_bivariado",
+      "src": "imagens/geral_Geral_anual_Moran_bivariado.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Emissao_concentracao",
+      "src": "imagens/geral_Geral_anual_Emissao_concentracao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Regioes_gestao",
+      "src": "imagens/geral_Geral_anual_Regioes_gestao.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Cobertura_prioridades",
+      "src": "imagens/geral_Geral_anual_Cobertura_prioridades.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Grupo_predominante",
+      "src": "imagens/geral_Geral_anual_Grupo_predominante.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Limiares",
+      "src": "imagens/geral_Geral_anual_Limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "anual",
+      "product": "Estabilidade_limiares",
+      "src": "imagens/geral_Geral_anual_Estabilidade_limiares.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "conjunto",
+      "product": "Conjunto_best_cluster_label",
+      "src": "imagens/geral_Geral_Conjunto_best_cluster_label.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "conjunto",
+      "product": "Conjunto_ward4_label",
+      "src": "imagens/geral_Geral_Conjunto_ward4_label.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "conjunto",
+      "product": "Comparacao_agrupamentos",
+      "src": "imagens/geral_Geral_Comparacao_agrupamentos.webp"
+    },
+    {
+      "mode": "geral",
+      "period": "conjunto",
+      "product": "Correlogramas",
+      "src": "imagens/geral_Geral_Correlogramas.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB1",
+      "src": "imagens/sintese_Figura_PB1.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB2",
+      "src": "imagens/sintese_Figura_PB2.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB3",
+      "src": "imagens/sintese_Figura_PB3.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB4",
+      "src": "imagens/sintese_Figura_PB4.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB5",
+      "src": "imagens/sintese_Figura_PB5.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB6_correlogramas",
+      "src": "imagens/sintese_PB6_correlogramas.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB7_agrupamentos",
+      "src": "imagens/sintese_PB7_agrupamentos.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB8_limiares_associativos",
+      "src": "imagens/sintese_PB8_limiares_associativos.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB9_contribuicoes_HH",
+      "src": "imagens/sintese_PB9_contribuicoes_HH.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB10",
+      "src": "imagens/sintese_Figura_PB10.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "Figura_PB11",
+      "src": "imagens/sintese_Figura_PB11.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB12_cinco_faixas_emissao",
+      "src": "imagens/sintese_PB12_cinco_faixas_emissao.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB13_estabilidade_limiares",
+      "src": "imagens/sintese_PB13_estabilidade_limiares.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB14_ABC_prioridades_PM10",
+      "src": "imagens/sintese_PB14_ABC_prioridades_PM10.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB14_ABC_prioridades_PM25",
+      "src": "imagens/sintese_PB14_ABC_prioridades_PM25.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB16_frequencia_direcional",
+      "src": "imagens/sintese_PB16_frequencia_direcional.webp"
+    },
+    {
+      "mode": "sintese",
+      "period": "resumo",
+      "product": "PB17_perfis_grupos",
+      "src": "imagens/sintese_PB17_perfis_grupos.webp"
+    }
+  ],
+  "labels": {
+    "Concentracoes": "Concentrações modeladas",
+    "Quintis": "Cinco faixas de concentração",
+    "Quintis_referencia_comum": "Quintis com referência comum entre direções",
+    "Moran_local": "Moran local",
+    "Moran_bivariado": "Associação espacial bivariada",
+    "Emissao_concentracao": "Emissão e concentração",
+    "Regioes_gestao": "Regiões propostas de gestão",
+    "Cobertura_prioridades": "Rede e prioridades de investigação",
+    "Grupo_predominante": "Principal grupo contribuinte",
+    "Limiares": "Cortes associativos de emissão",
+    "Estabilidade_limiares": "Estabilidade dos cortes de emissão",
+    "Comparacao_agrupamentos": "Comparação entre agrupamentos",
+    "Conjunto_best_cluster_label": "Perfis conjuntos dos seis indicadores",
+    "Conjunto_ward4_label": "Agrupamento Ward com quatro grupos",
+    "Correlogramas": "Correlogramas espaciais",
+    "Figura_PB1": "Quintis anuais dos dois poluentes",
+    "Figura_PB2": "Associação local anual",
+    "Figura_PB3": "Associação bivariada anual",
+    "Figura_PB4": "Perfis com quatro indicadores",
+    "Figura_PB5": "Tradução da associação local para as zonas",
+    "PB6_correlogramas": "Correlogramas anuais",
+    "PB7_agrupamentos": "Comparação dos agrupamentos de referência",
+    "PB8_limiares_associativos": "Cortes associativos de referência",
+    "PB9_contribuicoes_HH": "Contribuições nas regiões alto-alto",
+    "Figura_PB10": "Matriz anual de emissão e concentração",
+    "Figura_PB11": "Papéis propostos de gestão",
+    "PB12_cinco_faixas_emissao": "Cinco faixas associativas de emissão",
+    "PB13_estabilidade_limiares": "Estabilidade espacial dos cortes anuais",
+    "PB14_ABC_prioridades_PM10": "Curva ABC nas prioridades de MP10",
+    "PB14_ABC_prioridades_PM25": "Curva ABC nas prioridades de MP2,5",
+    "PB16_frequencia_direcional": "Frequências e velocidades por direção",
+    "PB17_perfis_grupos": "Perfis modelados dos grupos"
+  },
+  "descriptions": {
+    "Concentracoes": "Interpolação visual dos valores nos receptores. Os máximos não são necessariamente simultâneos. Barras independentes por poluente, com limites fixos entre direções do mesmo indicador.",
+    "Quintis": "Q1 ≤ P20; Q2 > P20 e ≤ P40; Q3 > P40 e ≤ P60; Q4 > P60 e ≤ P80; Q5 > P80. Os cortes descrevem o campo selecionado e não são padrões legais.",
+    "Quintis_referencia_comum": "Usa os cortes da união dos envelopes direcionais do mesmo poluente e indicador, permitindo comparar a posição em uma referência comum.",
+    "Moran_local": "Alto-alto e baixo-baixo indicam associação com a vizinhança após os testes. Não significativo não equivale a baixa concentração ou ausência de poluição.",
+    "Moran_bivariado": "Associação entre concentração local e emissão na vizinhança. Não demonstra causalidade, trajetória de transporte ou capacidade de emissão permissível.",
+    "Emissao_concentracao": "Cruza a posição relativa de concentração com emissão. A identificação de cinco cortes associativos é verificada separadamente em cada campo.",
+    "Regioes_gestao": "Prioridade receptora, controle de fontes, menor impacto relativo e acompanhamento são papéis analíticos propostos. As zonas municipais continuam sendo a referência de gestão.",
+    "Cobertura_prioridades": "Confronta prioridades relativas com a cobertura geométrica e a elegibilidade das estações. Não comprova observação válida em todos os eventos do recorte.",
+    "Grupo_predominante": "Grupo com maior concentração recebida no receptor. AEX e os subgrupos urbanos não são somados novamente à partição de empresas e Urbano Total.",
+    "Limiares": "Cortes empíricos que procuram separar alvos de concentração. A interpretação depende da validação espacial e da identificação de cortes distintos e crescentes.",
+    "Estabilidade_limiares": "Variação dos cortes em partições de blocos espaciais. Não são intervalos de emissões autorizáveis."
+  },
+  "wind": {
+    "histogram": [
+      [
+        379,
+        286,
+        294,
+        326,
+        101,
+        0
+      ],
+      [
+        428,
+        363,
+        418,
+        568,
+        174,
+        0
+      ],
+      [
+        373,
+        396,
+        368,
+        374,
+        163,
+        0
+      ],
+      [
+        454,
+        453,
+        395,
+        438,
+        272,
+        1
+      ],
+      [
+        710,
+        1492,
+        1635,
+        1102,
+        1167,
+        42
+      ],
+      [
+        815,
+        1636,
+        1545,
+        555,
+        371,
+        16
+      ],
+      [
+        364,
+        263,
+        240,
+        65,
+        8,
+        2
+      ],
+      [
+        233,
+        164,
+        98,
+        65,
+        5,
+        0
+      ],
+      [
+        249,
+        201,
+        178,
+        140,
+        41,
+        0
+      ],
+      [
+        289,
+        267,
+        204,
+        321,
+        208,
+        9
+      ],
+      [
+        300,
+        281,
+        230,
+        304,
+        390,
+        50
+      ],
+      [
+        344,
+        353,
+        287,
+        357,
+        262,
+        10
+      ]
+    ],
+    "valid_hours": 24892,
+    "total_hours": 26280,
+    "sectors": [
+      {
+        "direction": "N",
+        "name": "Norte",
+        "2021": 632,
+        "2022": 791,
+        "2023": 821,
+        "total_hours": 2244,
+        "percent_valid": 9.014944560501366,
+        "percent_all": 8.538812785388128,
+        "mean_speed_m_s": 1.4977718360071302,
+        "persistent_days": 20
+      },
+      {
+        "direction": "NE",
+        "name": "Nordeste",
+        "2021": 973,
+        "2022": 998,
+        "2023": 886,
+        "total_hours": 2857,
+        "percent_valid": 11.477583159247953,
+        "percent_all": 10.87138508371385,
+        "mean_speed_m_s": 1.587994399719986,
+        "persistent_days": 15
+      },
+      {
+        "direction": "L",
+        "name": "Leste",
+        "2021": 1208,
+        "2022": 1016,
+        "2023": 1067,
+        "total_hours": 3291,
+        "percent_valid": 13.22111521774064,
+        "percent_all": 12.52283105022831,
+        "mean_speed_m_s": 1.6030385900941964,
+        "persistent_days": 28
+      },
+      {
+        "direction": "SE",
+        "name": "Sudeste",
+        "2021": 3400,
+        "2022": 3233,
+        "2023": 3038,
+        "total_hours": 9671,
+        "percent_valid": 38.851839948577854,
+        "percent_all": 36.79984779299848,
+        "mean_speed_m_s": 1.6807362216937234,
+        "persistent_days": 328
+      },
+      {
+        "direction": "S",
+        "name": "Sul",
+        "2021": 485,
+        "2022": 598,
+        "2023": 480,
+        "total_hours": 1563,
+        "percent_valid": 6.279125823557769,
+        "percent_all": 5.947488584474886,
+        "mean_speed_m_s": 1.056046065259117,
+        "persistent_days": 1
+      },
+      {
+        "direction": "SO",
+        "name": "Sudoeste",
+        "2021": 328,
+        "2022": 291,
+        "2023": 396,
+        "total_hours": 1015,
+        "percent_valid": 4.077615298087739,
+        "percent_all": 3.8622526636225274,
+        "mean_speed_m_s": 1.1685714285714284,
+        "persistent_days": 2
+      },
+      {
+        "direction": "O",
+        "name": "Oeste",
+        "2021": 628,
+        "2022": 576,
+        "2023": 730,
+        "total_hours": 1934,
+        "percent_valid": 7.769564518720874,
+        "percent_all": 7.359208523592085,
+        "mean_speed_m_s": 1.7491726990692864,
+        "persistent_days": 26
+      },
+      {
+        "direction": "NO",
+        "name": "Noroeste",
+        "2021": 638,
+        "2022": 833,
+        "2023": 846,
+        "total_hours": 2317,
+        "percent_valid": 9.308211473565803,
+        "percent_all": 8.816590563165907,
+        "mean_speed_m_s": 1.876176089771256,
+        "persistent_days": 43
+      }
+    ]
+  },
+  "version": "2026-11-08"
+}

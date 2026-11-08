@@ -51,6 +51,10 @@ Os links de edição estão configurados para este repositório. Se o endereço 
 
 [Pôster CMAS](poster/README.md)
 
+[Visualizador privado dos resultados](visualizador/README.md). Na aba **Actions**, baixe **Visualizador-privado**, extraia o pacote e abra `index.html`. A rosa meteorológica permite selecionar a direção. O pacote funciona sem conexão e não publica os resultados. A opção do autor é manter todos os materiais privados.
+
+[Guia completo da metodologia](metodologia/guia-metodologia-completa.md) e [folha de apresentação do pôster em inglês](poster/apresentacao-em-ingles.md).
+
 ## Organização e rastreabilidade
 
 `capitulos/` e `index.qmd` são o texto corrente. `modelos/` contém o modelo de Word; `ferramentas/` contém apenas as rotinas editoriais. `_book/` contém exportações regeneráveis e não entra no histórico Git. O manifesto de migração registra a base, seus hashes e a correspondência dos capítulos.

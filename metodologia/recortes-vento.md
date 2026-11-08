@@ -46,7 +46,7 @@ A união dos oito envelopes horários reproduz o máximo horário geral. A uniã
 
 ## Como interpretar as novas figuras
 
-Cada figura reúne MP10 e MP2,5 para a mesma duração e direção, no encarte nativo de 1:440.000. O pequeno ícone colore apenas o setor de origem selecionado. Ele não é uma rosa de frequência e não informa intensidade do vento. As barras de concentração são independentes para os poluentes, mas seus limites permanecem fixos nas oito direções do mesmo poluente e duração. Portanto, a mesma cor em poluentes diferentes não implica igual concentração.
+Cada figura reúne MP10 e MP2,5 para a mesma duração e direção, no encarte nativo de 1:440.000. A pequena rosa junto à legenda usa os mesmos 24.892 vetores da apresentação, preservando frequências, setores gráficos de 30 graus e classes de velocidade. O destaque corresponde ao setor analítico de 45 graus selecionado, enquanto as demais direções permanecem em cinza. No visualizador, essa rosa também permite trocar o resultado exibido. As barras de concentração são independentes para os poluentes, mas seus limites permanecem fixos nas oito direções do mesmo poluente e duração. Portanto, a mesma cor em poluentes diferentes não implica igual concentração.
 
 Quintis, Moran local, associação bivariada, matriz emissão-concentração, regiões de gestão e contribuições são calculados sobre os receptores originais. A interpolação é usada apenas para visualizar a concentração. Os grupos AEX e os subgrupos urbanos não são somados novamente às empresas e ao Urbano Total. As classes relativas e os cortes associativos não constituem padrões legais ou emissões permissíveis.
 

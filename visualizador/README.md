@@ -6,7 +6,6 @@ A rosa dos ventos permite escolher N, NE, L, SE, S, SO, O ou NO. As pétalas usa
 
 As imagens WebP são prévias para leitura. Os arquivos PDF e SVG para publicação continuam em `E:/projeto/output/16_revisao_pos_banca`. A escala numérica impressa na figura se refere ao tamanho nativo. Na tela ou em outra dimensão de impressão, a barra de distância acompanha o redimensionamento.
 
-Para ajustar a apresentação, edite `index.html`. `dados.js` e `catalogo.json` são o catálogo gerado. `imagens.zip` contém somente as prévias. A rotina `ferramentas/preparar_visualizador.py` monta o pacote e verifica todos os arquivos. Os dados horários, inventários completos, documentos de terceiros e informações individuais de saúde não fazem parte desse pacote.
+Para ajustar a apresentação, edite `index.html`. `dados.js` e `catalogo.json` são o catálogo gerado. `partes/` contém somente as prévias, divididas em pequenos volumes para armazenamento. A rotina `ferramentas/preparar_visualizador.py` reúne os volumes em um único pacote pronto para baixar e verifica todos os arquivos. Os dados horários, inventários completos, documentos de terceiros e informações individuais de saúde não fazem parte desse pacote.
 
 Não ativar GitHub Pages ou o fluxo de publicação do livro. A opção do autor é manter todos os materiais privados.
-
