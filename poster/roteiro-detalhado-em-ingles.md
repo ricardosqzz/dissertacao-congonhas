@@ -18,7 +18,7 @@ The next two panels introduce emission information. Source masses were allocated
 
 The last two panels combine emission and concentration. High local emission can coexist with concentrations outside the upper relative class, while a receiving area can have high concentrations and lower local emissions. The resulting management roles distinguish receiving priorities, source-control areas, lower relative impact and follow-up. For annual PM2.5, 202 priority receptors formed 14 contiguous regions, covering approximately 52.4 square kilometres and intersecting 137 zoning records.
 
-Within those receiving priorities, Gerdau contributed approximately 74.7 percent of modelled concentrations, Urban Total 16.5 percent and the other groups 8.9 percent. These are area-weighted concentration shares, not shares of municipal emitted mass. Urban Total combines road resuspension and combustion, urban nuclei and railways.
+Within those receiving priorities, Gerdau contributed approximately 74.7 percent of modelled concentrations, Urban Total 16.5 percent, Vale Fábrica 3.5 percent, LGA 1.5 percent and the other 20 groups 3.9 percent. These are area-weighted concentration shares, not shares of municipal emitted mass. Urban Total combines road resuspension and combustion, urban nuclei and railways.
 
 The main contribution is a traceable distinction between generating areas and receiving areas. Relative patterns, source contributions and zoning provide complementary information for management planning. The boundaries remain conditional on the model scenario, emission inputs and spatial choices. New emission-timing simulations and independent observational evaluation are required before interpreting these results as operational control scenarios. Thank you.
 
@@ -26,11 +26,11 @@ The main contribution is a traceable distinction between generating areas and re
 
 The concentration classes describe the distribution across municipal receptors. Equal numbers of receptors in quintile classes do not imply equal land areas because receptor supports have different sizes. Annual means are based on the three native annual model outputs. We do not replace those means with an average that changes the model’s calm-hour treatment.
 
-The joint profile map is independent of percentile ranking. K-means groups receptors by similarity across six transformed and standardized indicators. Coordinates are not input variables, so a group may appear in separate parts of the municipality. The numbers Group 1 and Group 2 are labels, not a legal severity order. Their interpretation depends on the fitted profiles.
+The joint profile map is independent of percentile ranking. K-means groups receptors by similarity across six transformed and standardized indicators. Coordinates are not input variables, so a group may appear in separate parts of the municipality. The fitted profiles were checked in their original units. The lower-profile group contains 744 receptors and the higher-profile group contains 264. Annual PM2.5 medians are 28.23 and 107.77 µg/m³. All six means and medians are higher in the second group, although individual distributions overlap. These are relative model profiles, not legal air-quality classes.
 
 The emission-density map uses the actual source geometries. Area sources are split by intersection area, linear sources by length, and point sources are allocated once. Polygonal representations of volume sources are treated as spatial supports, with their physical limitations documented. Small cadastral overlaps are handled deterministically to avoid duplicate mass. The maximum zonal PM2.5 density is approximately 236.91 tonnes per year per square kilometre.
 
-The high-emission panel reports the numerical cut fitted at the original receptor-cell support. The four concentration targets P20, P40, P60 and P80 were associated with emission-density cuts of approximately 1.15, 2.05, 7.06 and 8.50 tonnes per year per square kilometre. Applying the same cuts directly to a mean over a much larger zone would change the statistical support and require a new assessment. The complementary area-share map remains available separately.
+The high-emission panel is a boxplot of fitted cuts at the original receptor-cell support. The vertical axis is emission density in tonnes per year per square kilometre. Horizontal labels identify concentration percentile targets and their annual concentrations in µg/m³. Each box contains ten cuts from spatial training partitions, with median, interquartile range, Tukey whiskers and outlying values. Diamonds show the full-data cuts. This is spatial-fit variability, not a distribution of concentrations and not a confidence interval. The four concentration targets P20, P40, P60 and P80 were associated with emission-density cuts of approximately 1.15, 2.05, 7.06 and 8.50 tonnes per year per square kilometre. Applying the same cuts directly to a mean over a much larger zone would change the statistical support and require a new assessment. The complementary area-share map remains available separately.
 
 Spatial validation used blocks of two and four kilometres. The fitted cuts ranged from approximately 7.11 to 10.23 tonnes per year per square kilometre. The numerical range describes variation across these fits. The complementary map uses hatching to show cells that can change classification within that range. The mean balanced accuracy in the spatial test sets was approximately 0.767. The range is descriptive of the tested partitions and should not be called a confidence interval or a probability of high pollution.
 
@@ -44,7 +44,7 @@ Each contribution is the concentration from a group received at the receptors in
 
 The ABC curve sorts groups from the largest to the smallest share. Bars show individual shares and the line shows their cumulative sum. Class A continues until the cumulative contribution reaches or crosses 80 percent. Class B continues until 95 percent, and Class C contains the remaining contribution. We do not impose a fixed proportion of companies in each class.
 
-Companies and Urban Total form the exclusive partition used to check closure against ALL. AEX overlaps the companies, and the urban subgroups overlap Urban Total. They can be reported as diagnostic breakdowns but must not be added again. The displayed three-bar summary pools the smaller groups only for readability; their individual results remain available in the study guide.
+Companies and Urban Total form the exclusive partition used to check closure against ALL. AEX overlaps the companies, and the urban subgroups overlap Urban Total. They can be reported as diagnostic breakdowns but must not be added again. The ranked horizontal chart displays Gerdau, Urban Total, Vale Fábrica and LGA separately, and pools the remaining 20 groups as Other groups. The full shares remain available in the study guide. The adjacent map identifies the predominant group at every municipal receptor, so spatial attribution and regional aggregation can be read together.
 
 ## Spatial association and uncertainty
 
@@ -64,8 +64,23 @@ The complete three-year reference includes 24,892 valid directional hours and 1,
 
 We acknowledge UTFPR, IAG/USP, UFMG, UNIFEI, UERJ, EPUSP and UFSC; VOLKSWAGEN do Brasil Indústria de Veículos Automotores LTDA, RASTECH Automação e Comércio LTDA, Robert BOSCH Limitada and STELLANTIS Automóveis Brasil LTDA; and the Research Development Foundation (Fundep), coordinator of the Mover Programme, Track V, project [27192*83].
 
-This study was financed in part by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior - Brasil (CAPES) - Finance Code 001.
+This study was financed in part by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Finance Code 001.
 
 ## Presentation reminders
 
 Point to the map, define what the colour represents, and then explain its implication. Distinguish relative classes from standards, emission mass from received concentration, and sensitivity testing from a new model run. If asked whether the model has been calibrated, explain that the current analyses diagnose the existing scenario and that new documented emission-timing runs are still required. The health assessment remains part of the dissertation and is intentionally outside the scope of this poster.
+
+
+## Answering questions about the joint profiles
+
+The silhouette of 0.481 is an internal separation measure ranging from -1 to 1. It suggests useful but incomplete separation in the chosen transformed feature space. It is not a percentage of correctly classified receptors, a measure of AERMOD accuracy, or a hypothesis test. There is no p-value attached to this silhouette calculation. The p = 0.001 shown on the poster belongs to the separate annual Moran permutation test. K = 2 had the highest silhouette among the ten Ward and k-means solutions evaluated with two to six groups. This selection favours a parsimonious profile summary among the tested alternatives and does not establish that only two physical air basins exist.
+
+The joint map remains useful as a complementary check of patterns across pollutants and durations. The final management map is based on annual concentrations and emission-density associations, not directly on k-means membership. Correlated indicators and alternative feature sets should be examined in subsequent stability tests.
+
+## Temporal scope and the presentation sequence
+
+Annual concentration quintiles, the threshold association, the bivariate map, predominant groups, regional shares, management regions and the displayed correlogram use native annual concentrations averaged over 2021–2023. Emissions refer to the 2023 annual inventory. The joint clustering alone combines the 1 h maxima, 24 h maxima and three-year annual means of both pollutants. The 24 h descriptor is a maximum rather than P98. Maxima from different receptors can occur at different times.
+
+Read the two-column poster from introduction and methods on the left to the annual maps on the right. The boxplot on the left explains the cut used in the bivariate map. Then connect the source-attribution map with the ranked contribution chart, and finish with the management regions and bottom conclusions. Method step 04 is Management regions. It describes the proposed analytical roles and their intersection with the 311 municipal zoning records.
+
+The six main maps have a physical scale of 1:220,000 on the 120 × 90 cm poster. The method maps remain at 1:440,000 without external coordinates. The geographic extent has not changed. The numerical scale changed only because the main maps were resized for the two-column layout. The road overlay is contextual and does not add its emissions a second time.

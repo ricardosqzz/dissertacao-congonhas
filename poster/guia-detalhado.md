@@ -1,6 +1,6 @@
 # Guia de estudo do pôster e da metodologia de Congonhas
 
-Este guia reúne a metodologia completa já documentada e uma leitura detalhada de cada painel do pôster CMAS, incluindo os grupos contribuintes, a estabilidade dos limiares e um roteiro de apresentação. Os resultados pertencem ao cenário existente e não representam uma nova simulação calibrada. Revisão de 08/11/2026.
+Este guia reúne a metodologia completa já documentada e uma leitura detalhada de cada painel do pôster CMAS, incluindo os grupos contribuintes, a estabilidade dos limiares e um roteiro de apresentação. Os resultados pertencem ao cenário existente e não representam uma nova simulação calibrada. Revisão de 09/11/2026.
 
 Este guia explica o que cada etapa produz, como os cálculos são realizados e como os resultados devem ser interpretados. A pesquisa procura verificar o que a análise conjunta de concentrações, emissões e organização espacial acrescenta ao diagnóstico por zoneamento. Além de localizar áreas prioritárias, precisa mostrar em que condições essa classificação é estável e quais limitações ainda dependem de novos dados ou de outra execução do modelo.
 
@@ -115,7 +115,7 @@ Anselin (1995), Local Indicators of Spatial Association, Geographical Analysis, 
 
 O pôster utiliza MP2,5 como fio principal. O painel de k-means incorpora os seis indicadores dos dois poluentes, e essa informação está expressa em sua legenda. O título permanece exatamente igual ao resumo simples aceito. Sua expressão attainment-status screening registra a origem do trabalho, mas o desenvolvimento atual distingue esse diagnóstico das classes relativas introduzidas após a banca. Na apresentação, essa evolução deve ser explicada como aprofundamento do diagnóstico territorial, sem apresentar quintis como novos padrões legais.
 
-A leitura pode começar no objetivo e seguir os quatro passos do método. Depois, os seis painéis da seção de resultados são lidos da esquerda para a direita. Eles apresentam concentrações anuais, perfis conjuntos, densidade de emissão, o painel numérico dos limiares de emissão, a matriz emissão-concentração e as regiões propostas de gestão. Abaixo deles aparecem as contribuições dos grupos e o correlograma. A conclusão encerra a sequência, antes das referências e dos agradecimentos. O gráfico de contribuição mostra quais grupos respondem pela concentração recebida nas regiões prioritárias, e a conclusão retoma a diferença entre gerar e receber poluição.
+O pôster conserva o modelo do congresso em duas colunas. A coluna esquerda apresenta introdução, objetivo e método, seguidos do boxplot dos limiares, das participações regionais e do correlograma. A coluna direita reúne seis mapas, lidos por linhas: concentração anual e perfis conjuntos, densidade de emissão e grupo predominante, matriz emissão-concentração e regiões de gestão. A conclusão encerra o corpo. O título dos agradecimentos, os logos e os textos de apoio permanecem na faixa azul inferior.
 
 ## Painel 1 Classes relativas de concentração anual
 
@@ -131,7 +131,22 @@ A contribuição deste painel é substituir uma leitura visual uniforme por um g
 
 Aqui, cada receptor é descrito por seis valores: máximo horário, máximo diário e média anual para MP10 e para MP2,5. A transformação log(1+C) reduz a influência de amplitudes extremas, e a padronização evita que o indicador numericamente maior domine a distância. O k-means procura grupos de receptores com perfis semelhantes nesse espaço de seis dimensões.
 
-A solução apresentada possui dois grupos e silhueta de aproximadamente 0,481. A silhueta descreve a separação dos grupos naquelas variáveis e não mede a precisão da concentração modelada. O algoritmo não recebe como instrução produzir um grupo de alta e outro de baixa poluição. Essa interpretação só pode ser atribuída depois de examinar os centróides e os valores originais. Por esse motivo, o mapa utiliza Group 1 e Group 2, evitando dar ao número do grupo uma hierarquia automática.
+A solução apresentada possui dois grupos e silhueta média de 0,480665824, arredondada para 0,481. Ela foi a maior entre as dez alternativas examinadas neste conjunto de seis indicadores, combinando Ward e k-means com dois a seis grupos. Isso favorece uma síntese em dois perfis entre as soluções testadas, mas não demonstra que existam apenas duas regiões físicas no município. A silhueta varia de -1 a 1. Valores positivos indicam que, em média, os receptores estão mais próximos de seu próprio grupo do que do grupo vizinho. O resultado é compatível com uma separação interna intermediária, cuja utilidade deve ser julgada junto dos perfis e da estabilidade. Não há um valor universal que transforme 0,481 em aprovação do método.
+
+A silhueta não tem um valor de p associado nesse cálculo. Ela não é um teste de hipótese nem uma medida de concordância observado-modelado. O p = 0,001 informado em outro ponto do pôster pertence ao Moran global da concentração anual de MP2,5, com 999 permutações, e não ao k-means. Esse teste avalia organização espacial sob a vizinhança adotada. Nenhuma dessas duas medidas confirma que as magnitudes modeladas estejam corretas.
+
+A interpretação foi conferida nos valores originais. O grupo 1 contém 744 receptores e apresenta valores menores, em média e mediana, nos seis indicadores. O grupo 2 contém 264 receptores e apresenta valores maiores. As legendas passaram a identificá-los como perfis relativamente menores e maiores. Essa denominação deriva do resultado ajustado e não é uma classificação legal de qualidade do ar. Há sobreposição dos intervalos individuais, portanto nem todo valor do grupo 2 supera todo valor do grupo 1.
+
+| Indicador em µg/m³ | Mediana no grupo 1 | Mediana no grupo 2 |
+|---|---:|---:|
+| MP10 máximo de 1 h | 1639.64 | 3811.61 |
+| MP10 máximo de 24 h | 395.04 | 1130.09 |
+| MP10 média anual do triênio | 104.01 | 319.20 |
+| MP25 máximo de 1 h | 741.23 | 1635.48 |
+| MP25 máximo de 24 h | 131.21 | 379.72 |
+| MP25 média anual do triênio | 28.23 | 107.77 |
+
+O mapa merece permanecer como análise complementar porque verifica a coerência dos perfis entre durações e poluentes. Ele não gera diretamente a prioridade receptora do mapa final, definida pela concentração anual acima de P80. Assim, o k-means não deve ser descrito como uma etapa que substitui os quintis ou como uma confirmação independente da prioridade. Os seis indicadores também apresentam correlações entre si, o que deve ser examinado na próxima avaliação de estabilidade dos atributos.
 
 Os dois grupos também não equivalem aos cinco quintis. Quintis dividem uma variável segundo a ordenação de seus valores. O k-means combina várias variáveis para reconhecer perfis. A solução anterior de Ward com quatro indicadores respondeu a outra configuração de entrada e sua silhueta não deve ser comparada como se fosse uma melhoria ou piora do AERMOD.
 
@@ -149,9 +164,34 @@ Também existem 31 fragmentos menores que 1 m² no cadastro. Eles permanecem ide
 
 É importante distinguir densidade em t/ano/km² da entrada superficial em g/s/m². A primeira descreve a massa anual atribuída a uma unidade territorial. A segunda é uma taxa usada na representação física de determinadas fontes do modelo. Elas não podem ser trocadas na interpretação. A emissão zonal também não equivale à concentração recebida pela zona, pois parte do material pode ser transportada para outros receptores.
 
+## Mapa de atribuição aos grupos emissores
+
+O terceiro passo do método passou a ter correspondência explícita nos resultados por meio do mapa Main contributing source group. Em cada receptor, compara-se a média anual trienal das concentrações dos 24 grupos exclusivos e identifica-se o de maior contribuição. A cor representa a identidade desse grupo. Ela não indica a massa emitida naquela célula nem a contribuição de todas as fontes da mesma empresa localizadas dentro da zona. O resultado pode ser dominado por fontes externas à célula ou ao município.
+
+No cenário anual de MP2,5, Urban Total predomina em 491 receptores, Gerdau em 341, CSN Casa de Pedra em 95, Vale Fábrica em 44, Ferro+ em 21, Vale Viga em 9, SCOF em 4, LGA em 2 e Nogueira Duarte em 1. A soma é 1.008. A legenda inclui somente esses nove grupos porque os demais não predominam em nenhum receptor, embora possam contribuir para as concentrações e para a ABC. O grupo AEX e os subgrupos urbanos não entram novamente nessa partição, pois se sobrepõem aos grupos exclusivos.
+
+O gráfico Received contributions in priority regions responde a uma pergunta diferente. Ele agrega apenas as 14 regiões receptoras prioritárias, ponderando a concentração pela área de suporte dos receptores. A divisão pela concentração de ALL agregada da mesma forma fornece as participações de cada grupo. O gráfico mostra Gerdau, Urban Total, Vale Fábrica e LGA individualmente e reúne os outros 20 grupos na categoria Other groups. Os 20 grupos reunidos em Other groups somam 3,86%. Os 8,86% citados para o conjunto dos demais grupos após Gerdau e Urbano Total incluem também Vale Fábrica e LGA, agora mostrados separadamente. Os valores completos permanecem na tabela ao final deste guia.
+
+Assim, Urban Total pode predominar em mais receptores no conjunto municipal enquanto Gerdau responde pela maior parcela da concentração nas regiões prioritárias. Uma contagem de receptores em todo o município e uma participação ponderada em um subconjunto não têm o mesmo denominador. O mapa mostra onde cada grupo predomina. O gráfico informa quanto cada grupo contribui no recorte prioritário. Urban Total reúne ressuspensão e combustão em vias, núcleos urbanos e ferrovias. Os 16,5% não devem ser atribuídos integralmente à ressuspensão sem decompor os subgrupos.
+
+As vias foram sobrepostas ao mapa de densidade como referência geográfica. Suas emissões já integram o rateio das fontes que compõem a massa anual, portanto o traçado não acrescenta massa nem duplica a contribuição viária. A camada de referência selecionada contém 2.592 feições que interceptam o município.
+
 ## Painel 4 Limiares de alta emissão e sensibilidade
 
-O pôster apresenta o limiar de alta emissão como resultado numérico, com valor de 8,50 t/ano/km², e um gráfico dos quatro cortes associados a P20, P40, P60 e P80 da concentração. Os cortes são aproximadamente 1,15, 2,05, 7,06 e 8,50 t/ano/km². A faixa de 7,11 a 10,23 t/ano/km² resume os extremos encontrados nas partições espaciais para o alvo P80. Essa faixa não é um intervalo de confiança. Como o corte de referência é único para este cenário e suporte, ele não deve ser representado como se cada zona tivesse recebido um limiar independente.
+O pôster apresenta um boxplot dos cortes de densidade de emissão ajustados para quatro alvos de concentração anual. O eixo horizontal identifica P20, P40, P60 e P80 e informa seus valores em µg/m³. Cada alvo responde à pergunta sobre qual corte de emissão melhor separa concentrações acima daquele percentil das demais, conforme o critério de ajuste documentado. Não são cinco distribuições de emissão dentro de faixas mutuamente exclusivas. São quatro problemas binários, dos quais derivam os cortes utilizados na associação.
+
+O eixo vertical permanece em t/ano/km² porque a variável estimada é o corte de densidade de emissão. Colocar µg/m³ nesse eixo mudaria o gráfico para uma distribuição de concentrações e deixaria de mostrar o limiar de emissão solicitado. A área foi mantida no denominador para conservar o mesmo suporte das análises associativas e da matriz. Isso não permite aplicar automaticamente um corte ajustado nas células à média de uma zona muito maior.
+
+Cada caixa reúne dez cortes de treinamento, cinco obtidos nas partições com blocos de 2 km e cinco nas de 4 km. A caixa vai do percentil 25 ao 75 dos cortes, e a linha interna indica sua mediana. Os bigodes alcançam os valores dentro de 1,5 vez o intervalo interquartil e os pontos representam os valores externos. O losango marca o ajuste com todos os dados. São partições relacionadas da mesma base, não dez experimentos independentes. A dispersão descreve sensibilidade espacial e não deve ser interpretada como intervalo de confiança ou incerteza total do inventário.
+
+| Alvo de concentração anual | Concentração em µg/m³ | Corte com todos os dados em t/ano/km² | Mediana dos cortes espaciais em t/ano/km² |
+|---|---:|---:|---:|
+| P20 | 21.23 | 1.15 | 0.82 |
+| P40 | 29.40 | 2.05 | 1.60 |
+| P60 | 43.93 | 7.06 | 7.06 |
+| P80 | 72.34 | 8.50 | 8.40 |
+
+Para o alvo P80, o corte principal é 8,495452 t/ano/km², apresentado como 8,50. Os ajustes espaciais variaram de 7,108348 a 10,234317 t/ano/km² e a acurácia balanceada média nos conjuntos de teste foi 0,767. Essa acurácia resume o desempenho da separação empírica acima e abaixo de P80, sem medir a precisão da concentração do AERMOD ou estabelecer uma emissão permissível.
 
 O mapa de fração de área em alta emissão e sua hachura de sensibilidade permanecem como produtos complementares na pasta do pôster, fora da composição principal. Os parágrafos seguintes explicam esses produtos para permitir sua leitura em conjunto com o painel numérico.
 
@@ -207,9 +247,23 @@ No estudo existem incertezas de inventário, geometria, tempo de emissão, meteo
 
 ## Escala, tamanho físico e qualidade
 
-O enquadramento geográfico foi preservado. A escala de 1:200.000 corresponde ao tamanho físico dos cinco mapas principais na faixa de resultados do pôster de 120 por 90 cm. O sexto painel apresenta os limiares numéricos e não tem escala cartográfica. Os mapas do método permanecem em 1:440.000 em seu tamanho físico. As escalas foram calculadas pela largura geodésica do encarte e pela largura real da figura no PPTX, evitando apenas trocar o texto da caixa.
+O enquadramento geográfico foi preservado. A escala de 1:220.000 corresponde ao tamanho físico dos seis mapas principais na organização em duas colunas do pôster de 120 por 90 cm. Os mapas do método permanecem em 1:440.000 e não têm coordenadas externas. A mudança em relação a 1:200.000 decorre do redimensionamento necessário ao novo arranjo. Os limites e as coordenadas geográficas continuam os mesmos. As escalas são conferidas pela largura geodésica do encarte e pela largura real da figura no PPTX. A barra de distância acompanha a reprodução, enquanto a escala numérica só vale no tamanho físico indicado.
 
 A escala numérica vale quando o pôster é impresso no tamanho original e sem ajuste adicional à página. Se houver redução, a escala numérica muda novamente. A barra de distância acompanha a redução e continua utilizável. Os SVG preservam as geometrias e a tipografia vetorial no PDF. Ao apresentar uma imagem de prévia na tela, sua aparência não deve ser confundida com a resolução do PDF vetorial final.
+
+## Duração utilizada em cada resultado
+
+| Produto do pôster | Indicador temporal |
+|---|---|
+| Classes relativas de concentração | Média das médias anuais nativas de 2021, 2022 e 2023 |
+| Densidade de emissão nas zonas | Massa anual inventariada, ano-base 2023, dividida pela área |
+| Boxplot dos cortes de emissão | Associação da densidade anual com quatro alvos da concentração média anual trienal |
+| Matriz emissão-concentração | Concentração média anual trienal e densidade anual no suporte das células |
+| Grupo predominante e participações regionais | Contribuições das concentrações anuais nativas, promediadas no triênio |
+| Regiões de gestão e correlograma | Campo da concentração média anual trienal, com cruzamentos metodológicos documentados |
+| Perfis conjuntos por k-means | Máximos de 1 h, máximos de 24 h e média anual trienal dos dois poluentes, seis variáveis |
+
+As máximas de 1 h e de 24 h podem ocorrer em instantes diferentes para receptores e poluentes distintos. São descritores de exposição extrema potencial no cenário, sem representar uma pluma simultânea. O P98 das médias diárias permanece em outro produto de avaliação do projeto, mas não foi utilizado como substituto da máxima diária nessa solução de seis indicadores. O pôster, portanto, não deve ser apresentado como se todos os seus produtos fossem baseados em 24 h.
 
 ## Padrão de apresentação oral
 
@@ -278,3 +332,6 @@ Pôster editável e PDF em E:/projeto/output/13_cmas_posters/Congonhas/Poster_CM
 A interpretação deve manter a distinção entre contribuição, sensibilidade e resposta ao controle discutida por Clappier et al. (2017), Geoscientific Model Development, DOI https://doi.org/10.5194/gmd-10-4245-2017 . O Moran local tem como referência Anselin (1995), DOI https://doi.org/10.1111/j.1538-4632.1995.tb00338.x . As referências recentes e os textos completos já organizados na revisão pós-banca permanecem na biblioteca do projeto, sem duplicar seus arquivos neste guia. O exemplo de episódios de poeira de Ribeiro et al. (2025), DOI https://doi.org/10.1080/09593330.2025.2556349 , pode apoiar a discussão de meteorologia e episódios, mas não transforma o recorte direcional desta análise em um modelo preditivo equivalente.
 
 O agradecimento da CAPES segue a formulação oficial em inglês, Finance Code 001, disponível em https://www.gov.br/capes/pt-br/centrais-de-conteudo/logomarca . O apoio do Mover Programme, Track V, project [27192*83], foi mantido conforme o resumo expandido.
+
+
+Interpretação da silhueta e definição do índice: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html . O detalhamento numérico dos perfis está em Perfis_conjuntos_estatisticas.csv e os dados dos boxplots em Cortes_emissao_boxplot_PM25.csv, na pasta corrente do pôster.
