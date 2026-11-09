@@ -142,9 +142,9 @@ A interpretação foi conferida nos valores originais. O grupo 1 contém 744 rec
 | MP10 máximo de 1 h | 1639.64 | 3811.61 |
 | MP10 máximo de 24 h | 395.04 | 1130.09 |
 | MP10 média anual do triênio | 104.01 | 319.20 |
-| MP25 máximo de 1 h | 741.23 | 1635.48 |
-| MP25 máximo de 24 h | 131.21 | 379.72 |
-| MP25 média anual do triênio | 28.23 | 107.77 |
+| MP2,5 máximo de 1 h | 741.23 | 1635.48 |
+| MP2,5 máximo de 24 h | 131.21 | 379.72 |
+| MP2,5 média anual do triênio | 28.23 | 107.77 |
 
 O mapa merece permanecer como análise complementar porque verifica a coerência dos perfis entre durações e poluentes. Ele não gera diretamente a prioridade receptora do mapa final, definida pela concentração anual acima de P80. Assim, o k-means não deve ser descrito como uma etapa que substitui os quintis ou como uma confirmação independente da prioridade. Os seis indicadores também apresentam correlações entre si, o que deve ser examinado na próxima avaliação de estabilidade dos atributos.
 
