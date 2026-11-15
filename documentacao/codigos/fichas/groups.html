@@ -1,0 +1,224 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/groups.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/groups.py</h2>
+<p>Define os grupos de fontes e distingue os grupos primários exclusivos dos agrupamentos diagnósticos sobrepostos.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\groups.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unicodedata</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>value: name.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>norm_token(value)</td><td>72-75</td><td>Chamadas efetivas: unicodedata.normalize, .join, re.sub, str, text.upper, unicodedata.combining Retorno: re.sub(&#x27;[^A-Z0-9]+&#x27;, &#x27;&#x27;, text.upper()).</td></tr><tr><td>canonical_group(value)</td><td>78-96</td><td>Chamadas efetivas: norm_token, ALIASES.items, t.startswith Retorno: None, None.</td></tr><tr><td>urban_subgroup_from_source(source_id)</td><td>99-109</td><td>Chamadas efetivas: .replace, norm_token, token.startswith, raw.startswith, .upper, str Retorno: None, &#x27;URB-VIA&#x27;.</td></tr><tr><td>is_exposed_area(source_id)</td><td>112-113</td><td>Chamadas efetivas: .startswith, norm_token Retorno: norm_token(source_id).startswith(&#x27;AEX&#x27;).</td></tr><tr><td>infer_primary_group_from_source(source_id, desc=None)</td><td>116-141</td><td>Chamadas efetivas: norm_token, re.fullmatch, suffixes.items, urban_subgroup_from_source, canonical_group, re.match Retorno: g, &#x27;WGM&#x27;.</td></tr><tr><td>canonical_post_group(value)</td><td>179-198</td><td>Chamadas efetivas: .strip, norm_token, re.sub, POST_FILE_ALIASES.items, canonical_group, .upper, str Retorno: g, None.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/groups.py, linhas 72-80.</p>
+<pre><code>def norm_token(value):
+    text = unicodedata.normalize(&quot;NFKD&quot;, str(value or &quot;&quot;))
+    text = &quot;&quot;.join(ch for ch in text if not unicodedata.combining(ch))
+    return re.sub(r&quot;[^A-Z0-9]+&quot;, &quot;&quot;, text.upper())
+
+# Canonical group
+def canonical_group(value):
+    t = norm_token(value)
+    if not t:</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Campos/chaves em value: name.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  import re
+   22  import unicodedata
+   23  
+   24  GROUPS = {
+   25      &quot;AEX&quot;:      {&quot;name&quot;: &quot;Áreas Expostas&quot;, &quot;expected&quot;: 243, &quot;kind&quot;: &quot;overlap&quot;},
+   26      &quot;BVC&quot;:      {&quot;name&quot;: &quot;BVC Transportes&quot;, &quot;expected&quot;: 11, &quot;kind&quot;: &quot;primary&quot;},
+   27      &quot;CDA&quot;:      {&quot;name&quot;: &quot;CDA Logística&quot;, &quot;expected&quot;: 17, &quot;kind&quot;: &quot;primary&quot;},
+   28      &quot;COC&quot;:      {&quot;name&quot;: &quot;Concrelagos Concreto&quot;, &quot;expected&quot;: 16, &quot;kind&quot;: &quot;primary&quot;},
+   29      &quot;COOPERA&quot;:  {&quot;name&quot;: &quot;Cooperauto&quot;, &quot;expected&quot;: 5, &quot;kind&quot;: &quot;primary&quot;},
+   30      &quot;CSN-CDP&quot;:  {&quot;name&quot;: &quot;CSN – Casa de Pedra&quot;, &quot;expected&quot;: 146, &quot;kind&quot;: &quot;primary&quot;},
+   31      &quot;CSN-PIR&quot;:  {&quot;name&quot;: &quot;CSN – Namisa/Pires&quot;, &quot;expected&quot;: 37, &quot;kind&quot;: &quot;primary&quot;},
+   32      &quot;ECOMIN&quot;:   {&quot;name&quot;: &quot;Ecomining América&quot;, &quot;expected&quot;: 13, &quot;kind&quot;: &quot;primary&quot;},
+   33      &quot;FERRO&quot;:    {&quot;name&quot;: &quot;Ferro+&quot;, &quot;expected&quot;: 68, &quot;kind&quot;: &quot;primary&quot;},
+   34      &quot;GERDAU&quot;:   {&quot;name&quot;: &quot;Gerdau Ouro Branco&quot;, &quot;expected&quot;: 380, &quot;kind&quot;: &quot;primary&quot;},
+   35      &quot;LGA&quot;:      {&quot;name&quot;: &quot;LGA Mineração&quot;, &quot;expected&quot;: 53, &quot;kind&quot;: &quot;primary&quot;},
+   36      &quot;LL-TRANS&quot;: {&quot;name&quot;: &quot;LL Transportes&quot;, &quot;expected&quot;: 3, &quot;kind&quot;: &quot;primary&quot;},
+   37      &quot;LM-MIN&quot;:   {&quot;name&quot;: &quot;LM Mining Company Eireli&quot;, &quot;expected&quot;: 12, &quot;kind&quot;: &quot;primary&quot;},
+   38      &quot;MONT-MIN&quot;: {&quot;name&quot;: &quot;Monteminas Minérios&quot;, &quot;expected&quot;: 4, &quot;kind&quot;: &quot;primary&quot;},
+   39      &quot;NOGD&quot;:     {&quot;name&quot;: &quot;Nogueira Duarte&quot;, &quot;expected&quot;: 25, &quot;kind&quot;: &quot;primary&quot;},
+   40      &quot;RODEIRO&quot;:  {&quot;name&quot;: &quot;Rodeiro&quot;, &quot;expected&quot;: 2, &quot;kind&quot;: &quot;primary&quot;},
+   41      &quot;SAPPORO&quot;:  {&quot;name&quot;: &quot;Sapporo Indústria e Comércio&quot;, &quot;expected&quot;: 30, &quot;kind&quot;: &quot;primary&quot;},
+   42      &quot;SILVANO&quot;:  {&quot;name&quot;: &quot;Silvano Transportes&quot;, &quot;expected&quot;: 4, &quot;kind&quot;: &quot;primary&quot;},
+   43      &quot;TERRA-MI&quot;: {&quot;name&quot;: &quot;Terra Minas&quot;, &quot;expected&quot;: 1, &quot;kind&quot;: &quot;primary&quot;},
+   44      &quot;TERRAMAR&quot;: {&quot;name&quot;: &quot;Terramares&quot;, &quot;expected&quot;: 16, &quot;kind&quot;: &quot;primary&quot;},
+   45      &quot;URB&quot;:      {&quot;name&quot;: &quot;Urbano Total&quot;, &quot;expected&quot;: 103, &quot;kind&quot;: &quot;primary&quot;},
+   46      &quot;URB-FER&quot;:  {&quot;name&quot;: &quot;Ferrovias Urbanas&quot;, &quot;expected&quot;: 44, &quot;kind&quot;: &quot;subgroup&quot;},
+   47      &quot;URB-NUC&quot;:  {&quot;name&quot;: &quot;Núcleo Urbano&quot;, &quot;expected&quot;: 10, &quot;kind&quot;: &quot;subgroup&quot;},
+   48      &quot;URB-VIA&quot;:  {&quot;name&quot;: &quot;Ressuspensão urbana&quot;, &quot;expected&quot;: 49, &quot;kind&quot;: &quot;subgroup&quot;},
+   49      &quot;VALE_FAB&quot;: {&quot;name&quot;: &quot;Vale – Fábrica&quot;, &quot;expected&quot;: 144, &quot;kind&quot;: &quot;primary&quot;},
+   50      &quot;VALE_VIG&quot;: {&quot;name&quot;: &quot;Vale – Viga&quot;, &quot;expected&quot;: 117, &quot;kind&quot;: &quot;primary&quot;},
+   51      &quot;WGM&quot;:      {&quot;name&quot;: &quot;WG Mineração&quot;, &quot;expected&quot;: 8, &quot;kind&quot;: &quot;primary&quot;},
+   52      &quot;SCOF&quot;:     {&quot;name&quot;: &quot;SCOF&quot;, &quot;expected&quot;: 13, &quot;kind&quot;: &quot;primary&quot;},
+   53  }
+   54  
+   55  ALIASES = {
+   56      &quot;VALESAMINADEFABRICA&quot;: &quot;VALE_FAB&quot;, &quot;VALESAMINADEVIGA&quot;: &quot;VALE_VIG&quot;,
+   57      &quot;CSNCDP&quot;: &quot;CSN-CDP&quot;, &quot;CSNCP&quot;: &quot;CSN-CDP&quot;, &quot;CASADEPEDRA&quot;: &quot;CSN-CDP&quot;,
+   58      &quot;CSNPIR&quot;: &quot;CSN-PIR&quot;, &quot;PIRESCSN&quot;: &quot;CSN-PIR&quot;, &quot;CSNPIRES&quot;: &quot;CSN-PIR&quot;,
+   59      &quot;CSNNAMISA&quot;: &quot;CSN-PIR&quot;, &quot;NAMISA&quot;: &quot;CSN-PIR&quot;, &quot;NAMISAPIRES&quot;: &quot;CSN-PIR&quot;,
+   60      &quot;CONCRELAGOS&quot;: &quot;COC&quot;, &quot;COOPERauto&quot;: &quot;COOPERA&quot;, &quot;COOPERAUTO&quot;: &quot;COOPERA&quot;,
+   61      &quot;LLTRANS&quot;: &quot;LL-TRANS&quot;, &quot;LMMIN&quot;: &quot;LM-MIN&quot;, &quot;MONTMIN&quot;: &quot;MONT-MIN&quot;,
+   62      &quot;MONTEMINAS&quot;: &quot;MONT-MIN&quot;, &quot;MONTEMINASMINERIOS&quot;: &quot;MONT-MIN&quot;, &quot;MOM&quot;: &quot;MONT-MIN&quot;,
+   63      &quot;TERRAMI&quot;: &quot;TERRA-MI&quot;, &quot;TERRAMINAS&quot;: &quot;TERRA-MI&quot;,
+   64      &quot;VALEFAB&quot;: &quot;VALE_FAB&quot;, &quot;VALEFABRICA&quot;: &quot;VALE_FAB&quot;, &quot;VALEVIG&quot;: &quot;VALE_VIG&quot;, &quot;VALEVIGA&quot;: &quot;VALE_VIG&quot;,
+   65      &quot;NOGD&quot;: &quot;NOGD&quot;, &quot;NOGDUAR&quot;: &quot;NOGD&quot;, &quot;NOGUEIRADUARTE&quot;: &quot;NOGD&quot;,
+   66      &quot;ECOMINING&quot;: &quot;ECOMIN&quot;, &quot;GERDAU&quot;: &quot;GERDAU&quot;, &quot;FERRO&quot;: &quot;FERRO&quot;,
+   67      &quot;SILVANO&quot;: &quot;SILVANO&quot;, &quot;RODEIRO&quot;: &quot;RODEIRO&quot;, &quot;SAPPORO&quot;: &quot;SAPPORO&quot;,
+   68      &quot;TERRAMARES&quot;: &quot;TERRAMAR&quot;, &quot;WGM&quot;: &quot;WGM&quot;, &quot;WGMINERACAO&quot;: &quot;WGM&quot;, &quot;SCOF&quot;: &quot;SCOF&quot;,
+   69  }
+   70  
+   71  # Norm token
+   72  def norm_token(value):
+   73      text = unicodedata.normalize(&quot;NFKD&quot;, str(value or &quot;&quot;))
+   74      text = &quot;&quot;.join(ch for ch in text if not unicodedata.combining(ch))
+   75      return re.sub(r&quot;[^A-Z0-9]+&quot;, &quot;&quot;, text.upper())
+   76  
+   77  # Canonical group
+   78  def canonical_group(value):
+   79      t = norm_token(value)
+   80      if not t:
+   81          return None
+   82      for key in GROUPS:
+   83          if norm_token(key) == t:
+   84              return key
+   85      for alias, key in ALIASES.items():
+   86          if norm_token(alias) in t:
+   87              return key
+   88      for key in GROUPS:
+   89          if key in {&quot;AEX&quot;, &quot;URB-FER&quot;, &quot;URB-NUC&quot;, &quot;URB-VIA&quot;}:
+   90              continue
+   91          kt = norm_token(key)
+   92          if kt and kt in t:
+   93              return key
+   94      if t.startswith(&quot;AEX&quot;):
+   95          return &quot;AEX&quot;
+   96      return None
+   97  
+   98  # Urban subgroup from source
+   99  def urban_subgroup_from_source(source_id):
+  100      raw = str(source_id or &quot;&quot;).upper().replace(&quot;-&quot;, &quot;_&quot;)
+  101      token = norm_token(source_id)
+  102  
+  103      if raw.startswith(&quot;VIA_P&quot;) or token.startswith(&quot;VIAP&quot;):
+  104          return &quot;URB-VIA&quot;
+  105      if token.startswith(&quot;URBU&quot;):
+  106          return &quot;URB-NUC&quot;
+  107      if token.startswith(&quot;FER&quot;):
+  108          return &quot;URB-FER&quot;
+  109      return None
+  110  
+  111  # Is exposed area
+  112  def is_exposed_area(source_id):
+  113      return norm_token(source_id).startswith(&quot;AEX&quot;)
+  114  
+  115  # Infer primary group from source
+  116  def infer_primary_group_from_source(source_id, desc=None):
+  117  
+  118      suffixes={&#x27;CCA&#x27;:&#x27;CSN-CDP&#x27;,&#x27;CPI&#x27;:&#x27;CSN-PIR&#x27;,&#x27;GER&#x27;:&#x27;GERDAU&#x27;,&#x27;VMF&#x27;:&#x27;VALE_FAB&#x27;,
+  119                &#x27;VMV&#x27;:&#x27;VALE_VIG&#x27;,&#x27;FEP&#x27;:&#x27;FERRO&#x27;,&#x27;SAP&#x27;:&#x27;SAPPORO&#x27;,&#x27;NOD&#x27;:&#x27;NOGD&#x27;,
+  120                &#x27;TMA&#x27;:&#x27;TERRAMAR&#x27;,&#x27;ECO&#x27;:&#x27;ECOMIN&#x27;,&#x27;LLM&#x27;:&#x27;LM-MIN&#x27;,&#x27;CPA&#x27;:&#x27;COOPERA&#x27;,
+  121                &#x27;SSR&#x27;:&#x27;SILVANO&#x27;,&#x27;LLT&#x27;:&#x27;LL-TRANS&#x27;,&#x27;ROD&#x27;:&#x27;RODEIRO&#x27;,&#x27;TMI&#x27;:&#x27;TERRA-MI&#x27;,
+  122                &#x27;BVC&#x27;:&#x27;BVC&#x27;,&#x27;CDA&#x27;:&#x27;CDA&#x27;,&#x27;COC&#x27;:&#x27;COC&#x27;,&#x27;LGA&#x27;:&#x27;LGA&#x27;,&#x27;MOM&#x27;:&#x27;MONT-MIN&#x27;}
+  123      token=norm_token(source_id)
+  124      if re.fullmatch(r&#x27;WG[0-9]+&#x27;,token):
+  125          return &#x27;WGM&#x27;
+  126      for suffix,group in suffixes.items():
+  127          if re.match(r&#x27;^[A-Z]+[0-9]+[A-Z]*&#x27;+suffix+r&#x27;$&#x27;,token):
+  128              return group
+  129      subgroup = urban_subgroup_from_source(source_id)
+  130      if subgroup:
+  131          return &quot;URB&quot;
+  132  
+  133      by_id=canonical_group(source_id)
+  134      if by_id and by_id not in {&#x27;AEX&#x27;,&#x27;URB-FER&#x27;,&#x27;URB-NUC&#x27;,&#x27;URB-VIA&#x27;}:
+  135          return by_id
+  136  
+  137      text = f&quot;{source_id or &#x27;&#x27;} {desc or &#x27;&#x27;}&quot;
+  138      g = canonical_group(text)
+  139      if g in {&quot;AEX&quot;, &quot;URB-FER&quot;, &quot;URB-NUC&quot;, &quot;URB-VIA&quot;}:
+  140          return None
+  141      return g
+  142  
+  143  POST_GROUP_NAMES = {
+  144      &quot;ALL&quot;: &quot;Todas as fontes&quot;,
+  145      &quot;GERDAU&quot;: &quot;Gerdau Ouro Branco&quot;,
+  146      &quot;CSN-CDP&quot;: &quot;CSN – Casa de Pedra&quot;,
+  147      &quot;CSN-PIR&quot;: &quot;CSN – Namisa/Pires&quot;,
+  148      &quot;FERRO&quot;: &quot;Ferro+&quot;,
+  149      &quot;LGA&quot;: &quot;LGA Mineração&quot;,
+  150      &quot;MINING&quot;: &quot;Mineração - grupo agregado&quot;,
+  151      &quot;NOGD&quot;: &quot;Nogueira Duarte&quot;,
+  152      &quot;URB&quot;: &quot;Fontes urbanas&quot;,
+  153      &quot;VALE_FAB&quot;: &quot;Vale – Fábrica&quot;,
+  154      &quot;VALE_VIG&quot;: &quot;Vale – Viga&quot;,
+  155  }
+  156  POST_GROUP_NAMES.update({key: value[&#x27;name&#x27;] for key, value in GROUPS.items()})
+  157  
+  158  POST_FILE_ALIASES = {
+  159      &quot;GALL&quot;: &quot;ALL&quot;,
+  160      &quot;ALL&quot;: &quot;ALL&quot;,
+  161      &quot;GCSNCDP&quot;: &quot;CSN-CDP&quot;,
+  162      &quot;GCSN_CDP&quot;: &quot;CSN-CDP&quot;,
+  163      &quot;GCSNPIR&quot;: &quot;CSN-PIR&quot;,
+  164      &quot;GCSN_PIR&quot;: &quot;CSN-PIR&quot;,
+  165      &quot;GFERRO&quot;: &quot;FERRO&quot;,
+  166      &quot;GGERDAU&quot;: &quot;GERDAU&quot;,
+  167      &quot;GLGA&quot;: &quot;LGA&quot;,
+  168      &quot;GMINING&quot;: &quot;MINING&quot;,
+  169      &quot;GNOGDUAR&quot;: &quot;NOGD&quot;,
+  170      &quot;GNOG_DUAR&quot;: &quot;NOGD&quot;,
+  171      &quot;GURB&quot;: &quot;URB&quot;,
+  172      &quot;GVALEFAB&quot;: &quot;VALE_FAB&quot;,
+  173      &quot;GVALE_FAB&quot;: &quot;VALE_FAB&quot;,
+  174      &quot;GVALEVIG&quot;: &quot;VALE_VIG&quot;,
+  175      &quot;GVALE_VIG&quot;: &quot;VALE_VIG&quot;,
+  176  }
+  177  
+  178  # Canonical post group
+  179  def canonical_post_group(value):
+  180      raw = str(value or &quot;&quot;).upper().strip()
+  181      token = norm_token(raw)
+  182      if not token:
+  183          return None
+  184  
+  185      stripped = re.sub(r&quot;^[0-9]+&quot;, &quot;&quot;, token)
+  186      for key in [&#x27;ALL&#x27;, *GROUPS]:
+  187          if stripped in {norm_token(key), &#x27;G&#x27;+norm_token(key)}:
+  188              return key
+  189      for alias, group in POST_FILE_ALIASES.items():
+  190          if norm_token(alias) == token:
+  191              return group
+  192  
+  193      token2 = re.sub(r&quot;^[0-9]+&quot;, &quot;&quot;, token)
+  194      for alias, group in POST_FILE_ALIASES.items():
+  195          if norm_token(alias) == token2 or norm_token(alias) in token2:
+  196              return group
+  197      g = canonical_group(value)
+  198      return g</code></pre></article></html>

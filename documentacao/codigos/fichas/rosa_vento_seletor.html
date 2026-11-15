@@ -1,0 +1,120 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/rosa_vento_seletor.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/rosa_vento_seletor.py</h2>
+<p>Rosa meteorológica da entrada WRF/AERMET com seleção angular independente.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\rosa_vento_seletor.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>functools</td><td>Composição, cache e auxiliares de funções.</td></tr><tr><td>matplotlib.patches</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/calendario_vento_horario.csv — chamada pd.read_csv, linha 37.</li>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>c: direction_idx.</li>
+<li>ax.spines: polar.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>histogram()</td><td>35-44</td><td>lê dados Retorno: (h, 100 * h / len(v)).</td></tr><tr><td>draw(ax, selected=None, fontsize=5.5)</td><td>47-73</td><td>Chamadas efetivas: histogram, ax.set_theta_zero_location, ax.set_theta_direction, ax.set_facecolor, ax.set_ylim, range, ax.set_xticks, enumerate Retorno: freq.</td></tr><tr><td>add_to_figure(fig, selected, top=0.1)</td><td>76-83</td><td>Chamadas efetivas: fig.add_axes, ax.set_gid, draw, ax.set_yticklabels, fig.legend, legend.set_gid, Patch Retorno: ax.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/rosa_vento_seletor.py, linhas 42-48.</p>
+<pre><code>    h=np.zeros((12,6),dtype=int);np.add.at(h,(directions,speed),1)
+    assert h.sum()==len(v)
+    return h,100*h/len(v)
+
+# Draw
+def draw(ax,selected=None,fontsize=5.5):
+    _,freq=histogram();ax.set_theta_zero_location(&#x27;N&#x27;);ax.set_theta_direction(-1)</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/rosa_vento_seletor.py, linhas 49-55.</p>
+<pre><code>    selected_idx=DIRS.index(selected) if selected in DIRS else None
+    ax.set_facecolor(&#x27;white&#x27;);ax.set_ylim(0,np.ceil(freq.sum(axis=1).max()/5)*5)
+    for i in range(12):
+        lo=i*30-15;hi=i*30+15
+        cuts=[lo,hi]
+        if selected_idx is not None:
+            for offset in [-360,0,360]:</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/calendario_vento_horario.csv | pd.read_csv.
+    5  # Campos/chaves em c: direction_idx.
+    6  # Campos/chaves em ax.spines: polar.
+    7  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    8  # CÓDIGO DO PROCESSAMENTO
+    9  
+   10  &quot;&quot;&quot;Rosa meteorológica da entrada WRF/AERMET com seleção angular independente.&quot;&quot;&quot;
+   11  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   12  import sys as _cp_sys
+   13  from pathlib import Path as _cp_Path
+   14  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   15  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   16      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   17      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   18          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   19          break
+   20  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   21  # FIM DOS CAMINHOS PORTÁTEIS
+   22  
+   23  from functools import lru_cache
+   24  import numpy as np
+   25  import pandas as pd
+   26  from matplotlib.patches import Patch
+   27  import config
+   28  
+   29  DIRS=[&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;]
+   30  COLORS=[&#x27;#BBDDE5&#x27;,&#x27;#77B8C3&#x27;,&#x27;#318EAA&#x27;,&#x27;#075A7A&#x27;,&#x27;#D59838&#x27;,&#x27;#B14739&#x27;]
+   31  BREAKS=[0,.5,1,2,3,5,10]
+   32  
+   33  @lru_cache(maxsize=1)
+   34  # Histogram
+   35  def histogram():
+   36      p=config.BASE/&#x27;output/16_revisao_pos_banca/vento/calendario_vento_horario.csv&#x27;
+   37      c=pd.read_csv(p);v=c[c.direction_idx.ge(0)]
+   38      assert len(v)==24892 and v.wind_speed.between(0,10).all()
+   39  
+   40      directions=((v.wind_from_deg.to_numpy()+15)%360//30).astype(int)
+   41      speed=np.searchsorted(BREAKS[1:],v.wind_speed.to_numpy(),side=&#x27;left&#x27;)
+   42      h=np.zeros((12,6),dtype=int);np.add.at(h,(directions,speed),1)
+   43      assert h.sum()==len(v)
+   44      return h,100*h/len(v)
+   45  
+   46  # Draw
+   47  def draw(ax,selected=None,fontsize=5.5):
+   48      _,freq=histogram();ax.set_theta_zero_location(&#x27;N&#x27;);ax.set_theta_direction(-1)
+   49      selected_idx=DIRS.index(selected) if selected in DIRS else None
+   50      ax.set_facecolor(&#x27;white&#x27;);ax.set_ylim(0,np.ceil(freq.sum(axis=1).max()/5)*5)
+   51      for i in range(12):
+   52          lo=i*30-15;hi=i*30+15
+   53          cuts=[lo,hi]
+   54          if selected_idx is not None:
+   55              for offset in [-360,0,360]:
+   56                  cuts.extend(x for x in [selected_idx*45-22.5+offset,selected_idx*45+22.5+offset] if lo&lt;x&lt;hi)
+   57          cuts=sorted(set(cuts))
+   58          for a,b in zip(cuts[:-1],cuts[1:]):
+   59              active=selected_idx is None or abs((((a+b)/2-selected_idx*45+180)%360)-180)&lt;=22.5
+   60              bottom=0.
+   61              for j,height in enumerate(freq[i]):
+   62                  ax.bar(np.deg2rad((a+b)/2),height,width=np.deg2rad(b-a)*.98,bottom=bottom,color=COLORS[j] if active else &#x27;#dce0df&#x27;,edgecolor=&#x27;white&#x27;,linewidth=.18,zorder=3)
+   63                  bottom+=height
+   64      ax.set_xticks(np.arange(8)*np.pi/4,DIRS,fontsize=fontsize)
+   65      for i,t in enumerate(ax.get_xticklabels()):
+   66          t.set_color(&#x27;#075A7A&#x27; if selected_idx is None or selected_idx==i else &#x27;#a0a9a8&#x27;)
+   67          t.set_fontweight(&#x27;bold&#x27; if selected_idx==i else &#x27;normal&#x27;)
+   68      maximum=ax.get_ylim()[1];ticks=np.arange(5,maximum,5)
+   69      ax.set_yticks(ticks,[f&#x27;{x:g}%&#x27; for x in ticks],fontsize=max(3.5,fontsize-1.4),color=&#x27;#899594&#x27;)
+   70      ax.set_rlabel_position(275);ax.grid(color=&#x27;#d6dedc&#x27;,linewidth=.3)
+   71      ax.spines[&#x27;polar&#x27;].set_color(&#x27;#c6cecb&#x27;);ax.spines[&#x27;polar&#x27;].set_linewidth(.35)
+   72      ax.tick_params(axis=&#x27;x&#x27;,pad=0)
+   73      return freq
+   74  
+   75  # Add to figure
+   76  def add_to_figure(fig,selected,top=.10):
+   77      ax=fig.add_axes([.405,top-.13,.11,.13],projection=&#x27;polar&#x27;,label=&#x27;rosa_selecao_&#x27;+selected)
+   78      ax.set_gid(&#x27;rosa_vento_selecao_&#x27;+selected)
+   79      draw(ax,selected,fontsize=4.8);ax.set_yticklabels([])
+   80      labels=[&#x27;0–0,5&#x27;,&#x27;0,5–1&#x27;,&#x27;1–2&#x27;,&#x27;2–3&#x27;,&#x27;3–5&#x27;,&#x27;5–10&#x27;]
+   81      legend=fig.legend([Patch(facecolor=v) for v in COLORS],labels,title=&#x27;Velocidade (m/s)&#x27;,ncol=2,loc=&#x27;center left&#x27;,bbox_to_anchor=(.55,top-.065),frameon=False,fontsize=4.5,title_fontsize=5,handlelength=1.2,columnspacing=.9,labelspacing=.4)
+   82      legend.set_gid(&#x27;legenda_velocidade_rosa&#x27;)
+   83      return ax</code></pre></article></html>

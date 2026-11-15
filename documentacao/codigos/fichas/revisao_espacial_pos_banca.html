@@ -1,0 +1,384 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/revisao_espacial_pos_banca.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/revisao_espacial_pos_banca.py</h2>
+<p>É a análise espacial inicial pós-banca e reúne funções reutilizadas. Seu agrupamento original utiliza quatro indicadores; não deve ser confundido com a matriz conjunta de seis indicadores do pôster atual.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\revisao_espacial_pos_banca.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>math</td><td>Funções matemáticas escalares.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>scipy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.cluster.hierarchy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.cluster.vq</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.sparse.csgraph</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.spatial</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>shapely</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg — chamada gpd.read_file, linha 159.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/zoneamento_nova_modelagem.gpkg — chamada gpd.read_file, linha 204.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/{pol}_indicadores_trienais_receptores.csv — chamada pd.read_csv, linha 208.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/{pol}_indicadores_trienais_receptores.csv — chamada path.read_bytes, linha 209.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/PM10_indicadores_trienais_receptores.csv — chamada pd.read_csv, linha 217.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/{pol}_fechamento_receptores.csv — chamada pd.read_csv, linha 237.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/{pol}_receptores_anuais.csv — chamada pd.read_csv, linha 248.</li>
+<p><strong>Saídas.</strong></p>
+<li>{path} — chamada path.write_text, linha 82.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{pol}_fontes_celulas.csv — chamada .to_csv, linha 177.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{pol}_lisa_receptores.csv — chamada .to_csv, linha 224.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{pol}_lisa_bivariado.csv — chamada .to_csv, linha 226.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{name}.gpkg — chamada frame.to_file, linha 300.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{name}.csv — chamada .to_csv, linha 300.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv — chamada links.to_csv, linha 301.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/correlogramas.csv — chamada .to_csv, linha 301.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/sensibilidade_espacial.csv — chamada .to_csv, linha 301.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/comparacao_agrupamentos.csv — chamada .to_csv, linha 301.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/limiares_associativos_validacao_espacial.csv — chamada .to_csv, linha 301.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/contribuicoes_regioes.csv — chamada .to_csv, linha 301.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>v: kind.</li>
+<li>cells: geometry, receptor_id.</li>
+<li>d: ANNUAL_MODEL, P98_MODEL, X, Y.</li>
+<li>points: PM25_annual, X, Y, receptor_id.</li>
+<li>stats: pols.</li>
+<li>r: silhouette.</li>
+<li>best: k, method.</li>
+<li>a: year.</li>
+<li>z: geometry, zone_index.</li>
+<li>z.loc: zone_index.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>points: cluster_profile, receptor_id.</li>
+<li>stats: cell_area_conservation_relative_error, clustering_selection, geometric_fragments, k8_distance_m, zone_coverage, zone_quintile_area_sums.</li>
+<li>inter: area_m2, support_method, zone_area_fraction.</li>
+<li>z: fragmento_menor_1m2.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>save_json(path, data)</td><td>81-82</td><td>grava produtos</td></tr><tr><td>bh(p)</td><td>85-87</td><td>Chamadas efetivas: np.asarray, np.argsort, np.empty_like, np.minimum, np.minimum.accumulate, np.arange, len Retorno: out.</td></tr><tr><td>weights(xy, k)</td><td>90-93</td><td>Chamadas efetivas: len, .query, sparse.csr_matrix, cKDTree, min, np.full, np.repeat, ids.ravel Retorno: (w, ids, dist).</td></tr><tr><td>moran(z, w, permutations=999, seed=SEED)</td><td>96-103</td><td>Chamadas efetivas: len, float, np.random.default_rng, range, np.asarray, np.mean, w.sum, rng.permutation Retorno: {&#x27;I&#x27;: observed, &#x27;expected&#x27;: expected, &#x27;p_two_sided&#x27;: p, &#x27;permutations&#x27;: permutations}.</td></tr><tr><td>local_moran(x, ids, y=None, permutations=999, seed=SEED)</td><td>106-121</td><td>Chamadas efetivas: np.asarray, len, .mean, np.random.default_rng, np.empty, range, bh, np.where Retorno: pd.DataFrame({&#x27;local_I&#x27;: stat, &#x27;p_conditional&#x27;: p, &#x27;q_FDR&#x27;: q, &#x27;z&#x27;: z, &#x27;spatial_lag&#x27;: lag, &#x27;quadrant&#x27;: quad, &#x27;cluster&#x27;: np.where(q &lt;= 0.05, quad, &#x27;Não significativo&#x27;)}).</td></tr><tr><td>silhouette(x, labels)</td><td>124-131</td><td>Chamadas efetivas: distance.cdist, np.unique, enumerate, float, same.sum, min, s.append, np.mean Retorno: float(np.mean(s)).</td></tr><tr><td>ari(a, b)</td><td>134-138</td><td>Chamadas efetivas: np.zeros, np.add.at, len, c, np.unique, np.sum, float, a.max Retorno: float((s - expected) / (mx - expected)) if mx &gt; expected else 1.0.</td></tr><tr><td>relative_quartile(v)</td><td>141-142</td><td>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial. Retorno: (np.searchsorted(q, np.asarray(v), side=&#x27;left&#x27;) + 1, q).</td></tr><tr><td>relative_quintile(v)</td><td>145-147</td><td>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial. Retorno: (np.searchsorted(q, np.asarray(v), side=&#x27;left&#x27;) + 1, q).</td></tr><tr><td>cells_for(points, municipality)</td><td>150-155</td><td>Chamadas efetivas: voronoi_polygons, gpd.GeoDataFrame, make_valid, MultiPoint, .all, points.geometry.to_list, points.receptor_id.to_numpy, len Retorno: cells.</td></tr><tr><td>emission_allocation(cells, municipality, pol)</td><td>158-178</td><td>lê dados; grava produtos Retorno: (masses, {&#x27;total_source_mass_tpy&#x27;: float(sources.massa.sum()), &#x27;municipal_mass_expected_tpy&#x27;: expected, &#x27;allocated_mass_tpy&#x27;: float(masses.sum()), &#x27;absolute_error_tpy&#x27;: err, &#x27;sources_missing_geometry_.</td></tr><tr><td>stump(x, y, min_fraction=0.1)</td><td>181-185</td><td>Chamadas efetivas: np.argsort, len, np.cumsum, np.arange, max, np.argmin, int, .any Retorno: (float((sx[cut] + sx[cut + 1]) / 2), float(sy[:cut + 1].mean()), float(sy[cut + 1:].mean())), None.</td></tr><tr><td>thresholds(x, y, xy, pol, unit)</td><td>188-199</td><td>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original. Retorno: out.</td></tr><tr><td>main()</td><td>202-303</td><td>lê dados; grava produtos; Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.; Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.; Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/revisao_espacial_pos_banca.py, linhas 124-130.</p>
+<pre><code>def silhouette(x,labels):
+ d=distance.cdist(x,x);classes=np.unique(labels);s=[]
+ for i,label in enumerate(labels):
+  same=labels==label;n=same.sum()
+  if n&lt;=1:s.append(0.);continue
+  a=d[i,same].sum()/(n-1);b=min(d[i,labels==c].mean() for c in classes if c!=label)
+  s.append((b-a)/max(a,b) if max(a,b)&gt;0 else 0.)</code></pre>
+<p>Matriz de distâncias entre observações. É usada no agrupamento, na silhouette ou na comparação entre centroides.</p>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p>Trecho de codigo/revisao_espacial_pos_banca.py, linhas 141-147.</p>
+<pre><code>def relative_quartile(v):
+ q=np.quantile(v,[.25,.5,.75]);return np.searchsorted(q,np.asarray(v),side=&#x27;left&#x27;)+1,q
+
+# Relative quintile
+def relative_quintile(v):
+ &quot;&quot;&quot;Cinco faixas P20/P40/P60/P80; empates permanecem juntos.&quot;&quot;&quot;
+ q=np.quantile(v,[.2,.4,.6,.8]);return np.searchsorted(q,np.asarray(v),side=&#x27;left&#x27;)+1,q</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>std: Desvio-padrão. Na padronização z, coloca colunas em escala comparável; conferir ddof no trecho.</li>
+<li>cdist: Matriz de distâncias entre observações. É usada no agrupamento, na silhouette ou na comparação entre centroides.</li>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>log1p: Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</li>
+<li>sqrt: Raiz quadrada. No ajuste ponderado do k-means, multiplicar a coluna por √peso faz o peso entrar uma única vez na distância ao quadrado.</li>
+<li>average: Média com ou sem pesos. As unidades do resultado são as da variável antes de eventual normalização.</li>
+<li>linkage: Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.</li>
+<li>fcluster: Transforma a árvore hierárquica em rótulos de grupos segundo o critério fornecido.</li>
+<li>kmeans2: Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg | gpd.read_file.
+    5  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/zoneamento_nova_modelagem.gpkg | gpd.read_file.
+    6  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/{pol}_indicadores_trienais_receptores.csv | pd.read_csv.
+    7  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/{pol}_indicadores_trienais_receptores.csv | path.read_bytes.
+    8  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/PM10_indicadores_trienais_receptores.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/{pol}_fechamento_receptores.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/{pol}_receptores_anuais.csv | pd.read_csv.
+   11  # Campos/chaves em v: kind.
+   12  # Campos/chaves em cells: geometry, receptor_id.
+   13  # Campos/chaves em d: ANNUAL_MODEL, P98_MODEL, X, Y.
+   14  # Campos/chaves em points: PM25_annual, X, Y, receptor_id.
+   15  # Campos/chaves em stats: pols.
+   16  # Campos/chaves em r: silhouette.
+   17  # Campos/chaves em best: k, method.
+   18  # Campos/chaves em a: year.
+   19  # Campos/chaves em z: geometry, zone_index.
+   20  # Campos/chaves em z.loc: zone_index.
+   21  # Saída: {path} | path.write_text.
+   22  # Saída: E:/projeto/output/16_revisao_pos_banca/{pol}_fontes_celulas.csv | .to_csv.
+   23  # Saída: E:/projeto/output/16_revisao_pos_banca/{pol}_lisa_receptores.csv | .to_csv.
+   24  # Saída: E:/projeto/output/16_revisao_pos_banca/{pol}_lisa_bivariado.csv | .to_csv.
+   25  # Saída: E:/projeto/output/16_revisao_pos_banca/{name}.gpkg | frame.to_file.
+   26  # Saída: E:/projeto/output/16_revisao_pos_banca/{name}.csv | .to_csv.
+   27  # Saída: E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv | links.to_csv.
+   28  # Saída: E:/projeto/output/16_revisao_pos_banca/correlogramas.csv | .to_csv.
+   29  # Saída: E:/projeto/output/16_revisao_pos_banca/sensibilidade_espacial.csv | .to_csv.
+   30  # Saída: E:/projeto/output/16_revisao_pos_banca/comparacao_agrupamentos.csv | .to_csv.
+   31  # Saída: E:/projeto/output/16_revisao_pos_banca/limiares_associativos_validacao_espacial.csv | .to_csv.
+   32  # Saída: E:/projeto/output/16_revisao_pos_banca/contribuicoes_regioes.csv | .to_csv.
+   33  # Campos/chaves gerados em points: cluster_profile, receptor_id.
+   34  # Campos/chaves gerados em stats: cell_area_conservation_relative_error, clustering_selection, geometric_fragments, k8_distance_m, zone_coverage, zone_quintile_area_sums.
+   35  # Campos/chaves gerados em inter: area_m2, support_method, zone_area_fraction.
+   36  # Campos/chaves gerados em z: fragmento_menor_1m2.
+   37  # receptor_id: identificador do receptor.
+   38  # X: coordenada leste em metros.
+   39  # Y: coordenada norte em metros.
+   40  # Novas variáveis: config/analise_extensivel.json; definir origem, campo, agregação, transformação e peso.
+   41  # CÓDIGO DO PROCESSAMENTO
+   42  
+   43  &quot;&quot;&quot;Análise exploratória pós-banca, independente dos produtos de seminários.
+   44  
+   45  Saídas não substituem o cenário AERMOD nem a classificação normativa.
+   46  Moran local usa permutação condicional bilateral e FDR por campo analisado.
+   47  &quot;&quot;&quot;
+   48  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   49  import sys as _cp_sys
+   50  from pathlib import Path as _cp_Path
+   51  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   52  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   53      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   54      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   55          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   56          break
+   57  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   58  # FIM DOS CAMINHOS PORTÁTEIS
+   59  
+   60  from pathlib import Path
+   61  import json,hashlib,math,sys
+   62  import numpy as np
+   63  import pandas as pd
+   64  import geopandas as gpd
+   65  from scipy import sparse
+   66  from scipy.spatial import cKDTree,distance
+   67  from scipy.cluster.hierarchy import linkage,fcluster
+   68  from scipy.cluster.vq import kmeans2
+   69  from scipy.sparse.csgraph import connected_components
+   70  from shapely import MultiPoint,voronoi_polygons,make_valid
+   71  from shapely.geometry import Point
+   72  import config
+   73  from groups import GROUPS
+   74  
+   75  BASE=config.BASE;SRC=BASE/&#x27;output/11_integracao/nova_modelagem&#x27;
+   76  OUT=BASE/&#x27;output/16_revisao_pos_banca&#x27;;SEED=20261105
+   77  PRIMARY=[k for k,v in GROUPS.items() if v[&#x27;kind&#x27;]==&#x27;primary&#x27;]
+   78  POLLS=[&#x27;PM10&#x27;,&#x27;PM25&#x27;]
+   79  
+   80  # Save json
+   81  def save_json(path,data):
+   82   path.write_text(json.dumps(data,ensure_ascii=False,indent=2,default=lambda v:v.item() if isinstance(v,np.generic) else str(v)),encoding=&#x27;utf8&#x27;)
+   83  
+   84  # Bh
+   85  def bh(p):
+   86   p=np.asarray(p,float);order=np.argsort(p);q=np.minimum.accumulate((p[order]*len(p)/np.arange(1,len(p)+1))[::-1])[::-1]
+   87   out=np.empty_like(q);out[order]=np.minimum(q,1);return out
+   88  
+   89  # Weights
+   90  def weights(xy,k):
+   91   n=len(xy);dist,ids=cKDTree(xy).query(xy,k=min(k+1,n));ids=ids[:,1:];dist=dist[:,1:]
+   92   w=sparse.csr_matrix((np.full(ids.size,1/ids.shape[1]),(np.repeat(np.arange(n),ids.shape[1]),ids.ravel())),shape=(n,n))
+   93   return w,ids,dist
+   94  
+   95  # Moran
+   96  def moran(z,w,permutations=999,seed=SEED):
+   97   z=np.asarray(z,float)-np.mean(z);n=len(z);den=z@z;scale=n/w.sum()
+   98   observed=float(scale*(z@(w@z))/den);rng=np.random.default_rng(seed);sim=[]
+   99   for _ in range(permutations):
+  100    q=rng.permutation(z);sim.append(float(scale*(q@(w@q))/den))
+  101   sim=np.asarray(sim);expected=-1/(n-1)
+  102   p=(1+np.count_nonzero(np.abs(sim-expected)&gt;=abs(observed-expected)))/(permutations+1)
+  103   return {&#x27;I&#x27;:observed,&#x27;expected&#x27;:expected,&#x27;p_two_sided&#x27;:p,&#x27;permutations&#x27;:permutations}
+  104  
+  105  # Local moran
+  106  def local_moran(x,ids,y=None,permutations=999,seed=SEED):
+  107   &quot;&quot;&quot;Igual peso nos k vizinhos. Bivariado: X_i versus média de Y_j.&quot;&quot;&quot;
+  108   x=np.asarray(x,float);z=(x-x.mean())/x.std(ddof=1);n=len(z);k=ids.shape[1]
+  109   zy=z if y is None else (np.asarray(y,float)-np.mean(y))/np.std(y,ddof=1)
+  110   lag=zy[ids].mean(axis=1);stat=z*lag;rng=np.random.default_rng(seed);p=np.empty(n)
+  111   for i in range(n):
+  112  
+  113    draws=rng.integers(0,n-1,size=(permutations,k))
+  114    bad=np.any(np.diff(np.sort(draws,axis=1),axis=1)==0,axis=1)
+  115    while bad.any():
+  116     draws[bad]=rng.integers(0,n-1,size=(int(bad.sum()),k));bad=np.any(np.diff(np.sort(draws,axis=1),axis=1)==0,axis=1)
+  117    draws+=draws&gt;=i;sim=z[i]*zy[draws].mean(axis=1)
+  118    expect=-z[i]*zy[i]/(n-1)
+  119    p[i]=(1+np.count_nonzero(np.abs(sim-expect)&gt;=abs(stat[i]-expect)))/(permutations+1)
+  120   q=bh(p);quad=np.where(z&gt;=0,np.where(lag&gt;=0,&#x27;Alto–alto&#x27;,&#x27;Alto–baixo&#x27;),np.where(lag&gt;=0,&#x27;Baixo–alto&#x27;,&#x27;Baixo–baixo&#x27;))
+  121   return pd.DataFrame({&#x27;local_I&#x27;:stat,&#x27;p_conditional&#x27;:p,&#x27;q_FDR&#x27;:q,&#x27;z&#x27;:z,&#x27;spatial_lag&#x27;:lag,&#x27;quadrant&#x27;:quad,&#x27;cluster&#x27;:np.where(q&lt;=.05,quad,&#x27;Não significativo&#x27;)})
+  122  
+  123  # Silhouette
+  124  def silhouette(x,labels):
+  125   d=distance.cdist(x,x);classes=np.unique(labels);s=[]
+  126   for i,label in enumerate(labels):
+  127    same=labels==label;n=same.sum()
+  128    if n&lt;=1:s.append(0.);continue
+  129    a=d[i,same].sum()/(n-1);b=min(d[i,labels==c].mean() for c in classes if c!=label)
+  130    s.append((b-a)/max(a,b) if max(a,b)&gt;0 else 0.)
+  131   return float(np.mean(s))
+  132  
+  133  # Ari
+  134  def ari(a,b):
+  135   a=np.unique(a,return_inverse=True)[1];b=np.unique(b,return_inverse=True)[1];t=np.zeros((a.max()+1,b.max()+1));np.add.at(t,(a,b),1)
+  136   c=lambda v:np.sum(v*(v-1)/2)
+  137   n=len(a);total=n*(n-1)/2;s=c(t);expected=c(t.sum(0))*c(t.sum(1))/total;mx=(c(t.sum(0))+c(t.sum(1)))/2
+  138   return float((s-expected)/(mx-expected)) if mx&gt;expected else 1.
+  139  
+  140  # Relative quartile
+  141  def relative_quartile(v):
+  142   q=np.quantile(v,[.25,.5,.75]);return np.searchsorted(q,np.asarray(v),side=&#x27;left&#x27;)+1,q
+  143  
+  144  # Relative quintile
+  145  def relative_quintile(v):
+  146   &quot;&quot;&quot;Cinco faixas P20/P40/P60/P80; empates permanecem juntos.&quot;&quot;&quot;
+  147   q=np.quantile(v,[.2,.4,.6,.8]);return np.searchsorted(q,np.asarray(v),side=&#x27;left&#x27;)+1,q
+  148  
+  149  # Cells for
+  150  def cells_for(points,municipality):
+  151   parts=voronoi_polygons(MultiPoint(points.geometry.to_list()),extend_to=municipality.envelope,ordered=True)
+  152   cells=gpd.GeoDataFrame({&#x27;receptor_id&#x27;:points.receptor_id.to_numpy()},geometry=[v.intersection(municipality) for v in parts.geoms],crs=config.CRS_PROJECT)
+  153   cells.geometry=make_valid(cells.geometry);assert len(cells)==len(points) and cells.area.gt(0).all()
+  154   assert abs(cells.area.sum()-municipality.area)/municipality.area&lt;1e-7
+  155   return cells
+  156  
+  157  # Emission allocation
+  158  def emission_allocation(cells,municipality,pol):
+  159   sources=gpd.read_file(BASE/f&#x27;output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg&#x27;).to_crs(cells.crs)
+  160   masses=np.zeros(len(cells));records=[];expected=0.;missing=0
+  161   for r in sources.itertuples():
+  162    geom=make_valid(r.geometry)
+  163    if geom.is_empty or not np.isfinite(r.massa):missing+=1;continue
+  164    mode=&#x27;area&#x27; if geom.area&gt;0 else &#x27;length&#x27; if geom.length&gt;0 else &#x27;point&#x27;
+  165    denominator=geom.area if mode==&#x27;area&#x27; else geom.length if mode==&#x27;length&#x27; else 1
+  166    inside=geom.intersection(municipality)
+  167    fraction=inside.area/denominator if mode==&#x27;area&#x27; else inside.length/denominator if mode==&#x27;length&#x27; else float(municipality.covers(geom))
+  168    expected+=r.massa*fraction
+  169    candidates=cells.sindex.query(geom,predicate=&#x27;intersects&#x27;)
+  170    if mode==&#x27;point&#x27; and len(candidates)&gt;1:
+  171     candidates=np.array([min(candidates,key=lambda j:(cells.geometry.iloc[j].representative_point().distance(geom),j))])
+  172    for j in candidates:
+  173     it=geom.intersection(cells.geometry.iloc[j]);f=it.area/denominator if mode==&#x27;area&#x27; else it.length/denominator if mode==&#x27;length&#x27; else 1.
+  174     if f&lt;=0:continue
+  175     mass=float(r.massa*f);masses[j]+=mass;records.append({&#x27;pollutant&#x27;:pol,&#x27;source_id&#x27;:r.source_id,&#x27;group_id&#x27;:r.group_id,&#x27;source_type&#x27;:r.source_type,&#x27;receptor_id&#x27;:int(cells.receptor_id.iloc[j]),&#x27;fraction&#x27;:f,&#x27;mass_tpy&#x27;:mass})
+  176   err=abs(masses.sum()-expected);assert err&lt;=max(.001,expected*1e-7),(pol,err,expected)
+  177   pd.DataFrame(records).to_csv(OUT/f&#x27;{pol}_fontes_celulas.csv&#x27;,index=False)
+  178   return masses,{&#x27;total_source_mass_tpy&#x27;:float(sources.massa.sum()),&#x27;municipal_mass_expected_tpy&#x27;:expected,&#x27;allocated_mass_tpy&#x27;:float(masses.sum()),&#x27;absolute_error_tpy&#x27;:err,&#x27;sources_missing_geometry_or_mass&#x27;:missing,&#x27;volume_geometry&#x27;:&#x27;Suporte geométrico do cadastro; não área física emissora comprovada.&#x27;}
+  179  
+  180  # Stump
+  181  def stump(x,y,min_fraction=.1):
+  182   order=np.argsort(x);sx=x[order];sy=y[order];n=len(x);a=np.cumsum(sy);b=np.cumsum(sy*sy);j=np.arange(1,n);minn=max(5,int(n*min_fraction))
+  183   score=(b[:-1]-a[:-1]**2/j)+(b[-1]-b[:-1]-(a[-1]-a[:-1])**2/(n-j));ok=(j&gt;=minn)&amp;(j&lt;=n-minn)&amp;(sx[:-1]&lt;sx[1:]);score[~ok]=np.inf
+  184   if not np.isfinite(score).any():return None
+  185   cut=np.argmin(score);return (float((sx[cut]+sx[cut+1])/2),float(sy[:cut+1].mean()),float(sy[cut+1:].mean()))
+  186  
+  187  # Thresholds
+  188  def thresholds(x,y,xy,pol,unit):
+  189   out=[];lx=np.log1p(x);ly=np.log1p(y);fit=stump(lx,ly)
+  190   for size in [2000,4000]:
+  191    blocks=np.floor((xy-xy.min(0))/size).astype(int);keys=[tuple(v) for v in blocks];unique=sorted(set(keys));rng=np.random.default_rng(SEED);rng.shuffle(unique);fold={b:i%5 for i,b in enumerate(unique)};folds=np.array([fold[k] for k in keys])
+  192    for k in range(5):
+  193     test=folds==k;train=~test
+  194     if min(test.sum(),train.sum())&lt;10:continue
+  195     f=stump(lx[train],ly[train]);
+  196     if f is None:continue
+  197     pred=np.where(lx[test]&lt;=f[0],f[1],f[2]);mse=np.mean((pred-ly[test])**2);null=np.mean((ly[train].mean()-ly[test])**2)
+  198     out.append({&#x27;pollutant&#x27;:pol,&#x27;emission_basis&#x27;:unit,&#x27;block_m&#x27;:size,&#x27;fold&#x27;:k,&#x27;threshold&#x27;:np.expm1(f[0]),&#x27;threshold_all_data&#x27;:np.expm1(fit[0]) if fit else np.nan,&#x27;skill_vs_mean&#x27;:1-mse/null if null&gt;0 else np.nan,&#x27;rmse_log1p&#x27;:np.sqrt(mse),&#x27;n_train&#x27;:int(train.sum()),&#x27;n_test&#x27;:int(test.sum()),&#x27;low_mean_conc&#x27;:np.expm1(f[1]),&#x27;high_mean_conc&#x27;:np.expm1(f[2])})
+  199   return out
+  200  
+  201  # Main
+  202  def main():
+  203   OUT.mkdir(parents=True,exist_ok=True)
+  204   z=gpd.read_file(SRC/&#x27;zoneamento_nova_modelagem.gpkg&#x27;).to_crs(config.CRS_PROJECT)
+  205   municipality=make_valid(z.geometry.union_all())
+  206   points=None;inputs=[]
+  207   for pol in POLLS:
+  208    path=SRC/f&#x27;{pol}_indicadores_trienais_receptores.csv&#x27;;d=pd.read_csv(path)
+  209    inputs.append({&#x27;path&#x27;:str(path),&#x27;sha256&#x27;:hashlib.sha256(path.read_bytes()).hexdigest(),&#x27;rows&#x27;:len(d)})
+  210    d=d[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;ANNUAL_MODEL&#x27;,&#x27;P98_MODEL&#x27;]].rename(columns={&#x27;ANNUAL_MODEL&#x27;:pol+&#x27;_annual&#x27;,&#x27;P98_MODEL&#x27;:pol+&#x27;_p98&#x27;})
+  211    points=d if points is None else points.merge(d,on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;)
+  212   points=gpd.GeoDataFrame(points,geometry=gpd.points_from_xy(points.X,points.Y),crs=z.crs)
+  213   points=points[points.geometry.map(municipality.covers)].sort_values([&#x27;X&#x27;,&#x27;Y&#x27;]).reset_index(drop=True)
+  214   assert np.isfinite(points.drop(columns=&#x27;geometry&#x27;).to_numpy()).all()
+  215   points[&#x27;receptor_id&#x27;]=np.arange(1,len(points)+1);xy=points[[&#x27;X&#x27;,&#x27;Y&#x27;]].to_numpy();n=len(points);cells=cells_for(points,municipality)
+  216   nearest=cKDTree(xy).query(xy,k=2)[0][:,1];print(&#x27;Receptores municipais&#x27;,n,&#x27;zonas&#x27;,len(z),flush=True)
+  217   stats={&#x27;inputs&#x27;:inputs,&#x27;receptors_municipal&#x27;:n,&#x27;receptors_total&#x27;:len(pd.read_csv(SRC/&#x27;PM10_indicadores_trienais_receptores.csv&#x27;)),&#x27;zones&#x27;:len(z),&#x27;municipality_km2&#x27;:municipality.area/1e6,&#x27;nearest_distance_m&#x27;:{&#x27;min&#x27;:float(nearest.min()),&#x27;median&#x27;:float(np.median(nearest)),&#x27;max&#x27;:float(nearest.max())},&#x27;spatial_support&#x27;:&#x27;Voronoi dos receptores existentes, recortado pela união do zoneamento. Não constitui nova simulação nem grade uniforme.&#x27;,&#x27;pols&#x27;:{}}
+  218   w,ids,wd=weights(xy,8);stats[&#x27;k8_distance_m&#x27;]={&#x27;median&#x27;:float(np.median(wd[:,-1])),&#x27;max&#x27;:float(wd[:,-1].max())}
+  219   sens=[];corr=[];threshold_rows=[];group_rows=[];annual={}
+  220   for pol in POLLS:
+  221    print(pol,&#x27;emissões e associação espacial&#x27;,flush=True)
+  222    v=points[pol+&#x27;_annual&#x27;].to_numpy();lv=np.log1p(v);q,cut=relative_quintile(v);points[pol+&#x27;_quintile&#x27;]=q
+  223    lisa=local_moran(lv,ids);points[pol+&#x27;_lisa&#x27;]=lisa.cluster.to_numpy();points[pol+&#x27;_qFDR&#x27;]=lisa.q_FDR.to_numpy()
+  224    lisa.assign(receptor_id=points.receptor_id).to_csv(OUT/f&#x27;{pol}_lisa_receptores.csv&#x27;,index=False)
+  225    mass,audit=emission_allocation(cells,municipality,pol);points[pol+&#x27;_mass_tpy&#x27;]=mass;points[pol+&#x27;_density_tpy_km2&#x27;]=mass/(cells.area.to_numpy()/1e6)
+  226    bivar=local_moran(lv,ids,np.log1p(points[pol+&#x27;_density_tpy_km2&#x27;]));points[pol+&#x27;_bivariate&#x27;]=bivar.cluster.to_numpy();bivar.assign(receptor_id=points.receptor_id).to_csv(OUT/f&#x27;{pol}_lisa_bivariado.csv&#x27;,index=False)
+  227    eq,ecut=relative_quintile(points[pol+&#x27;_density_tpy_km2&#x27;]);points[pol+&#x27;_emission_q&#x27;]=eq
+  228    points[pol+&#x27;_matrix&#x27;]=np.where(q==5,&#x27;Alta C&#x27;,&#x27;Demais C&#x27;)+&#x27; / &#x27;+np.where(eq==5,&#x27;Alta E&#x27;,&#x27;Demais E&#x27;)
+  229    for k in [4,12]:
+  230     _,ii,_=weights(xy,k);ss=local_moran(lv,ii,permutations=999,seed=SEED+k);a=set(np.where(lisa.cluster.eq(&#x27;Alto–alto&#x27;))[0]);b=set(np.where(ss.cluster.eq(&#x27;Alto–alto&#x27;))[0]);sens.append({&#x27;pollutant&#x27;:pol,&#x27;comparison&#x27;:f&#x27;LISA k8 vs k{k}&#x27;,&#x27;ARI&#x27;:ari(lisa.cluster,ss.cluster),&#x27;HH_jaccard&#x27;:len(a&amp;b)/len(a|b) if a|b else 1})
+  231    D=distance.cdist(xy,xy)
+  232    for upper in range(750,8250,750):
+  233     keep=(D&gt;upper-750)&amp;(D&lt;=upper);wc=sparse.csr_matrix(keep.astype(float));rs=np.asarray(wc.sum(1)).ravel();wc=sparse.diags(np.divide(1,rs,out=np.zeros_like(rs),where=rs&gt;0))@wc
+  234     if wc.sum()==0:continue
+  235     res=moran(lv,wc,199,seed=SEED+upper);corr.append({&#x27;pollutant&#x27;:pol,&#x27;min_distance_m&#x27;:upper-750,&#x27;max_distance_m&#x27;:upper,&#x27;directed_pairs&#x27;:int(keep.sum()),&#x27;isolates&#x27;:int((rs==0).sum()),**res})
+  236    for col,unit in [(pol+&#x27;_mass_tpy&#x27;,&#x27;t/ano na célula&#x27;),(pol+&#x27;_density_tpy_km2&#x27;,&#x27;t/ano/km² na célula&#x27;)]:threshold_rows.extend(thresholds(points[col].to_numpy(),v,xy,pol,unit))
+  237    g=pd.read_csv(SRC/f&#x27;{pol}_fechamento_receptores.csv&#x27;).groupby([&#x27;X&#x27;,&#x27;Y&#x27;])[PRIMARY+[&#x27;ALL&#x27;]].mean().reset_index()
+  238    g=points[[&#x27;receptor_id&#x27;,&#x27;X&#x27;,&#x27;Y&#x27;]].merge(g,on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;);assert len(g)==n
+  239    closure=float((g[PRIMARY].sum(axis=1)-g.ALL).abs().max());assert np.allclose(g[PRIMARY].sum(axis=1),g.ALL,rtol=2e-5,atol=1e-4)
+  240    for col in PRIMARY:points[pol+&#x27;_share_&#x27;+col]=100*g[col].to_numpy()/g.ALL.to_numpy()
+  241    points[pol+&#x27;_dominant&#x27;]=g[PRIMARY].idxmax(axis=1).map({k:GROUPS[k][&#x27;name&#x27;] for k in PRIMARY}).to_numpy()
+  242    crit=lisa.cluster.eq(&#x27;Alto–alto&#x27;).to_numpy();areas=cells.area.to_numpy()
+  243    for mask,name in [(crit,&#x27;Alto–alto FDR&#x27;),(q==5,&#x27;Quintil 5&#x27;),(np.ones(n,bool),&#x27;Município&#x27;)]:
+  244     for group in PRIMARY:
+  245      weighted=float(np.average(g[group][mask],weights=areas[mask])) if mask.any() else np.nan
+  246      denom=float(np.average(g.ALL[mask],weights=areas[mask])) if mask.any() else np.nan
+  247      group_rows.append({&#x27;pollutant&#x27;:pol,&#x27;region&#x27;:name,&#x27;group_id&#x27;:group,&#x27;group_name&#x27;:GROUPS[group][&#x27;name&#x27;],&#x27;annual_area_weighted&#x27;:weighted,&#x27;share_pct&#x27;:100*weighted/denom if denom else np.nan,&#x27;n_receptors&#x27;:int(mask.sum())})
+  248    a=pd.read_csv(SRC/f&#x27;{pol}_receptores_anuais.csv&#x27;);annual[pol]=a
+  249    stats[&#x27;pols&#x27;][pol]={&#x27;annual_quintiles_ug_m3&#x27;:cut.tolist(),&#x27;emission_density_quintiles&#x27;:ecut.tolist(),&#x27;moran_log_annual&#x27;:moran(lv,w),&#x27;LISA_FDR_counts&#x27;:lisa.cluster.value_counts().to_dict(),&#x27;bivariate_FDR_counts&#x27;:bivar.cluster.value_counts().to_dict(),&#x27;mass_allocation&#x27;:audit,&#x27;source_group_closure_max_abs&#x27;:closure,&#x27;annual_min&#x27;:float(v.min()),&#x27;annual_max&#x27;:float(v.max())}
+  250  
+  251   feature_cols=[p+s for p in POLLS for s in [&#x27;_annual&#x27;,&#x27;_p98&#x27;]];f=np.log1p(points[feature_cols].to_numpy());f=(f-f.mean(0))/f.std(0);cluster_results=[];labels={}
+  252   tree=linkage(f,method=&#x27;ward&#x27;)
+  253   for method in [&#x27;ward&#x27;,&#x27;kmeans&#x27;]:
+  254    for k in range(2,7):
+  255     if method==&#x27;ward&#x27;:lab=fcluster(tree,k,criterion=&#x27;maxclust&#x27;)-1
+  256     else:
+  257      solutions=[kmeans2(f,k,minit=&#x27;++&#x27;,iter=100,rng=np.random.default_rng(SEED+j)) for j in range(10)]
+  258      _,lab=min(solutions,key=lambda a:np.sum((f-a[0][a[1]])**2))
+  259  
+  260     order=pd.Series(points.PM25_annual.to_numpy()).groupby(lab).mean().sort_values().index;mapping={old:i+1 for i,old in enumerate(order)};lab=np.array([mapping[x] for x in lab]);score=silhouette(f,lab)
+  261     labels[method,k]=lab;points[f&#x27;{method}_k{k}&#x27;]=lab;cluster_results.append({&#x27;method&#x27;:method,&#x27;k&#x27;:k,&#x27;silhouette&#x27;:score,&#x27;smallest_cluster&#x27;:int(pd.Series(lab).value_counts().min())})
+  262   best=max(cluster_results,key=lambda r:r[&#x27;silhouette&#x27;]);points[&#x27;cluster_profile&#x27;]=labels[best[&#x27;method&#x27;],best[&#x27;k&#x27;]];stats[&#x27;clustering_selection&#x27;]=best
+  263  
+  264   for pol in POLLS:
+  265    ref=points[pol+&#x27;_quintile&#x27;].to_numpy()
+  266    for year in [2021,2022,2023]:
+  267     a=annual[pol];av=points[[&#x27;X&#x27;,&#x27;Y&#x27;]].merge(a[a.year==year][[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;ANNUAL_MEAN&#x27;]],on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;).ANNUAL_MEAN
+  268     lab,_=relative_quintile(av);sens.append({&#x27;pollutant&#x27;:pol,&#x27;comparison&#x27;:f&#x27;Quintis trienais vs {year}&#x27;,&#x27;ARI&#x27;:ari(ref,lab),&#x27;HH_jaccard&#x27;:len(set(np.where(ref==5)[0])&amp;set(np.where(lab==5)[0]))/len(set(np.where(ref==5)[0])|set(np.where(lab==5)[0]))})
+  269    for dx,dy in [(0,0),(250,0),(0,250),(250,250)]:
+  270     xmin,ymin,xmax,ymax=municipality.bounds;xx=np.arange(np.ceil(xmin/500)*500+dx,xmax,500);yy=np.arange(np.ceil(ymin/500)*500+dy,ymax,500)
+  271     target=np.array([(x,y) for x in xx for y in yy if municipality.covers(Point(x,y))]);dist,idx=cKDTree(xy).query(target);supported=dist&lt;=354
+  272  
+  273     val=points[pol+&#x27;_annual&#x27;].to_numpy()[idx[supported]];_,qt=relative_quintile(val)
+  274     lab=np.searchsorted(qt,points[pol+&#x27;_annual&#x27;],side=&#x27;left&#x27;)+1
+  275     sens.append({&#x27;pollutant&#x27;:pol,&#x27;comparison&#x27;:f&#x27;Reamostragem suporte {dx}/{dy} m&#x27;,&#x27;ARI&#x27;:ari(ref,lab),&#x27;supported_targets&#x27;:int(supported.sum()),&#x27;unsupported_targets&#x27;:int((~supported).sum()),&#x27;unique_existing_receptors&#x27;:len(np.unique(idx[supported])),&#x27;p80&#x27;:float(qt[3]),&#x27;new_simulation&#x27;:False})
+  276  
+  277   cells=cells.merge(points.drop(columns=&#x27;geometry&#x27;),on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+  278   inter=gpd.overlay(z[[&#x27;zone_index&#x27;,&#x27;geometry&#x27;]],cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]],how=&#x27;intersection&#x27;,keep_geom_type=False);inter=inter[inter.area&gt;0].copy();inter[&#x27;area_m2&#x27;]=inter.area;inter[&#x27;support_method&#x27;]=&#x27;Interseção areal&#x27;
+  279   missing=z[~z.zone_index.isin(inter.zone_index)]
+  280   fallback=[]
+  281   for r in missing.itertuples():
+  282    if r.geometry.area&gt;=1:raise ValueError(f&#x27;Zona de área relevante sem suporte: {r.zone_index}&#x27;)
+  283    j=int(np.argmin([r.geometry.distance(p) for p in points.geometry]));fallback.append({&#x27;zone_index&#x27;:r.zone_index,&#x27;receptor_id&#x27;:int(points.receptor_id.iloc[j]),&#x27;geometry&#x27;:r.geometry,&#x27;area_m2&#x27;:r.geometry.area,&#x27;support_method&#x27;:&#x27;Fragmento geométrico sem interseção estável; receptor mais próximo&#x27;})
+  284   if fallback:inter=pd.concat([inter,gpd.GeoDataFrame(fallback,crs=z.crs)],ignore_index=True)
+  285   z[&#x27;fragmento_menor_1m2&#x27;]=z.area&lt;1
+  286   stats[&#x27;geometric_fragments&#x27;]={&#x27;below_0_01_m2&#x27;:int((z.area&lt;.01).sum()),&#x27;below_1_m2&#x27;:int((z.area&lt;1).sum()),&#x27;ids_below_1_m2&#x27;:z.loc[z.area&lt;1,&#x27;zone_index&#x27;].astype(int).tolist(),&#x27;fallback_zone_ids&#x27;:missing.zone_index.astype(int).tolist(),&#x27;interpretation&#x27;:&#x27;IDs preservados. Fragmentos cartográficos não representam unidades territoriais de dimensão usual e exigem conferência do cadastro original.&#x27;}
+  287   zonetotal=inter.groupby(&#x27;zone_index&#x27;).area_m2.sum();inter[&#x27;zone_area_fraction&#x27;]=inter.area_m2/inter.zone_index.map(zonetotal)
+  288   links=inter.drop(columns=&#x27;geometry&#x27;).merge(points.drop(columns=&#x27;geometry&#x27;),on=&#x27;receptor_id&#x27;,validate=&#x27;many_to_one&#x27;);assert z.zone_index.isin(links.zone_index).all()
+  289   for pol in POLLS:
+  290    for q in [1,2,3,4,5]:z[f&#x27;{pol}_Q{q}_area_pct&#x27;]=z.zone_index.map(links[links[pol+&#x27;_quintile&#x27;].eq(q)].groupby(&#x27;zone_index&#x27;).zone_area_fraction.sum()).fillna(0)*100
+  291    for label,short in [(&#x27;Alto–alto&#x27;,&#x27;HH&#x27;),(&#x27;Baixo–baixo&#x27;,&#x27;LL&#x27;),(&#x27;Alto–baixo&#x27;,&#x27;HL&#x27;),(&#x27;Baixo–alto&#x27;,&#x27;LH&#x27;),(&#x27;Não significativo&#x27;,&#x27;NS&#x27;)]:z[f&#x27;{pol}_LISA_{short}_area_pct&#x27;]=z.zone_index.map(links[links[pol+&#x27;_lisa&#x27;].eq(label)].groupby(&#x27;zone_index&#x27;).zone_area_fraction.sum()).fillna(0)*100
+  292    z[pol+&#x27;_annual_area_mean&#x27;]=z.zone_index.map((links[pol+&#x27;_annual&#x27;]*links.zone_area_fraction).groupby(links.zone_index).sum())
+  293    for group in PRIMARY:
+  294     weighted_cg=(links[pol+&#x27;_annual&#x27;]*links[pol+&#x27;_share_&#x27;+group]/100*links.zone_area_fraction).groupby(links.zone_index).sum()
+  295     z[pol+&#x27;_share_&#x27;+group]=100*z.zone_index.map(weighted_cg)/z[pol+&#x27;_annual_area_mean&#x27;]
+  296    z[pol+&#x27;_relative_label&#x27;]=z[[f&#x27;{pol}_Q{q}_area_pct&#x27; for q in range(1,6)]].idxmax(axis=1).str.extract(r&#x27;_Q(\d)&#x27;)[0].map(lambda q:&#x27;Quintil &#x27;+q)
+  297   for name,frame in [(&#x27;receptores&#x27;,points),(&#x27;celulas_analise&#x27;,cells),(&#x27;zoneamento_pos_banca&#x27;,z)]:
+  298    path=OUT/f&#x27;{name}.gpkg&#x27;
+  299    if path.exists():path.unlink()
+  300    frame.to_file(path,driver=&#x27;GPKG&#x27;);frame.drop(columns=&#x27;geometry&#x27;).to_csv(OUT/f&#x27;{name}.csv&#x27;,index=False)
+  301   links.to_csv(OUT/&#x27;vinculo_celula_zona.csv&#x27;,index=False);pd.DataFrame(corr).to_csv(OUT/&#x27;correlogramas.csv&#x27;,index=False);pd.DataFrame(sens).to_csv(OUT/&#x27;sensibilidade_espacial.csv&#x27;,index=False);pd.DataFrame(cluster_results).to_csv(OUT/&#x27;comparacao_agrupamentos.csv&#x27;,index=False);pd.DataFrame(threshold_rows).to_csv(OUT/&#x27;limiares_associativos_validacao_espacial.csv&#x27;,index=False);pd.DataFrame(group_rows).to_csv(OUT/&#x27;contribuicoes_regioes.csv&#x27;,index=False)
+  302   stats[&#x27;zone_coverage&#x27;]=len(zonetotal);stats[&#x27;cell_area_conservation_relative_error&#x27;]=abs(cells.area.sum()-municipality.area)/municipality.area;stats[&#x27;zone_quintile_area_sums&#x27;]={p:float(z[[f&#x27;{p}_Q{q}_area_pct&#x27; for q in range(1,6)]].sum(axis=1).sub(100).abs().max()) for p in POLLS}
+  303   save_json(OUT/&#x27;resumo.json&#x27;,stats);print(json.dumps({&#x27;n&#x27;:n,&#x27;clustering&#x27;:best,&#x27;LISA&#x27;:{p:stats[&#x27;pols&#x27;][p][&#x27;LISA_FDR_counts&#x27;] for p in POLLS}},ensure_ascii=False),flush=True)
+  304  
+  305  if __name__==&#x27;__main__&#x27;:main()</code></pre></article></html>

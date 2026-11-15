@@ -1,0 +1,217 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/io_utils.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/io_utils.py</h2>
+<p>Io utils. Processamento ou módulo de apoio. A organização passa por ensure_dirs, first_existing, _read_kml_with_encoding_fallback, read_vector, normalize_name, excel_serial_to_datetime, _sanitize_vector_columns, save_gpkg, _shp_safe_columns, save_shp.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\io_utils.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>__future__</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>shutil</td><td>Cópia e movimentação de arquivos, inclusive preservação de versões geradas.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>tempfile</td><td>Arquivos temporários definidos pelo processamento.</td></tr><tr><td>zipfile</td><td>Leitura/empacotamento de arquivos ZIP e estruturas internas de documentos.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada gpd.read_file, linha 93.</li>
+<li>{path} — chamada path.read_bytes, linha 57.</li>
+<li>tmp.name — chamada gpd.read_file, linha 66.</li>
+<li>{path} — chamada zipfile.ZipFile, linha 84.</li>
+<p><strong>Saídas.</strong></p>
+<li>{path} — chamada out.to_file, linha 183.</li>
+<li>path.with_name(path.stem + &#x27;_campos.csv&#x27;) — chamada .to_csv, linha 186.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>ensure_dirs(*paths: Path)</td><td>38-40</td><td>Chamadas efetivas: p.mkdir</td></tr><tr><td>first_existing(preferred: Path  /  None, folder: Path, patterns)</td><td>43-50</td><td>Chamadas efetivas: preferred.exists, sorted, folder.glob, folder.rglob Retorno: None, preferred.</td></tr><tr><td>_read_kml_with_encoding_fallback(path: Path)</td><td>53-71</td><td>lê dados Retorno: gpd.read_file(path), gpd.read_file(tmp_path).</td></tr><tr><td>read_vector(path: Path, target_crs=CRS_PROJECT)</td><td>74-106</td><td>lê dados Retorno: gdf.to_crs(target_crs), gdf.</td></tr><tr><td>normalize_name(s)</td><td>109-114</td><td>Chamadas efetivas: .lower, .replace, .strip, re.sub, str, s.replace Retorno: re.sub(&#x27;[^a-z0-9]+&#x27;, &#x27;-&#x27;, s).strip(&#x27;-&#x27;).</td></tr><tr><td>excel_serial_to_datetime(series: pd.Series)</td><td>117-124</td><td>Chamadas efetivas: series.copy, pd.to_numeric, pd.to_datetime, len, .mean, numeric.notna, .between, numeric.dropna Retorno: pd.to_datetime(s, dayfirst=True, errors=&#x27;coerce&#x27;), pd.to_datetime(numeric, unit=&#x27;D&#x27;, origin=&#x27;1899-12-30&#x27;, errors=&#x27;coerce&#x27;).</td></tr><tr><td>_sanitize_vector_columns(gdf)</td><td>127-143</td><td>Chamadas efetivas: gdf.copy, .lower, out.drop, out.rename, .strip, drop_cols.append, str Retorno: out.</td></tr><tr><td>save_gpkg(gdf, path: Path, layer: str)</td><td>146-149</td><td>grava produtos</td></tr><tr><td>_shp_safe_columns(gdf)</td><td>152-176</td><td>Chamadas efetivas: gdf.copy, set, str, used.add, out.rename, .strip, .upper, re.sub Retorno: (out.rename(columns=rename), mapping).</td></tr><tr><td>save_shp(gdf, path: Path)</td><td>179-188</td><td>grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/io_utils.py, linhas 120-126.</p>
+<pre><code>    numeric = pd.to_numeric(s, errors=&quot;coerce&quot;)
+    numeric_share = numeric.notna().mean() if len(s) else 0
+    if numeric_share &gt; 0.8 and numeric.dropna().between(20000, 80000).mean() &gt; 0.8:
+        return pd.to_datetime(numeric, unit=&quot;D&quot;, origin=&quot;1899-12-30&quot;, errors=&quot;coerce&quot;)
+    return pd.to_datetime(s, dayfirst=True, errors=&quot;coerce&quot;)
+
+# Sanitize vector columns</code></pre>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | gpd.read_file.
+    5  # Entrada: {path} | path.read_bytes.
+    6  # Entrada: tmp.name | gpd.read_file.
+    7  # Entrada: {path} | zipfile.ZipFile.
+    8  # Saída: {path} | out.to_file.
+    9  # Saída: path.with_name(path.stem + &#x27;_campos.csv&#x27;) | .to_csv.
+   10  # CÓDIGO DO PROCESSAMENTO
+   11  
+   12  from __future__ import annotations
+   13  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   14  import sys as _cp_sys
+   15  from pathlib import Path as _cp_Path
+   16  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   17  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   18      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   19      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   20          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   21          break
+   22  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   23  # FIM DOS CAMINHOS PORTÁTEIS
+   24  
+   25  
+   26  from pathlib import Path
+   27  import shutil
+   28  import tempfile
+   29  import zipfile
+   30  import re
+   31  
+   32  import geopandas as gpd
+   33  import pandas as pd
+   34  
+   35  from config import CRS_PROJECT
+   36  
+   37  # Ensure dirs
+   38  def ensure_dirs(*paths: Path):
+   39      for p in paths:
+   40          p.mkdir(parents=True, exist_ok=True)
+   41  
+   42  # First existing
+   43  def first_existing(preferred: Path | None, folder: Path, patterns):
+   44      if preferred is not None and preferred.exists():
+   45          return preferred
+   46      for pattern in patterns:
+   47          found = sorted(folder.glob(pattern)) + sorted(folder.rglob(pattern))
+   48          if found:
+   49              return found[0]
+   50      return None
+   51  
+   52  # Read kml with encoding fallback
+   53  def _read_kml_with_encoding_fallback(path: Path):
+   54      try:
+   55          return gpd.read_file(path)
+   56      except Exception as first_error:
+   57          raw = path.read_bytes()
+   58          last_error = first_error
+   59          for encoding in (&quot;utf-8-sig&quot;, &quot;utf-8&quot;, &quot;cp1252&quot;, &quot;latin-1&quot;):
+   60              try:
+   61                  text = raw.decode(encoding)
+   62                  with tempfile.NamedTemporaryFile(&quot;w&quot;, suffix=&quot;.kml&quot;, delete=False, encoding=&quot;utf-8&quot;) as tmp:
+   63                      tmp.write(text)
+   64                      tmp_path = Path(tmp.name)
+   65                  try:
+   66                      return gpd.read_file(tmp_path)
+   67                  finally:
+   68                      tmp_path.unlink(missing_ok=True)
+   69              except Exception as exc:
+   70                  last_error = exc
+   71          raise last_error
+   72  
+   73  # Read vector
+   74  def read_vector(path: Path, target_crs=CRS_PROJECT):
+   75      &quot;&quot;&quot;Lê KML/KMZ/SHP/GPKG/GeoJSON e reprojeta.&quot;&quot;&quot;
+   76      if path is None or not path.exists():
+   77          raise FileNotFoundError(path)
+   78  
+   79      suffix = path.suffix.lower()
+   80      temp = None
+   81      try:
+   82          if suffix == &quot;.kmz&quot;:
+   83              temp = Path(tempfile.mkdtemp(prefix=&quot;kmz_&quot;))
+   84              with zipfile.ZipFile(path, &quot;r&quot;) as zf:
+   85                  zf.extractall(temp)
+   86              kmls = list(temp.rglob(&quot;*.kml&quot;))
+   87              if not kmls:
+   88                  raise ValueError(f&quot;KMZ sem KML: {path}&quot;)
+   89              gdf = _read_kml_with_encoding_fallback(kmls[0])
+   90          elif suffix == &quot;.kml&quot;:
+   91              gdf = _read_kml_with_encoding_fallback(path)
+   92          else:
+   93              gdf = gpd.read_file(path)
+   94  
+   95          if gdf.empty:
+   96              return gdf
+   97          if gdf.crs is None:
+   98  
+   99              if suffix in {&quot;.kml&quot;, &quot;.kmz&quot;}:
+  100                  gdf = gdf.set_crs(&quot;EPSG:4326&quot;)
+  101              else:
+  102                  raise ValueError(f&quot;Arquivo sem CRS declarado: {path}&quot;)
+  103          return gdf.to_crs(target_crs)
+  104      finally:
+  105          if temp is not None:
+  106              shutil.rmtree(temp, ignore_errors=True)
+  107  
+  108  # Normalize name
+  109  def normalize_name(s):
+  110      s = str(s or &quot;&quot;).strip().lower()
+  111      s = s.replace(&quot;ç&quot;, &quot;c&quot;).replace(&quot;ã&quot;, &quot;a&quot;).replace(&quot;á&quot;, &quot;a&quot;).replace(&quot;à&quot;, &quot;a&quot;)
+  112      s = s.replace(&quot;é&quot;, &quot;e&quot;).replace(&quot;ê&quot;, &quot;e&quot;).replace(&quot;í&quot;, &quot;i&quot;).replace(&quot;ó&quot;, &quot;o&quot;)
+  113      s = s.replace(&quot;ô&quot;, &quot;o&quot;).replace(&quot;õ&quot;, &quot;o&quot;).replace(&quot;ú&quot;, &quot;u&quot;)
+  114      return re.sub(r&quot;[^a-z0-9]+&quot;, &quot;-&quot;, s).strip(&quot;-&quot;)
+  115  
+  116  # Excel serial to datetime
+  117  def excel_serial_to_datetime(series: pd.Series):
+  118      &quot;&quot;&quot;Converte datas robustamente, inclusive serial Excel.&quot;&quot;&quot;
+  119      s = series.copy()
+  120      numeric = pd.to_numeric(s, errors=&quot;coerce&quot;)
+  121      numeric_share = numeric.notna().mean() if len(s) else 0
+  122      if numeric_share &gt; 0.8 and numeric.dropna().between(20000, 80000).mean() &gt; 0.8:
+  123          return pd.to_datetime(numeric, unit=&quot;D&quot;, origin=&quot;1899-12-30&quot;, errors=&quot;coerce&quot;)
+  124      return pd.to_datetime(s, dayfirst=True, errors=&quot;coerce&quot;)
+  125  
+  126  # Sanitize vector columns
+  127  def _sanitize_vector_columns(gdf):
+  128      out = gdf.copy()
+  129      rename = {}
+  130      drop_cols = []
+  131      for c in out.columns:
+  132          if c == out.geometry.name:
+  133              continue
+  134          lc = str(c).strip().lower()
+  135          if lc in {&quot;fid&quot;, &quot;ogc_fid&quot;}:
+  136              rename[c] = f&quot;src_{lc}&quot;
+  137          elif lc in {&quot;geometry&quot;}:
+  138              drop_cols.append(c)
+  139      if drop_cols:
+  140          out = out.drop(columns=drop_cols, errors=&quot;ignore&quot;)
+  141      if rename:
+  142          out = out.rename(columns=rename)
+  143      return out
+  144  
+  145  # Save gpkg
+  146  def save_gpkg(gdf, path: Path, layer: str):
+  147      path.parent.mkdir(parents=True, exist_ok=True)
+  148      out = _sanitize_vector_columns(gdf)
+  149      out.to_file(path, layer=layer, driver=&quot;GPKG&quot;, index=False)
+  150  
+  151  # Shp safe columns
+  152  def _shp_safe_columns(gdf):
+  153      &quot;&quot;&quot;Renomeia atributos para &lt;=10 caracteres e evita colisões do Shapefile.&quot;&quot;&quot;
+  154      out = gdf.copy()
+  155      geom = out.geometry.name
+  156      used = set()
+  157      mapping = {}
+  158      rename = {}
+  159      for c in out.columns:
+  160          if c == geom:
+  161              continue
+  162          raw = str(c)
+  163          base = re.sub(r&quot;[^A-Za-z0-9_]&quot;, &quot;_&quot;, raw).upper().strip(&quot;_&quot;) or &quot;FIELD&quot;
+  164          candidate = base[:10]
+  165          if candidate in used:
+  166              prefix = base[:7]
+  167              i = 1
+  168              while True:
+  169                  candidate = f&quot;{prefix}{i:03d}&quot;[:10]
+  170                  if candidate not in used:
+  171                      break
+  172                  i += 1
+  173          used.add(candidate)
+  174          rename[c] = candidate
+  175          mapping[raw] = candidate
+  176      return out.rename(columns=rename), mapping
+  177  
+  178  # Save shp
+  179  def save_shp(gdf, path: Path):
+  180      path.parent.mkdir(parents=True, exist_ok=True)
+  181      out = _sanitize_vector_columns(gdf)
+  182      out, mapping = _shp_safe_columns(out)
+  183      out.to_file(path, driver=&quot;ESRI Shapefile&quot;, index=False)
+  184  
+  185      map_path = path.with_name(path.stem + &quot;_campos.csv&quot;)
+  186      pd.DataFrame([{&quot;campo_original&quot;: k, &quot;campo_shp&quot;: v} for k, v in mapping.items()]).to_csv(
+  187          map_path, index=False, encoding=&quot;utf-8-sig&quot;
+  188      )</code></pre></article></html>

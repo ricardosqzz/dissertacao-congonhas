@@ -1,0 +1,170 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/analises_direcionais_pos_banca.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/analises_direcionais_pos_banca.py</h2>
+<p>Envelopes condicionados ao vento real da SFC, sem nova simulação AERMOD.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\analises_direcionais_pos_banca.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>met[&#x27;sfc&#x27;][&#x27;path&#x27;] — chamada pd.read_csv, linha 61.</li>
+<li>E:/projeto/wrf/AERMET-3Y.{ext} — chamada p.read_bytes, linha 68.</li>
+<li>met[ext.lower()][&#x27;path&#x27;] — chamada q.read_bytes, linha 68.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_manifesto.json — chamada stamp.read_text, linha 87.</li>
+<li>E:/projeto/out-aermod/{folder}/01_GALL.POS — chamada pd.read_csv, linha 92.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz — chamada pd.read_csv, linha 115.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/calendario_vento_horario.csv — chamada cal.to_csv, linha 72.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/dias_direcao_persistente.csv — chamada daily.to_csv, linha 81.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/frequencia_vento.csv — chamada freq.to_csv, linha 82.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_horarios.csv — chamada result.to_csv, linha 111.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_diarios_persistentes.csv — chamada selected.to_csv, linha 116.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_manifesto.json — chamada stamp.write_text, linha 118.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>met: sfc.</li>
+<li>sfc: CODE.</li>
+<li>chunk: X, Y.</li>
+<li>metidx.loc: direction_idx.</li>
+<li>daily: day, direction_idx, eligible.</li>
+<li>summary: hours_by_direction.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>sfc: CODE.</li>
+<li>cal: direction, direction_idx.</li>
+<li>freq: percent_total.</li>
+<li>selected: direction.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>sector8(degrees)</td><td>54-56</td><td>Chamadas efetivas: np.asarray, np.full, .astype, np.isfinite, np.floor Retorno: out.</td></tr><tr><td>run()</td><td>59-120</td><td>lê dados; grava produtos Retorno: summaries.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/analises_direcionais_pos_banca.py, linhas 76-82.</p>
+<pre><code>        if n:
+            theta=np.deg2rad(v.wind_from_deg);u=np.mean(np.sin(theta));w=np.mean(np.cos(theta));r=float(np.hypot(u,w));deg=float(np.rad2deg(np.arctan2(u,w))%360);idx=int(sector8([deg])[0]);fraction=float(v.direction_idx.eq(idx).mean())
+        else:r=0;deg=np.nan;idx=-1;fraction=0
+        eligible=n&gt;=18 and r&gt;=.5 and fraction&gt;=.5
+        dayrows.append({&#x27;day&#x27;:day,&#x27;valid_hours&#x27;:n,&#x27;resultant&#x27;:r,&#x27;mean_from_deg&#x27;:deg,&#x27;direction_idx&#x27;:idx if eligible else -1,&#x27;dominant_fraction&#x27;:fraction,&#x27;eligible&#x27;:eligible})
+    daily=pd.DataFrame(dayrows);daily.to_csv(out/&#x27;dias_direcao_persistente.csv&#x27;,index=False)
+    freq=cal.groupby(&#x27;direction&#x27;,sort=False).agg(hours=(&#x27;CODE&#x27;,&#x27;size&#x27;),mean_speed=(&#x27;wind_speed&#x27;,&#x27;mean&#x27;)).reset_index();freq[&#x27;percent_total&#x27;]=100*freq.hours/len(cal);freq.to_csv(out/&#x27;frequencia_vento.csv&#x27;,index=False)</code></pre>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: met[&#x27;sfc&#x27;][&#x27;path&#x27;] | pd.read_csv.
+    5  # Entrada: E:/projeto/wrf/AERMET-3Y.{ext} | p.read_bytes.
+    6  # Entrada: met[ext.lower()][&#x27;path&#x27;] | q.read_bytes.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_manifesto.json | stamp.read_text.
+    8  # Entrada: E:/projeto/out-aermod/{folder}/01_GALL.POS | pd.read_csv.
+    9  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz | pd.read_csv.
+   10  # Campos/chaves em met: sfc.
+   11  # Campos/chaves em sfc: CODE.
+   12  # Campos/chaves em chunk: X, Y.
+   13  # Campos/chaves em metidx.loc: direction_idx.
+   14  # Campos/chaves em daily: day, direction_idx, eligible.
+   15  # Campos/chaves em summary: hours_by_direction.
+   16  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/calendario_vento_horario.csv | cal.to_csv.
+   17  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/dias_direcao_persistente.csv | daily.to_csv.
+   18  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/frequencia_vento.csv | freq.to_csv.
+   19  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_horarios.csv | result.to_csv.
+   20  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_diarios_persistentes.csv | selected.to_csv.
+   21  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_manifesto.json | stamp.write_text.
+   22  # Campos/chaves gerados em sfc: CODE.
+   23  # Campos/chaves gerados em cal: direction, direction_idx.
+   24  # Campos/chaves gerados em freq: percent_total.
+   25  # Campos/chaves gerados em selected: direction.
+   26  # X: coordenada leste em metros.
+   27  # Y: coordenada norte em metros.
+   28  # CÓDIGO DO PROCESSAMENTO
+   29  
+   30  &quot;&quot;&quot;Envelopes condicionados ao vento real da SFC, sem nova simulação AERMOD.&quot;&quot;&quot;
+   31  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   32  import sys as _cp_sys
+   33  from pathlib import Path as _cp_Path
+   34  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   35  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   36      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   37      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   38          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   39          break
+   40  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   41  # FIM DOS CAMINHOS PORTÁTEIS
+   42  
+   43  from pathlib import Path
+   44  import json,hashlib
+   45  import numpy as np
+   46  import pandas as pd
+   47  import config
+   48  from medias_horarias_verificadas import met_calendar,identity
+   49  
+   50  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   51  DIRS=np.array([&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;])
+   52  
+   53  # Sector8
+   54  def sector8(degrees):
+   55      a=np.asarray(degrees,float);valid=np.isfinite(a)&amp;(a&gt;=0)&amp;(a&lt;=360)
+   56      out=np.full(a.shape,-1,dtype=int);out[valid]=np.floor(((a[valid]%360+22.5)%360)/45).astype(int);return out
+   57  
+   58  # Run
+   59  def run():
+   60      out=ROOT/&#x27;vento&#x27;;out.mkdir(exist_ok=True,parents=True)
+   61      cal,met=met_calendar();sfc=pd.read_csv(met[&#x27;sfc&#x27;][&#x27;path&#x27;],sep=r&#x27;\s+&#x27;,skiprows=1,header=None)
+   62      sfc[&#x27;CODE&#x27;]=(((sfc[0]*100+sfc[1])*100+sfc[2])*100+sfc[4]).astype(&#x27;int64&#x27;)
+   63      cal=cal.merge(sfc[[&#x27;CODE&#x27;,15,16]].rename(columns={15:&#x27;wind_speed&#x27;,16:&#x27;wind_from_deg&#x27;}),on=&#x27;CODE&#x27;,validate=&#x27;one_to_one&#x27;)
+   64  
+   65      copies={}
+   66      for ext in [&#x27;SFC&#x27;,&#x27;PFL&#x27;]:
+   67          p=config.BASE/f&#x27;wrf/AERMET-3Y.{ext}&#x27;;q=Path(met[ext.lower()][&#x27;path&#x27;])
+   68          copies[ext]={&#x27;wrf_sha256&#x27;:hashlib.sha256(p.read_bytes()).hexdigest(),&#x27;linked_sha256&#x27;:hashlib.sha256(q.read_bytes()).hexdigest()}
+   69          if copies[ext][&#x27;wrf_sha256&#x27;]!=copies[ext][&#x27;linked_sha256&#x27;]:raise ValueError(&#x27;Meteorologia WRF difere da vinculada; confirmar cenário antes de filtrar.&#x27;)
+   70      cal[&#x27;direction_idx&#x27;]=sector8(cal.wind_from_deg);cal.loc[~cal.valid|cal.wind_speed.le(0),&#x27;direction_idx&#x27;]=-1
+   71      cal[&#x27;direction&#x27;]=cal.direction_idx.map(dict(enumerate(DIRS))).fillna(&#x27;Inválida ou calmaria&#x27;)
+   72      cal.to_csv(out/&#x27;calendario_vento_horario.csv&#x27;,index=False)
+   73      dayrows=[]
+   74      for day,g in cal.groupby(&#x27;day&#x27;):
+   75          v=g[g.direction_idx.ge(0)];n=len(v)
+   76          if n:
+   77              theta=np.deg2rad(v.wind_from_deg);u=np.mean(np.sin(theta));w=np.mean(np.cos(theta));r=float(np.hypot(u,w));deg=float(np.rad2deg(np.arctan2(u,w))%360);idx=int(sector8([deg])[0]);fraction=float(v.direction_idx.eq(idx).mean())
+   78          else:r=0;deg=np.nan;idx=-1;fraction=0
+   79          eligible=n&gt;=18 and r&gt;=.5 and fraction&gt;=.5
+   80          dayrows.append({&#x27;day&#x27;:day,&#x27;valid_hours&#x27;:n,&#x27;resultant&#x27;:r,&#x27;mean_from_deg&#x27;:deg,&#x27;direction_idx&#x27;:idx if eligible else -1,&#x27;dominant_fraction&#x27;:fraction,&#x27;eligible&#x27;:eligible})
+   81      daily=pd.DataFrame(dayrows);daily.to_csv(out/&#x27;dias_direcao_persistente.csv&#x27;,index=False)
+   82      freq=cal.groupby(&#x27;direction&#x27;,sort=False).agg(hours=(&#x27;CODE&#x27;,&#x27;size&#x27;),mean_speed=(&#x27;wind_speed&#x27;,&#x27;mean&#x27;)).reset_index();freq[&#x27;percent_total&#x27;]=100*freq.hours/len(cal);freq.to_csv(out/&#x27;frequencia_vento.csv&#x27;,index=False)
+   83      summaries={}
+   84      for pol,folder in [(&#x27;PM10&#x27;,&#x27;PM10&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5&#x27;)]:
+   85          path=config.BASE/f&#x27;out-aermod/{folder}/01_GALL.POS&#x27;;stamp=out/f&#x27;{pol}_manifesto.json&#x27;;target=out/f&#x27;{pol}_envelopes_horarios.csv&#x27;
+   86          signature={&#x27;hourly_post&#x27;:identity(path),&#x27;meteorology&#x27;:met,&#x27;direction_method&#x27;:&#x27;8 sectors from SFC, meteorological from; valid noncalm hours; 2021-2023&#x27;}
+   87          if stamp.exists() and target.exists() and json.loads(stamp.read_text(encoding=&#x27;utf8&#x27;)).get(&#x27;inputs&#x27;)==signature:
+   88              print(pol,&#x27;cache direcional íntegro&#x27;,flush=True);continue
+   89          from out_aermod_reader import header
+   90          nr=header(path)[&#x27;n_receptors&#x27;];assert nr and nr&gt;0
+   91          coords=None;maximum=np.full((8,nr),-np.inf);codes=np.zeros((8,nr),dtype=&#x27;int64&#x27;);sums=np.zeros((8,nr));counts=np.zeros(8,dtype=int);allmax=np.full(nr,-np.inf);rows=0
+   92          metidx=cal.set_index(&#x27;CODE&#x27;);chunks=pd.read_csv(path,sep=r&#x27;\s+&#x27;,comment=&#x27;*&#x27;,header=None,usecols=[0,1,2,8],names=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;C&#x27;,&#x27;CODE&#x27;],chunksize=nr*24*14)
+   93          for chunk in chunks:
+   94              if len(chunk)%nr:raise ValueError(&#x27;Bloco incompleto de receptores&#x27;)
+   95              xy=chunk[[&#x27;X&#x27;,&#x27;Y&#x27;]].to_numpy().reshape(-1,nr,2);c=chunk.C.to_numpy().reshape(-1,nr);code=chunk.CODE.to_numpy().reshape(-1,nr)
+   96              if coords is None:coords=xy[0].copy()
+   97              assert np.all(xy==coords) and np.all(code==code[:,:1]) and np.isfinite(c).all() and (c&gt;=0).all()
+   98              t=code[:,0];keep=(t&gt;=21010101)&amp;(t&lt;=23123124);c=c[keep];t=t[keep]
+   99              if not len(t):continue
+  100              sectors=metidx.loc[t,&#x27;direction_idx&#x27;].to_numpy();rows+=len(t)*nr
+  101              for d in range(8):
+  102                  mask=sectors==d;v=c[mask]
+  103                  if not len(v):continue
+  104                  arg=v.argmax(axis=0);m=v[arg,np.arange(nr)];update=m&gt;maximum[d];maximum[d,update]=m[update];codes[d,update]=t[mask][arg[update]];sums[d]+=v.sum(axis=0);counts[d]+=len(v)
+  105              valid=sectors&gt;=0
+  106              if valid.any():allmax=np.maximum(allmax,c[valid].max(axis=0))
+  107          assert rows==nr*26280 and np.all(counts&gt;0)
+  108          records=[]
+  109          for d,name in enumerate(DIRS):
+  110              records.append(pd.DataFrame({&#x27;X&#x27;:coords[:,0],&#x27;Y&#x27;:coords[:,1],&#x27;direction&#x27;:name,&#x27;direction_from_center_deg&#x27;:d*45,&#x27;max_1h&#x27;:maximum[d],&#x27;max_code&#x27;:codes[d],&#x27;conditional_mean_1h&#x27;:sums[d]/counts[d],&#x27;hours&#x27;:counts[d]}))
+  111          result=pd.concat(records,ignore_index=True);result.to_csv(target,index=False)
+  112          assert np.allclose(maximum.max(axis=0),allmax)
+  113  
+  114          cache=config.BASE/f&#x27;output/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz&#x27;
+  115          ds=pd.read_csv(cache,usecols=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;,&#x27;daily_from_1h&#x27;]).merge(daily[[&#x27;day&#x27;,&#x27;direction_idx&#x27;]],on=&#x27;day&#x27;,validate=&#x27;many_to_one&#x27;);ds=ds[ds.direction_idx.ge(0)]
+  116          selected=ds.loc[ds.groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;direction_idx&#x27;]).daily_from_1h.idxmax()].copy();selected[&#x27;direction&#x27;]=selected.direction_idx.map(dict(enumerate(DIRS)));selected.to_csv(out/f&#x27;{pol}_envelopes_diarios_persistentes.csv&#x27;,index=False)
+  117          summary={&#x27;inputs&#x27;:signature,&#x27;met_copies&#x27;:copies,&#x27;hours_checked&#x27;:rows,&#x27;hours_by_direction&#x27;:dict(zip(DIRS,counts.tolist())),&#x27;valid_hours_total&#x27;:int(counts.sum()),&#x27;excluded_calm_missing_hours&#x27;:int(26280-counts.sum()),&#x27;daily_eligible&#x27;:int(daily.eligible.sum()),&#x27;daily_rule&#x27;:&#x27;minimum 18 valid hours, resultant &gt;=0.5, at least 50% hours in mean wind sector&#x27;,&#x27;max_by_direction&#x27;:result.groupby(&#x27;direction&#x27;).max_1h.max().to_dict(),&#x27;envelope_not_simultaneous&#x27;:True,&#x27;wind_field_is_single_AERMET_profile&#x27;:True}
+  118          stamp.write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;);summaries[pol]=summary
+  119          print(pol,&#x27;envelopes concluídos&#x27;,summary[&#x27;hours_by_direction&#x27;],flush=True)
+  120      return summaries
+  121  
+  122  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

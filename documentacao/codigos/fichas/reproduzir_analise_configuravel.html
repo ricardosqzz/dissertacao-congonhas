@@ -1,0 +1,307 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/reproduzir_analise_configuravel.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/reproduzir_analise_configuravel.py</h2>
+<p>Reproduz a classificação atual a partir de matrizes já consolidadas e permite testar outra variável com origem, campo, agregação, transformação e pesos declarados. Grava em pasta separada, sem substituir os mapas publicados.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\reproduzir_analise_configuravel.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>argparse</td><td>Parâmetros fornecidos ao iniciar o programa.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>importlib.metadata</td><td>Importação e identificação de versões das bibliotecas.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>rasterio</td><td>Leitura e escrita de rasters, transformação entre pixel e coordenada e amostragem por geometria.</td></tr><tr><td>rasterio.features</td><td>Leitura e escrita de rasters, transformação entre pixel e coordenada e amostragem por geometria.</td></tr><tr><td>rasterio.windows</td><td>Leitura e escrita de rasters, transformação entre pixel e coordenada e amostragem por geometria.</td></tr><tr><td>scipy.cluster.hierarchy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.cluster.vq</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.optimize</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.sparse</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.spatial</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.stats</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>warnings</td><td>Controle de avisos de bibliotecas sem alterar a definição do estimador.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>caminho(spec[&#x27;arquivo&#x27;]) — chamada gpd.read_file, linha 68.</li>
+<li>caminho(spec[&#x27;arquivo&#x27;]) — chamada pd.read_csv, linha 78.</li>
+<li>caminho(spec[&#x27;arquivo&#x27;]) — chamada rasterio.open, linha 82.</li>
+<li>args.config — chamada .read_text, linha 236.</li>
+<p><strong>Saídas.</strong></p>
+<li>caminho(config[&#x27;saida&#x27;])/analise_configuravel.gpkg [camada &#x27;resultados&#x27;] — chamada out.to_file, linha 228.</li>
+<li>caminho(config[&#x27;saida&#x27;])/indicadores.csv — chamada .to_csv, linha 229.</li>
+<li>caminho(config[&#x27;saida&#x27;])/comparacao_k.csv — chamada table.to_csv, linha 230.</li>
+<li>caminho(config[&#x27;saida&#x27;])/normalizacao.csv — chamada params.to_csv, linha 230.</li>
+<li>caminho(config[&#x27;saida&#x27;])/sensibilidade.csv — chamada .to_csv, linha 230.</li>
+<li>caminho(config[&#x27;saida&#x27;])/moran.csv — chamada .to_csv, linha 231.</li>
+<li>caminho(config[&#x27;saida&#x27;])/manifesto.json — chamada .write_text, linha 233.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>spec: arquivo, camada, campo, nome.</li>
+<li>support: geometry.</li>
+<li>src: geometry.</li>
+<li>overlap: _a, _av.</li>
+<li>s: _a, _av.</li>
+<li>config: base, campo_bacia, cenarios, chaves, inicializacoes, k_testados, normalizacao, saida, semente, suporte_calculo, variaveis.</li>
+<li>v: nome.</li>
+<li>setting: pesos.</li>
+<li>table: cenario.</li>
+<li>local: cluster, q.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>work: _i.</li>
+<li>overlap: _a, _av.</li>
+<li>out: completo, estabilidade, q_fdr, r_moran, r_quintil.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>ler_camada(spec)</td><td>66-68</td><td>lê dados Retorno: gpd.read_file(path, layer=spec[&#x27;camada&#x27;]) if spec.get(&#x27;camada&#x27;) else gpd.read_file(path).</td></tr><tr><td>anexar_variavel(base, spec, support)</td><td>71-105</td><td>lê dados Retorno: pd.to_numeric(base[field], errors=&#x27;coerce&#x27;).to_numpy(), pd.to_numeric(base[[left]].merge(src[[right, field]], left_on=left, right_on=right, how=&#x27;left&#x27;, validate=&#x27;many_to_one&#x27;)[field], errors=&#x27;coerce&#x27;).</td></tr><tr><td>matriz(base, support, config)</td><td>108-124</td><td>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original. Retorno: (norm, valid, pd.DataFrame({&#x27;variavel&#x27;: fields, &#x27;centro_ou_minimo&#x27;: center, &#x27;escala_ou_amplitude&#x27;: scale})).</td></tr><tr><td>ari(a, b)</td><td>127-132</td><td>Chamadas efetivas: np.unique, len, .reshape, comb, .sum, tab.sum, np.bincount, a.max Retorno: (x - e) / den if den else 1.0.</td></tr><tr><td>fitkm(x, k, seed, starts=12)</td><td>135-144</td><td>Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida. Retorno: best.</td></tr><tr><td>silhouette(x, l)</td><td>147-154</td><td>Chamadas efetivas: distance.cdist, enumerate, float, same.sum, min, s.append, np.mean, .sum Retorno: float(np.mean(s)).</td></tr><tr><td>bh(p)</td><td>157-158</td><td>Chamadas efetivas: np.asarray, np.argsort, np.empty, np.minimum, np.minimum.accumulate, len, np.arange Retorno: o.</td></tr><tr><td>align(labels, reference)</td><td>161-163</td><td>Chamadas efetivas: .reshape, linear_sum_assignment, dict, np.array, max, zip, labels.max, reference.max Retorno: np.array([lookup[v] for v in labels]).</td></tr><tr><td>queen(g)</td><td>166-168</td><td>Chamadas efetivas: g.sindex.query, len, csr_matrix, w.maximum, w.setdiag, w.eliminate_zeros, np.ones Retorno: w.</td></tr><tr><td>moran_w(values, w, local=False, seed=SEED)</td><td>171-188</td><td>Chamadas efetivas: np.flatnonzero, .tocsr, len, float, np.random.default_rng, range, np.empty, bh Retorno: (rec, {&#x27;p&#x27;: p, &#x27;q&#x27;: q, &#x27;cluster&#x27;: cl, &#x27;Ii&#x27;: Ii}, original), ({&#x27;n&#x27;: n, &#x27;isolados&#x27;: int((~good).sum()), &#x27;I&#x27;: np.nan, &#x27;p&#x27;: np.nan}, None, original).</td></tr><tr><td>executar(config)</td><td>191-233</td><td>grava produtos; Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.; Associação por postos. Mede ordenação conjunta, não igualdade de magnitude nem desempenho frente a observações ausentes.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/reproduzir_analise_configuravel.py, linhas 113-119.</p>
+<pre><code>            if np.any(values[np.isfinite(values)]&lt;0):raise ValueError(&#x27;log1p exige valores não negativos nesta análise&#x27;)
+            values=np.log1p(values)
+        elif transform!=&#x27;identidade&#x27;:raise ValueError(&#x27;Transformação desconhecida: &#x27;+transform)
+        columns.append(values);fields.append(spec[&#x27;nome&#x27;])
+    x=np.column_stack(columns);valid=np.isfinite(x).all(axis=1)
+    if valid.sum()&lt;8:raise ValueError(&#x27;Menos de oito registros completos; revisar entradas e lacunas&#x27;)
+    if config[&#x27;normalizacao&#x27;]==&#x27;minmax&#x27;:</code></pre>
+<p>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</p>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/reproduzir_analise_configuravel.py, linhas 128-134.</p>
+<pre><code>    _,a=np.unique(a,return_inverse=True);_,b=np.unique(b,return_inverse=True);n=len(a)
+    tab=np.bincount(a*(b.max()+1)+b,minlength=(a.max()+1)*(b.max()+1)).reshape(a.max()+1,b.max()+1)
+    comb=lambda x:(x*(x-1)/2).sum()
+    x=comb(tab);r=comb(tab.sum(0));s=comb(tab.sum(1));e=r*s/(n*(n-1)/2);den=(r+s)/2-e
+    return (x-e)/den if den else 1.
+
+# Fitkm</code></pre>
+<p>Conta ocorrências ou soma pesos por identificador inteiro. O vetor weights define se há contagem ou acumulação ponderada.</p>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>log1p: Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</li>
+<li>std: Desvio-padrão. Na padronização z, coloca colunas em escala comparável; conferir ddof no trecho.</li>
+<li>bincount: Conta ocorrências ou soma pesos por identificador inteiro. O vetor weights define se há contagem ou acumulação ponderada.</li>
+<li>kmeans2: Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida.</li>
+<li>cdist: Matriz de distâncias entre observações. É usada no agrupamento, na silhouette ou na comparação entre centroides.</li>
+<li>linear_sum_assignment: Alinha rótulos de grupos pela maior correspondência; evita contar como mudança apenas a troca do número do grupo.</li>
+<li>sqrt: Raiz quadrada. No ajuste ponderado do k-means, multiplicar a coluna por √peso faz o peso entrar uma única vez na distância ao quadrado.</li>
+<li>linkage: Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.</li>
+<li>fcluster: Transforma a árvore hierárquica em rótulos de grupos segundo o critério fornecido.</li>
+<li>spearmanr: Associação por postos. Mede ordenação conjunta, não igualdade de magnitude nem desempenho frente a observações ausentes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: caminho(spec[&#x27;arquivo&#x27;]) | gpd.read_file.
+    5  # Entrada: caminho(spec[&#x27;arquivo&#x27;]) | pd.read_csv.
+    6  # Entrada: caminho(spec[&#x27;arquivo&#x27;]) | rasterio.open.
+    7  # Entrada: args.config | .read_text.
+    8  # Campos/chaves em spec: arquivo, camada, campo, nome.
+    9  # Campos/chaves em support: geometry.
+   10  # Campos/chaves em src: geometry.
+   11  # Campos/chaves em overlap: _a, _av.
+   12  # Campos/chaves em s: _a, _av.
+   13  # Campos/chaves em config: base, campo_bacia, cenarios, chaves, inicializacoes, k_testados, normalizacao, saida, semente, suporte_calculo, variaveis.
+   14  # Campos/chaves em v: nome.
+   15  # Campos/chaves em setting: pesos.
+   16  # Campos/chaves em table: cenario.
+   17  # Campos/chaves em local: cluster, q.
+   18  # Saída: caminho(config[&#x27;saida&#x27;])/analise_configuravel.gpkg | out.to_file.
+   19  # Saída: caminho(config[&#x27;saida&#x27;])/indicadores.csv | .to_csv.
+   20  # Saída: caminho(config[&#x27;saida&#x27;])/comparacao_k.csv | table.to_csv.
+   21  # Saída: caminho(config[&#x27;saida&#x27;])/normalizacao.csv | params.to_csv.
+   22  # Saída: caminho(config[&#x27;saida&#x27;])/sensibilidade.csv | .to_csv.
+   23  # Saída: caminho(config[&#x27;saida&#x27;])/moran.csv | .to_csv.
+   24  # Saída: caminho(config[&#x27;saida&#x27;])/manifesto.json | .write_text.
+   25  # Campos/chaves gerados em work: _i.
+   26  # Campos/chaves gerados em overlap: _a, _av.
+   27  # Campos/chaves gerados em out: completo, estabilidade, q_fdr, r_moran, r_quintil.
+   28  # Novas variáveis: config/analise_extensivel.json; definir origem, campo, agregação, transformação e peso.
+   29  # CÓDIGO DO PROCESSAMENTO
+   30  
+   31  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   32  import sys as _cp_sys
+   33  from pathlib import Path as _cp_Path
+   34  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   35  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   36      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   37      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   38          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   39          break
+   40  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   41  # FIM DOS CAMINHOS PORTÁTEIS
+   42  
+   43  from pathlib import Path
+   44  import argparse
+   45  import hashlib
+   46  import importlib.metadata
+   47  import json
+   48  import warnings
+   49  import numpy as np
+   50  import pandas as pd
+   51  import geopandas as gpd
+   52  import rasterio
+   53  from rasterio.features import geometry_mask
+   54  from rasterio.windows import from_bounds
+   55  from scipy.spatial import distance
+   56  from scipy.cluster.vq import kmeans2
+   57  from scipy.cluster.hierarchy import linkage,fcluster
+   58  from scipy.sparse import csr_matrix
+   59  from scipy.optimize import linear_sum_assignment
+   60  from scipy.stats import spearmanr
+   61  from caminhos_congonhas import caminho
+   62  SEED=20261105
+   63  PERM=999
+   64  
+   65  # Ler camada
+   66  def ler_camada(spec):
+   67      path=caminho(spec[&#x27;arquivo&#x27;])
+   68      return gpd.read_file(path,layer=spec[&#x27;camada&#x27;]) if spec.get(&#x27;camada&#x27;) else gpd.read_file(path)
+   69  
+   70  # Anexar variavel
+   71  def anexar_variavel(base,spec,support):
+   72      origin=spec.get(&#x27;origem&#x27;,&#x27;base&#x27;);field=spec[&#x27;campo&#x27;]
+   73      if origin==&#x27;base&#x27;:
+   74          if field not in base:raise KeyError(&#x27;Campo ausente: &#x27;+field)
+   75          return pd.to_numeric(base[field],errors=&#x27;coerce&#x27;).to_numpy()
+   76      aggregation=spec.get(&#x27;agregacao&#x27;,&#x27;por_chave&#x27;)
+   77      if origin==&#x27;tabela&#x27;:
+   78          src=pd.read_csv(caminho(spec[&#x27;arquivo&#x27;]),sep=spec.get(&#x27;separador&#x27;,&#x27;,&#x27;),dtype=spec.get(&#x27;tipos&#x27;))
+   79      elif origin==&#x27;vetor&#x27;:src=ler_camada(spec).to_crs(base.crs)
+   80      elif origin==&#x27;raster&#x27;:
+   81          if aggregation!=&#x27;media_raster&#x27;:raise ValueError(&#x27;Raster requer agregacao=media_raster&#x27;)
+   82          with rasterio.open(caminho(spec[&#x27;arquivo&#x27;])) as raster:
+   83              geometries=support.to_crs(raster.crs).geometry;result=[]
+   84              for geometry in geometries:
+   85                  win=from_bounds(*geometry.bounds,transform=raster.transform).round_offsets().round_lengths()
+   86                  win=win.intersection(rasterio.windows.Window(0,0,raster.width,raster.height))
+   87                  a=raster.read(spec.get(&#x27;banda&#x27;,1),window=win,masked=True)
+   88                  mask=geometry_mask([geometry.__geo_interface__],a.shape,raster.window_transform(win),invert=True)
+   89                  values=np.asarray(a.data)[mask&amp;~np.ma.getmaskarray(a)];values=values[np.isfinite(values)]
+   90                  result.append(values.mean() if len(values) else np.nan)
+   91              return np.array(result)
+   92      else:raise ValueError(&#x27;Origem não implementada: &#x27;+origin)
+   93      if field not in src:raise KeyError(&#x27;Campo ausente na nova entrada: &#x27;+field)
+   94      if aggregation==&#x27;por_chave&#x27;:
+   95          left=spec.get(&#x27;chave_base&#x27;,&#x27;receptor_id&#x27;);right=spec.get(&#x27;chave_origem&#x27;,left)
+   96          if src.duplicated(right).any():raise ValueError(&#x27;Chave duplicada em &#x27;+spec[&#x27;arquivo&#x27;])
+   97          return pd.to_numeric(base[[left]].merge(src[[right,field]],left_on=left,right_on=right,how=&#x27;left&#x27;,validate=&#x27;many_to_one&#x27;)[field],errors=&#x27;coerce&#x27;).to_numpy()
+   98      if origin!=&#x27;vetor&#x27;:raise ValueError(&#x27;Agregação espacial exige origem=vetor&#x27;)
+   99      work=support[[&#x27;geometry&#x27;]].reset_index(drop=True);work[&#x27;_i&#x27;]=np.arange(len(work));src=src[[field,&#x27;geometry&#x27;]].copy()
+  100      if aggregation==&#x27;media_area&#x27;:
+  101          overlap=gpd.overlay(work,src,how=&#x27;intersection&#x27;,keep_geom_type=False);overlap[&#x27;_a&#x27;]=overlap.area;overlap[&#x27;_av&#x27;]=overlap[&#x27;_a&#x27;]*pd.to_numeric(overlap[field],errors=&#x27;coerce&#x27;)
+  102          overlap=overlap[np.isfinite(overlap[&#x27;_av&#x27;])];s=overlap.groupby(&#x27;_i&#x27;)[[&#x27;_a&#x27;,&#x27;_av&#x27;]].sum();s=s[&#x27;_av&#x27;]/s[&#x27;_a&#x27;];return s.reindex(range(len(base))).to_numpy()
+  103      if aggregation==&#x27;soma_pontos&#x27;:
+  104          hit=gpd.sjoin(work,src,how=&#x27;inner&#x27;,predicate=&#x27;intersects&#x27;);v=hit.groupby(&#x27;_i&#x27;)[field].sum();return v.reindex(range(len(base)),fill_value=0).to_numpy()
+  105      raise ValueError(&#x27;Agregação não implementada: &#x27;+aggregation)
+  106  
+  107  # Matriz
+  108  def matriz(base,support,config):
+  109      fields=[];columns=[]
+  110      for spec in config[&#x27;variaveis&#x27;]:
+  111          values=anexar_variavel(base,spec,support);transform=spec.get(&#x27;transformacao&#x27;,&#x27;identidade&#x27;)
+  112          if transform==&#x27;log1p&#x27;:
+  113              if np.any(values[np.isfinite(values)]&lt;0):raise ValueError(&#x27;log1p exige valores não negativos nesta análise&#x27;)
+  114              values=np.log1p(values)
+  115          elif transform!=&#x27;identidade&#x27;:raise ValueError(&#x27;Transformação desconhecida: &#x27;+transform)
+  116          columns.append(values);fields.append(spec[&#x27;nome&#x27;])
+  117      x=np.column_stack(columns);valid=np.isfinite(x).all(axis=1)
+  118      if valid.sum()&lt;8:raise ValueError(&#x27;Menos de oito registros completos; revisar entradas e lacunas&#x27;)
+  119      if config[&#x27;normalizacao&#x27;]==&#x27;minmax&#x27;:
+  120          center=x[valid].min(0);scale=x[valid].max(0)-center
+  121      elif config[&#x27;normalizacao&#x27;]==&#x27;zscore&#x27;:center=x[valid].mean(0);scale=x[valid].std(0)
+  122      else:raise ValueError(&#x27;Normalização desconhecida&#x27;)
+  123      norm=(x-center)/np.where(scale&gt;0,scale,1)
+  124      return norm,valid,pd.DataFrame({&#x27;variavel&#x27;:fields,&#x27;centro_ou_minimo&#x27;:center,&#x27;escala_ou_amplitude&#x27;:scale})
+  125  
+  126  # Ari
+  127  def ari(a,b):
+  128      _,a=np.unique(a,return_inverse=True);_,b=np.unique(b,return_inverse=True);n=len(a)
+  129      tab=np.bincount(a*(b.max()+1)+b,minlength=(a.max()+1)*(b.max()+1)).reshape(a.max()+1,b.max()+1)
+  130      comb=lambda x:(x*(x-1)/2).sum()
+  131      x=comb(tab);r=comb(tab.sum(0));s=comb(tab.sum(1));e=r*s/(n*(n-1)/2);den=(r+s)/2-e
+  132      return (x-e)/den if den else 1.
+  133  
+  134  # Fitkm
+  135  def fitkm(x,k,seed,starts=12):
+  136      best=None
+  137      for r in range(starts):
+  138          with warnings.catch_warnings():
+  139              warnings.simplefilter(&#x27;ignore&#x27;);cent,l=kmeans2(x,k,iter=100,minit=&#x27;++&#x27;,rng=np.random.default_rng(seed+r))
+  140          if len(np.unique(l))!=k:continue
+  141          loss=np.sum((x-cent[l])**2)
+  142          if best is None or loss&lt;best[0]:best=(loss,cent,l)
+  143      if best is None:raise RuntimeError(&#x27;K-means sem todos os grupos&#x27;)
+  144      return best
+  145  
+  146  # Silhouette
+  147  def silhouette(x,l):
+  148      d=distance.cdist(x,x);s=[]
+  149      for i,cl in enumerate(l):
+  150          same=l==cl;n=same.sum()
+  151          if n&lt;=1:s.append(0);continue
+  152          a=d[i,same].sum()/(n-1);b=min(d[i,l==k].mean() for k in np.unique(l) if k!=cl)
+  153          s.append((b-a)/max(a,b) if max(a,b) else 0)
+  154      return float(np.mean(s))
+  155  
+  156  # Bh
+  157  def bh(p):
+  158      p=np.asarray(p);order=np.argsort(p);q=np.minimum.accumulate((p[order]*len(p)/np.arange(1,len(p)+1))[::-1])[::-1];o=np.empty(len(p));o[order]=np.minimum(q,1);return o
+  159  
+  160  # Align
+  161  def align(labels,reference):
+  162   k=max(labels.max(),reference.max())+1;tab=np.bincount(reference*k+labels,minlength=k*k).reshape(k,k)
+  163   rr,cc=linear_sum_assignment(-tab);lookup=dict(zip(cc,rr));return np.array([lookup[v] for v in labels])
+  164  
+  165  # Queen
+  166  def queen(g):
+  167   pairs=g.sindex.query(g.geometry,predicate=&#x27;touches&#x27;);n=len(g)
+  168   w=csr_matrix((np.ones(pairs.shape[1]),(pairs[0],pairs[1])),shape=(n,n));w=w.maximum(w.T);w.setdiag(0);w.eliminate_zeros();return w
+  169  
+  170  # Moran w
+  171  def moran_w(values,w,local=False,seed=SEED):
+  172   good=np.asarray(w.sum(1)).ravel()&gt;0;original=np.flatnonzero(good);w=w[good][:,good].tocsr();v=np.asarray(values)[good];n=len(v)
+  173   if n&lt;4 or v.std()==0:return {&#x27;n&#x27;:n,&#x27;isolados&#x27;:int((~good).sum()),&#x27;I&#x27;:np.nan,&#x27;p&#x27;:np.nan},None,original
+  174   w=w.multiply(1/np.asarray(w.sum(1))).tocsr();z=(v-v.mean())/v.std();lag=w@z;I=float(z@lag/(z@z));expected=-1/(n-1);rng=np.random.default_rng(seed)
+  175   ss=[]
+  176   for _ in range(PERM):zp=rng.permutation(z);ss.append(zp@(w@zp)/(zp@zp))
+  177   pv=(1+(np.abs(np.array(ss)-expected)&gt;=abs(I-expected)).sum())/(PERM+1)
+  178   rec={&#x27;n&#x27;:n,&#x27;isolados&#x27;:int((~good).sum()),&#x27;I&#x27;:I,&#x27;p&#x27;:pv,&#x27;permutacoes&#x27;:PERM}
+  179   if not local:return rec,None,original
+  180   Ii=z*lag;p=np.empty(n)
+  181   for i in range(n):
+  182    start,end=w.indptr[i:i+2];ww=w.data[start:end];m=len(ww);draws=rng.integers(0,n-1,size=(PERM,m))
+  183    for col in range(1,m):
+  184     bad=(draws[:,col,None]==draws[:,:col]).any(1)
+  185     while bad.any():draws[bad,col]=rng.integers(0,n-1,size=bad.sum());bad=(draws[:,col,None]==draws[:,:col]).any(1)
+  186    draws+=draws&gt;=i;sim=z[i]*(z[draws]@ww);ex=-z[i]*z[i]/(n-1);p[i]=(1+(np.abs(sim-ex)&gt;=abs(Ii[i]-ex)).sum())/(PERM+1)
+  187   q=bh(p);cl=np.where((z&gt;=0)&amp;(lag&gt;=0),&#x27;HH&#x27;,np.where((z&lt;0)&amp;(lag&lt;0),&#x27;LL&#x27;,np.where(z&gt;=0,&#x27;HL&#x27;,&#x27;LH&#x27;)));cl=np.where(q&lt;=.05,cl,&#x27;NS&#x27;)
+  188   return rec,{&#x27;p&#x27;:p,&#x27;q&#x27;:q,&#x27;cluster&#x27;:cl,&#x27;Ii&#x27;:Ii},original
+  189  
+  190  # Executar
+  191  def executar(config):
+  192      base=ler_camada(config[&#x27;base&#x27;]).reset_index(drop=True)
+  193      support=ler_camada(config[&#x27;suporte_calculo&#x27;]) if config.get(&#x27;suporte_calculo&#x27;) else base.copy()
+  194      if len(base)!=len(support):raise ValueError(&#x27;Base e suporte com contagens diferentes&#x27;)
+  195      keys=config[&#x27;chaves&#x27;]
+  196      if config.get(&#x27;suporte_calculo&#x27;):
+  197          support=base[keys].merge(support,on=keys,how=&#x27;left&#x27;,validate=&#x27;one_to_one&#x27;);support=gpd.GeoDataFrame(support,geometry=&#x27;geometry&#x27;,crs=base.crs)
+  198      norm,valid,params=matriz(base,support,config);x=norm[valid];names=[v[&#x27;nome&#x27;] for v in config[&#x27;variaveis&#x27;]]
+  199      output=caminho(config[&#x27;saida&#x27;]);output.mkdir(parents=True,exist_ok=True);out=base.copy();out[&#x27;completo&#x27;]=valid
+  200      for j in range(len(names)):out[&#x27;N&#x27;+str(j+1)]=norm[:,j]
+  201      rows=[];models={};scores={};scenario_keys=list(config[&#x27;cenarios&#x27;])
+  202      for i,(scenario,setting) in enumerate(config[&#x27;cenarios&#x27;].items()):
+  203          weights=np.array([setting[&#x27;pesos&#x27;].get(n,0) for n in names],float)
+  204          if (weights&lt;0).any() or weights.sum()&lt;=0:raise ValueError(&#x27;Pesos devem ser não negativos e somar mais de zero&#x27;)
+  205          xx=x*np.sqrt(weights);scores[scenario]=(norm@weights)/weights.sum();out[&#x27;I_&#x27;+scenario]=100*scores[scenario] if config[&#x27;normalizacao&#x27;]==&#x27;minmax&#x27; else scores[scenario]
+  206          for method in config.get(&#x27;metodos&#x27;,[&#x27;kmeans&#x27;]):
+  207              tree=linkage(xx,method=&#x27;ward&#x27;) if method==&#x27;ward&#x27; else None
+  208              for k in config[&#x27;k_testados&#x27;]:
+  209                  if method==&#x27;ward&#x27;:lab=fcluster(tree,k,criterion=&#x27;maxclust&#x27;)-1;loss=float(&#x27;nan&#x27;)
+  210                  else:loss,cent,lab=fitkm(xx,k,config[&#x27;semente&#x27;]+i*config.get(&#x27;passo_semente&#x27;,0),starts=config[&#x27;inicializacoes&#x27;])
+  211                  sil=silhouette(xx,lab);models[scenario,method,k]=lab
+  212                  rows.append({&#x27;cenario&#x27;:scenario,&#x27;metodo&#x27;:method,&#x27;k&#x27;:k,&#x27;silhouette&#x27;:sil,&#x27;inercia&#x27;:loss,&#x27;menor_grupo&#x27;:int(np.bincount(lab).min())})
+  213      table=pd.DataFrame(rows);first=scenario_keys[0];best=table[table.cenario.eq(first)].sort_values(&#x27;silhouette&#x27;,ascending=False).iloc[0];k0=int(best.k);method=best.metodo
+  214      reference=models[first,method,k0];rank=sorted(np.unique(reference),key=lambda g: scores[first][valid][reference==g].mean());remap=dict(zip(rank,range(len(rank))));reference=np.array([remap[v] for v in reference]);stability=[];comparisons=[]
+  215      for scenario in scenario_keys:
+  216          lab=align(models[scenario,method,k0],reference);out[&#x27;K_&#x27;+scenario]=0;out.loc[valid,&#x27;K_&#x27;+scenario]=lab+1;stability.append(lab==reference)
+  217          comparisons.append({&#x27;cenario&#x27;:scenario,&#x27;k_comum&#x27;:k0,&#x27;ARI&#x27;:ari(reference,lab),&#x27;concordancia_pct&#x27;:100*np.mean(lab==reference),&#x27;rho_indice&#x27;:float(spearmanr(scores[first][valid],scores[scenario][valid]).statistic)})
+  218      out[&#x27;estabilidade&#x27;]=np.nan;out.loc[valid,&#x27;estabilidade&#x27;]=100*np.mean(stability,axis=0);out[&#x27;r_quintil&#x27;]=0
+  219      out.loc[valid,&#x27;r_quintil&#x27;]=pd.qcut(pd.Series(scores[first][valid]).rank(method=&#x27;average&#x27;),5,labels=False,duplicates=&#x27;drop&#x27;).to_numpy()+1
+  220      moran_rows=[]
+  221      if config.get(&#x27;moran&#x27;):
+  222          out[&#x27;r_moran&#x27;]=&#x27;ND&#x27;;out[&#x27;q_fdr&#x27;]=np.nan
+  223          for basin,g in out[valid].groupby(config[&#x27;campo_bacia&#x27;]):
+  224              if &#x27;COB_ESG&#x27; in g:g=g[g.COB_ESG.ge(95)]
+  225              rec,local,ids=moran_w(g[&#x27;I_&#x27;+first].to_numpy(),queen(g),local=True,seed=config[&#x27;semente&#x27;]);moran_rows.append({&#x27;bacia&#x27;:basin,**rec})
+  226              out.loc[g.index,&#x27;r_moran&#x27;]=&#x27;ISO&#x27;
+  227              if local is not None:out.loc[g.index[ids],&#x27;r_moran&#x27;]=local[&#x27;cluster&#x27;];out.loc[g.index[ids],&#x27;q_fdr&#x27;]=local[&#x27;q&#x27;]
+  228      out.to_file(output/&#x27;analise_configuravel.gpkg&#x27;,layer=&#x27;resultados&#x27;,driver=&#x27;GPKG&#x27;)
+  229      out.drop(columns=&#x27;geometry&#x27;).to_csv(output/&#x27;indicadores.csv&#x27;,index=False)
+  230      table.to_csv(output/&#x27;comparacao_k.csv&#x27;,index=False);params.to_csv(output/&#x27;normalizacao.csv&#x27;,index=False);pd.DataFrame(comparisons).to_csv(output/&#x27;sensibilidade.csv&#x27;,index=False)
+  231      pd.DataFrame(moran_rows).to_csv(output/&#x27;moran.csv&#x27;,index=False)
+  232      evidence={&#x27;registros&#x27;:len(base),&#x27;completos&#x27;:int(valid.sum()),&#x27;k&#x27;:k0,&#x27;metodo&#x27;:method,&#x27;silhouette&#x27;:float(best.silhouette),&#x27;variaveis&#x27;:names,&#x27;configuracao&#x27;:config,&#x27;bibliotecas&#x27;:{n:importlib.metadata.version(n) for n in [&#x27;numpy&#x27;,&#x27;pandas&#x27;,&#x27;geopandas&#x27;,&#x27;scipy&#x27;,&#x27;rasterio&#x27;]},&#x27;aviso&#x27;:&#x27;Reprodução configurável separada dos produtos publicados; índice não mede genes nem corrige concentrações.&#x27;}
+  233      (output/&#x27;manifesto.json&#x27;).write_text(json.dumps(evidence,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;);print(json.dumps({k:v for k,v in evidence.items() if k not in [&#x27;configuracao&#x27;]},ensure_ascii=True))
+  234  
+  235  if __name__==&#x27;__main__&#x27;:
+  236      parser=argparse.ArgumentParser();parser.add_argument(&#x27;--config&#x27;,default=str(caminho(&#x27;config/analise_extensivel.json&#x27;)));args=parser.parse_args();executar(json.loads(Path(args.config).read_text(&#x27;utf-8-sig&#x27;)))</code></pre></article></html>

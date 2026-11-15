@@ -1,0 +1,810 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/aermod_post.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/aermod_post.py</h2>
+<p>Aermod post. Aquisição/leitura. A organização passa por _unique_paths, inspect_pos_header, _fmt_elapsed, _fmt_size, iter_pos_chunks, parse_datecode, read_post_24h, summarize_post_24h, _infer_pollutant, discover_post_24h.</p>
+<p><strong>Papel.</strong> Aquisição/leitura. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\aermod_post.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>__future__</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>os</td><td>Integração com sistema operacional e variáveis de ambiente.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>standards</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>time</td><td>Medição de duração e acompanhamento de tarefas.</td></tr><tr><td>warnings</td><td>Controle de avisos de bibliotecas sem alterar a definição do estimador.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada path.open, linha 503.</li>
+<li>{meta_path} — chamada meta_path.read_text, linha 547.</li>
+<p><strong>Saídas.</strong></p>
+<li>paths[&#x27;meta&#x27;].tmp — chamada tmp_meta.write_text, linha 619.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>ch: AVE, CONC, DATECODE, GRP, X, Y, _kind, date, hour, year.</li>
+<li>agg: COMPLETENESS, N_DAYS.</li>
+<li>sub: CONC, DATECODE, VALID_YEAR, X, Y, year.</li>
+<li>sub.loc: year.</li>
+<li>valid: ANNUAL_MEAN, P98, year.</li>
+<li>row: ANNUAL_MODEL, P98_MODEL, n_model_years, years_model.</li>
+<li>out: ANNUAL_MODEL, P98_MODEL, X, Y, n_model_years.</li>
+<li>info: ave.</li>
+<li>h: CONC, GRP, N_HOURS, SUM_CONC, X, Y, date.</li>
+<li>daily: date.</li>
+<li>paths: daily, meta.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>info: ave, cache_file, cache_load_seconds, cache_used, daily_source, detected_averaging, group, n_receptors, raw_processing_seconds.</li>
+<li>ch: CONC, DATECODE, _kind, date, hour, year.</li>
+<li>agg: COMPLETENESS, EXPECTED_DAYS, VALID_YEAR, year.</li>
+<li>row: ANNUAL_3YR, ANNUAL_MODEL, P98_3YR, P98_MODEL, n_design_years, years_valid.</li>
+<li>a: N_HOURS.</li>
+<li>h: CONC.</li>
+<li>daily: SOURCE_AVERAGING, year.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>_unique_paths(paths)</td><td>61-75</td><td>Chamadas efetivas: set, Path, seen.add, out.append, .casefold, str, pp.resolve, pp.absolute Retorno: out.</td></tr><tr><td>inspect_pos_header(path: Path)</td><td>78-93</td><td>Chamadas efetivas: str, path.open, range, f.readline, line.upper, re.search, .strip, int Retorno: info.</td></tr><tr><td>_fmt_elapsed(seconds)</td><td>96-102</td><td>Chamadas efetivas: max, divmod, int Retorno: f&#x27;{m:02d}:{s:02d}&#x27;, f&#x27;{h:02d}:{m:02d}:{s:02d}&#x27;.</td></tr><tr><td>_fmt_size(num_bytes)</td><td>105-110</td><td>Chamadas efetivas: float Retorno: f&#x27;{n:.1f} {unit}&#x27;.</td></tr><tr><td>iter_pos_chunks(path: Path, chunk_rows=350000, progress=False, progress_label=None)</td><td>113-171</td><td>Chamadas efetivas: Path, time.perf_counter, float, path.exists, getattr, path.open, print, path.stat</td></tr><tr><td>parse_datecode(series: pd.Series)</td><td>174-183</td><td>Chamadas efetivas: .str.zfill, pd.to_numeric, pd.to_datetime, s.str.slice, dict, .str.replace, series.astype Retorno: (dt, hh).</td></tr><tr><td>read_post_24h(path: Path, background=0.0)</td><td>186-204</td><td>Chamadas efetivas: inspect_pos_header, iter_pos_chunks, pd.concat, .isin, .copy, parse_datecode, chunks.append, ValueError Retorno: (df, info).</td></tr><tr><td>summarize_post_24h(path: Path, pollutant: str, background=0.0)</td><td>207-318</td><td>Chamadas efetivas: inspect_pos_header, iter_pos_chunks, finalize_year, pd.concat, int, yearly.groupby, pd.DataFrame, gpd.GeoDataFrame Retorno: (gdf, yearly, info), agg.</td></tr><tr><td>_infer_pollutant(path: Path)</td><td>321-330</td><td>Chamadas efetivas: re.sub, any, .upper, str Retorno: None, &#x27;PM10&#x27;.</td></tr><tr><td>discover_post_24h(post_dir: Path, pollutant: str)</td><td>333-352</td><td>Chamadas efetivas: .get, post_dir.rglob, Path, p.exists, _infer_pollutant, inspect_pos_header, len, info.get Retorno: None, candidates[0].</td></tr><tr><td>discover_group_posts(post_dir: Path, pollutant: str)</td><td>355-363</td><td>Chamadas efetivas: post_dir.rglob, inspect_pos_header, _infer_pollutant, info.get, files.append, str Retorno: files.</td></tr><tr><td>discover_post_hourly(post_dir: Path, pollutant: str)</td><td>366-381</td><td>Chamadas efetivas: post_dir.rglob, _infer_pollutant, inspect_pos_header, len, _ave_kind, candidates.append, sorted, info.get Retorno: None, candidates[0].</td></tr><tr><td>read_post_hourly_for_day(path: Path, target_date, background=0.0, chunk_rows=350000, progress=False)</td><td>384-409</td><td>Chamadas efetivas: .normalize, iter_pos_chunks, pd.concat, .mean, .map, .copy, parse_datecode, pd.to_numeric Retorno: out, pd.DataFrame(columns=[&#x27;X&#x27;, &#x27;Y&#x27;, &#x27;CONC&#x27;, &#x27;date&#x27;, &#x27;hour&#x27;, &#x27;GRP&#x27;]).</td></tr><tr><td>_ave_kind(value)</td><td>412-418</td><td>Chamadas efetivas: re.sub, .upper, t.startswith, str Retorno: None, &#x27;24H&#x27;.</td></tr><tr><td>read_post_daily(path: Path, background=0.0, chunk_rows=350000, progress=False, progress_label=None)</td><td>421-488</td><td>Chamadas efetivas: inspect_pos_header, set, iter_pos_chunks, .dt.year.astype, dict, .join, .map, detected.update Retorno: (daily, info).</td></tr><tr><td>_safe_pollutant_name(pollutant, path)</td><td>491-495</td><td>Chamadas efetivas: _infer_pollutant, .replace, str Retorno: inferred or &#x27;GEN&#x27;, str(pollutant).replace(&#x27;/&#x27;, &#x27;_&#x27;).</td></tr><tr><td>_pos_fingerprint(path: Path)</td><td>498-513</td><td>Chamadas efetivas: Path, path.stat, int, hashlib.sha256, getattr, path.open, f.read, h.update Retorno: {&#x27;size&#x27;: int(st.st_size), &#x27;mtime_ns&#x27;: int(st.st_mtime_ns), &#x27;sample_sha256&#x27;: h.hexdigest()}.</td></tr><tr><td>_pos_cache_paths(path: Path, pollutant=None)</td><td>516-532</td><td>Chamadas efetivas: Path, _safe_pollutant_name, folder.mkdir, .resolve, re.sub, .get, .lower, .hexdigest Retorno: {&#x27;daily&#x27;: Path(str(base) + &#x27;_daily.pkl.gz&#x27;), &#x27;meta&#x27;: Path(str(base) + &#x27;_meta.json&#x27;)}.</td></tr><tr><td>_cache_signature(background)</td><td>535-540</td><td>Chamadas efetivas: int, float, getattr Retorno: {&#x27;cache_version&#x27;: int(getattr(config, &#x27;POS_CACHE_VERSION&#x27;, 1)), &#x27;min_valid_hours_day&#x27;: int(config.MIN_VALID_HOURS_DAY), &#x27;background&#x27;: float(background)}.</td></tr><tr><td>_cache_is_valid(path: Path, meta_path: Path, background)</td><td>543-556</td><td>lê dados Retorno: (meta.get(&#x27;source_fingerprint&#x27;) == fp, meta), (False, None).</td></tr><tr><td>read_post_daily_cached(path: Path, background=0.0, pollutant=None, chunk_rows=350000)</td><td>559-631</td><td>grava produtos Retorno: (daily, info), (daily, info).</td></tr><tr><td>summarize_post_for_pm(path: Path, pollutant: str, background=0.0)</td><td>634-700</td><td>Chamadas efetivas: read_post_daily_cached, daily.groupby, pd.concat, int, yearly.groupby, pd.DataFrame, gpd.GeoDataFrame, .reset_index Retorno: (gdf, yearly, info).</td></tr><tr><td>_pollutant_folder(post_dir: Path, pollutant: str)</td><td>703-709</td><td>Chamadas efetivas: p.exists, p.is_dir Retorno: post_dir, p.</td></tr><tr><td>discover_post_main(post_dir: Path, pollutant: str)</td><td>712-747</td><td>Chamadas efetivas: .get, _pollutant_folder, _unique_paths, pool.sort, Path, p.exists, _infer_pollutant, inspect_pos_header Retorno: pool[0][0], None.</td></tr><tr><td>discover_group_posts_any(post_dir: Path, pollutant: str)</td><td>750-764</td><td>Chamadas efetivas: _pollutant_folder, _unique_paths, _infer_pollutant, inspect_pos_header, sorted, _ave_kind, out.append, folder.glob Retorno: out.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/aermod_post.py, linhas 285-291.</p>
+<pre><code>        if len(valid) == n_required:
+            row[&quot;P98_MODEL&quot;] = valid[&quot;P98&quot;].mean()
+            row[&quot;ANNUAL_MODEL&quot;] = valid[&quot;ANNUAL_MEAN&quot;].mean()
+        else:
+            row[&quot;P98_MODEL&quot;] = np.nan
+            row[&quot;ANNUAL_MODEL&quot;] = np.nan
+</code></pre>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | path.open.
+    5  # Entrada: {meta_path} | meta_path.read_text.
+    6  # Campos/chaves em ch: AVE, CONC, DATECODE, GRP, X, Y, _kind, date, hour, year.
+    7  # Campos/chaves em agg: COMPLETENESS, N_DAYS.
+    8  # Campos/chaves em sub: CONC, DATECODE, VALID_YEAR, X, Y, year.
+    9  # Campos/chaves em sub.loc: year.
+   10  # Campos/chaves em valid: ANNUAL_MEAN, P98, year.
+   11  # Campos/chaves em row: ANNUAL_MODEL, P98_MODEL, n_model_years, years_model.
+   12  # Campos/chaves em out: ANNUAL_MODEL, P98_MODEL, X, Y, n_model_years.
+   13  # Campos/chaves em info: ave.
+   14  # Campos/chaves em h: CONC, GRP, N_HOURS, SUM_CONC, X, Y, date.
+   15  # Campos/chaves em daily: date.
+   16  # Campos/chaves em paths: daily, meta.
+   17  # Saída: paths[&#x27;meta&#x27;].tmp | tmp_meta.write_text.
+   18  # Campos/chaves gerados em info: ave, cache_file, cache_load_seconds, cache_used, daily_source, detected_averaging, group, n_receptors, raw_processing_seconds.
+   19  # Campos/chaves gerados em ch: CONC, DATECODE, _kind, date, hour, year.
+   20  # Campos/chaves gerados em agg: COMPLETENESS, EXPECTED_DAYS, VALID_YEAR, year.
+   21  # Campos/chaves gerados em row: ANNUAL_3YR, ANNUAL_MODEL, P98_3YR, P98_MODEL, n_design_years, years_valid.
+   22  # Campos/chaves gerados em a: N_HOURS.
+   23  # Campos/chaves gerados em h: CONC.
+   24  # Campos/chaves gerados em daily: SOURCE_AVERAGING, year.
+   25  # X: coordenada leste em metros.
+   26  # Y: coordenada norte em metros.
+   27  # CÓDIGO DO PROCESSAMENTO
+   28  
+   29  from __future__ import annotations
+   30  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   31  import sys as _cp_sys
+   32  from pathlib import Path as _cp_Path
+   33  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   34  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   35      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   36      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   37          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   38          break
+   39  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   40  # FIM DOS CAMINHOS PORTÁTEIS
+   41  
+   42  
+   43  from pathlib import Path
+   44  import re
+   45  import warnings
+   46  import json
+   47  import hashlib
+   48  import time
+   49  import os
+   50  
+   51  import numpy as np
+   52  import pandas as pd
+   53  import geopandas as gpd
+   54  
+   55  import config
+   56  from standards import STANDARDS, nearest_rank_percentile
+   57  
+   58  DATA_RE = re.compile(r&quot;^\s*[-+]?\d&quot;)
+   59  
+   60  # Unique paths
+   61  def _unique_paths(paths):
+   62      &quot;&quot;&quot;Remove duplicações de caminhos, inclusive em sistemas case-insensitive.&quot;&quot;&quot;
+   63      seen = set()
+   64      out = []
+   65      for p in paths:
+   66          pp = Path(p)
+   67          try:
+   68              key = str(pp.resolve()).casefold()
+   69          except Exception:
+   70              key = str(pp.absolute()).casefold()
+   71          if key in seen:
+   72              continue
+   73          seen.add(key)
+   74          out.append(pp)
+   75      return out
+   76  
+   77  # Inspect pos header
+   78  def inspect_pos_header(path: Path):
+   79      info = {&quot;file&quot;: str(path), &quot;ave&quot;: None, &quot;group&quot;: None, &quot;n_receptors&quot;: None}
+   80      with path.open(&quot;r&quot;, encoding=&quot;latin1&quot;, errors=&quot;replace&quot;) as f:
+   81          for _ in range(30):
+   82              line = f.readline()
+   83              if not line:
+   84                  break
+   85              up = line.upper()
+   86              m = re.search(r&quot;CONCURRENT\s+(.+?)\s+VALUES\s+FOR SOURCE GROUP:\s*(\S+)&quot;, up)
+   87              if m:
+   88                  info[&quot;ave&quot;] = m.group(1).strip()
+   89                  info[&quot;group&quot;] = m.group(2).strip()
+   90              m = re.search(r&quot;TOTAL OF\s+(\d+)\s+RECEPTORS&quot;, up)
+   91              if m:
+   92                  info[&quot;n_receptors&quot;] = int(m.group(1))
+   93      return info
+   94  
+   95  # Fmt elapsed
+   96  def _fmt_elapsed(seconds):
+   97      seconds = max(0, int(seconds))
+   98      h, rem = divmod(seconds, 3600)
+   99      m, s = divmod(rem, 60)
+  100      if h:
+  101          return f&quot;{h:02d}:{m:02d}:{s:02d}&quot;
+  102      return f&quot;{m:02d}:{s:02d}&quot;
+  103  
+  104  # Fmt size
+  105  def _fmt_size(num_bytes):
+  106      n = float(num_bytes)
+  107      for unit in (&quot;B&quot;, &quot;KB&quot;, &quot;MB&quot;, &quot;GB&quot;, &quot;TB&quot;):
+  108          if n &lt; 1024.0 or unit == &quot;TB&quot;:
+  109              return f&quot;{n:.1f} {unit}&quot;
+  110          n /= 1024.0
+  111  
+  112  # Iter pos chunks
+  113  def iter_pos_chunks(path: Path, chunk_rows=350_000, progress=False, progress_label=None):
+  114      &quot;&quot;&quot;Itera pelas linhas de dados do POST em blocos.
+  115  
+  116      Quando ``progress=True``, imprime progresso aproximado por tamanho lido,
+  117      número de registros válidos e tempo decorrido. O objetivo é deixar claro
+  118      que arquivos .POS gigantes continuam sendo processados.
+  119      &quot;&quot;&quot;
+  120      path = Path(path)
+  121      rows = []
+  122      data_rows = 0
+  123      raw_lines = 0
+  124      bytes_seen = 0
+  125      file_size = path.stat().st_size if path.exists() else 0
+  126      t0 = time.perf_counter()
+  127      last_report = t0
+  128      min_seconds = float(getattr(config, &quot;POS_PROGRESS_MIN_SECONDS&quot;, 8.0))
+  129      label = progress_label or path.name
+  130  
+  131      with path.open(&quot;r&quot;, encoding=&quot;latin1&quot;, errors=&quot;replace&quot;, newline=&quot;&quot;) as f:
+  132          for line in f:
+  133              raw_lines += 1
+  134  
+  135              bytes_seen += len(line)
+  136              if not DATA_RE.match(line):
+  137                  continue
+  138              p = line.split()
+  139  
+  140              if len(p) &lt; 9:
+  141                  continue
+  142              try:
+  143                  rows.append((
+  144                      float(p[0]), float(p[1]), float(p[2]),
+  145                      p[6], p[7], str(p[8]).zfill(8)
+  146                  ))
+  147                  data_rows += 1
+  148              except Exception:
+  149                  continue
+  150              if len(rows) &gt;= chunk_rows:
+  151                  now = time.perf_counter()
+  152                  if progress and (now - last_report &gt;= min_seconds):
+  153                      pct = min(100.0, 100.0 * bytes_seen / file_size) if file_size else 0.0
+  154                      print(
+  155                          f&quot;      [PROGRESSO] {label}: {pct:5.1f}% | &quot;
+  156                          f&quot;{data_rows:,} registros | {_fmt_size(bytes_seen)} de {_fmt_size(file_size)} | &quot;
+  157                          f&quot;tempo {_fmt_elapsed(now-t0)}&quot;,
+  158                          flush=True,
+  159                      )
+  160                      last_report = now
+  161                  yield pd.DataFrame(rows, columns=[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;AVE&quot;, &quot;GRP&quot;, &quot;DATECODE&quot;])
+  162                  rows = []
+  163      if rows:
+  164          yield pd.DataFrame(rows, columns=[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;AVE&quot;, &quot;GRP&quot;, &quot;DATECODE&quot;])
+  165      if progress:
+  166          elapsed = time.perf_counter() - t0
+  167          print(
+  168              f&quot;      [PROGRESSO] {label}: 100.0% | {data_rows:,} registros válidos lidos | &quot;
+  169              f&quot;{_fmt_size(file_size)} | tempo {_fmt_elapsed(elapsed)}&quot;,
+  170              flush=True,
+  171          )
+  172  
+  173  # Parse datecode
+  174  def parse_datecode(series: pd.Series):
+  175      s = series.astype(str).str.replace(r&quot;\.0$&quot;, &quot;&quot;, regex=True).str.zfill(8)
+  176      yy = pd.to_numeric(s.str.slice(0, 2), errors=&quot;coerce&quot;)
+  177      mm = pd.to_numeric(s.str.slice(2, 4), errors=&quot;coerce&quot;)
+  178      dd = pd.to_numeric(s.str.slice(4, 6), errors=&quot;coerce&quot;)
+  179      hh = pd.to_numeric(s.str.slice(6, 8), errors=&quot;coerce&quot;)
+  180      year = 2000 + yy
+  181  
+  182      dt = pd.to_datetime(dict(year=year, month=mm, day=dd), errors=&quot;coerce&quot;)
+  183      return dt, hh
+  184  
+  185  # Read post 24h
+  186  def read_post_24h(path: Path, background=0.0):
+  187      info = inspect_pos_header(path)
+  188      chunks = []
+  189      for ch in iter_pos_chunks(path):
+  190  
+  191          mask = ch[&quot;AVE&quot;].str.upper().isin({&quot;24-HR&quot;, &quot;24HR&quot;, &quot;24&quot;})
+  192          ch = ch[mask].copy()
+  193          if ch.empty:
+  194              continue
+  195          dt, hh = parse_datecode(ch[&quot;DATECODE&quot;])
+  196          ch[&quot;date&quot;] = dt
+  197          ch[&quot;year&quot;] = dt.dt.year
+  198          ch[&quot;hour&quot;] = hh
+  199          ch[&quot;CONC&quot;] = ch[&quot;CONC&quot;] + float(background)
+  200          chunks.append(ch[[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;date&quot;, &quot;year&quot;, &quot;GRP&quot;]])
+  201      if not chunks:
+  202          raise ValueError(f&quot;Nenhum registro 24-HR encontrado em {path}&quot;)
+  203      df = pd.concat(chunks, ignore_index=True)
+  204      return df, info
+  205  
+  206  # Summarize post 24h
+  207  def summarize_post_24h(path: Path, pollutant: str, background=0.0):
+  208      &quot;&quot;&quot;Resume um POSTFILE de 24 h por receptor.
+  209  
+  210      O monitoramento pode continuar usando 3 anos, mas a modelagem AERMOD
+  211      aceita provisoriamente o número de anos definido em
+  212      ``config.MODEL_N_YEARS_DESIGN``. Nesta versão o padrão é 1 ano, pois o
+  213      POST disponível contém somente 2023. Quando os três anos estiverem
+  214      disponíveis, basta alterar MODEL_N_YEARS_DESIGN para 3 no config.py.
+  215      &quot;&quot;&quot;
+  216      info = inspect_pos_header(path)
+  217      yearly_parts = []
+  218      current_year = None
+  219      current_parts = []
+  220  
+  221      def finalize_year(year, parts):
+  222          if year is None or not parts:
+  223              return None
+  224          d = pd.concat(parts, ignore_index=True)
+  225          d = d.drop_duplicates(subset=[&quot;X&quot;, &quot;Y&quot;, &quot;DATECODE&quot;], keep=&quot;last&quot;)
+  226          agg = d.groupby([&quot;X&quot;, &quot;Y&quot;], observed=True).agg(
+  227              ANNUAL_MEAN=(&quot;CONC&quot;, &quot;mean&quot;),
+  228              N_DAYS=(&quot;CONC&quot;, &quot;count&quot;),
+  229              P98=(&quot;CONC&quot;, lambda x: nearest_rank_percentile(x, config.SHORT_TERM_PERCENTILE)),
+  230          ).reset_index()
+  231          agg[&quot;year&quot;] = int(year)
+  232          expected = 366 if pd.Timestamp(int(year), 12, 31).is_leap_year else 365
+  233          agg[&quot;EXPECTED_DAYS&quot;] = expected
+  234          agg[&quot;COMPLETENESS&quot;] = agg[&quot;N_DAYS&quot;] / expected
+  235          agg[&quot;VALID_YEAR&quot;] = agg[&quot;COMPLETENESS&quot;] &gt;= config.MIN_QUARTER_COMPLETENESS
+  236          return agg
+  237  
+  238      for ch in iter_pos_chunks(path):
+  239          mask = ch[&quot;AVE&quot;].str.upper().isin({&quot;24-HR&quot;, &quot;24HR&quot;, &quot;24&quot;})
+  240          ch = ch[mask].copy()
+  241          if ch.empty:
+  242              continue
+  243          code = ch[&quot;DATECODE&quot;].astype(str).str.replace(r&quot;\.0$&quot;, &quot;&quot;, regex=True).str.zfill(8)
+  244          ch[&quot;year&quot;] = 2000 + pd.to_numeric(code.str.slice(0, 2), errors=&quot;coerce&quot;)
+  245          ch[&quot;CONC&quot;] = ch[&quot;CONC&quot;] + float(background)
+  246          ch[&quot;DATECODE&quot;] = code
+  247          ch = ch.dropna(subset=[&quot;year&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;])
+  248          for year, sub in ch.groupby(&quot;year&quot;, sort=True):
+  249              year = int(year)
+  250              if current_year is None:
+  251                  current_year = year
+  252              if year != current_year:
+  253                  done = finalize_year(current_year, current_parts)
+  254                  if done is not None:
+  255                      yearly_parts.append(done)
+  256                  current_parts = []
+  257                  current_year = year
+  258              current_parts.append(sub[[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;DATECODE&quot;]].copy())
+  259  
+  260      done = finalize_year(current_year, current_parts)
+  261      if done is not None:
+  262          yearly_parts.append(done)
+  263      if not yearly_parts:
+  264          raise ValueError(f&quot;Nenhum registro 24-HR encontrado em {path}&quot;)
+  265  
+  266      yearly = pd.concat(yearly_parts, ignore_index=True)
+  267      n_required = int(config.MODEL_N_YEARS_DESIGN)
+  268  
+  269      summaries = []
+  270      for (x, y), sub in yearly.groupby([&quot;X&quot;, &quot;Y&quot;], sort=False):
+  271          valid_years = sorted(sub.loc[sub[&quot;VALID_YEAR&quot;], &quot;year&quot;].astype(int).tolist())
+  272          valid = pd.DataFrame(columns=sub.columns)
+  273          for end_year in sorted(valid_years, reverse=True):
+  274              wanted = list(range(end_year - n_required + 1, end_year + 1))
+  275              if all(yv in valid_years for yv in wanted):
+  276                  valid = sub[sub[&quot;year&quot;].isin(wanted)].sort_values(&quot;year&quot;)
+  277                  break
+  278  
+  279          row = {
+  280              &quot;X&quot;: x,
+  281              &quot;Y&quot;: y,
+  282              &quot;n_model_years&quot;: int(len(valid)),
+  283              &quot;years_model&quot;: &quot;,&quot;.join(map(str, valid[&quot;year&quot;].astype(int).tolist())) if len(valid) else &quot;&quot;,
+  284          }
+  285          if len(valid) == n_required:
+  286              row[&quot;P98_MODEL&quot;] = valid[&quot;P98&quot;].mean()
+  287              row[&quot;ANNUAL_MODEL&quot;] = valid[&quot;ANNUAL_MEAN&quot;].mean()
+  288          else:
+  289              row[&quot;P98_MODEL&quot;] = np.nan
+  290              row[&quot;ANNUAL_MODEL&quot;] = np.nan
+  291  
+  292          row[&quot;n_design_years&quot;] = row[&quot;n_model_years&quot;]
+  293          row[&quot;years_valid&quot;] = row[&quot;years_model&quot;]
+  294          row[&quot;P98_3YR&quot;] = row[&quot;P98_MODEL&quot;]
+  295          row[&quot;ANNUAL_3YR&quot;] = row[&quot;ANNUAL_MODEL&quot;]
+  296          summaries.append(row)
+  297  
+  298      out = pd.DataFrame(summaries)
+  299      for scenario in (&quot;PV&quot;, &quot;PF&quot;):
+  300          lim24 = STANDARDS[pollutant][scenario][&quot;24H&quot;]
+  301          limann = STANDARDS[pollutant][scenario][&quot;ANNUAL&quot;]
+  302          out[f&quot;ratio24_{scenario}&quot;] = out[&quot;P98_MODEL&quot;] / lim24
+  303          out[f&quot;ratioann_{scenario}&quot;] = out[&quot;ANNUAL_MODEL&quot;] / limann
+  304          out[f&quot;status_{scenario}&quot;] = np.select(
+  305              [
+  306                  out[&quot;n_model_years&quot;] &lt; n_required,
+  307                  (out[&quot;P98_MODEL&quot;] &lt;= lim24) &amp; (out[&quot;ANNUAL_MODEL&quot;] &lt;= limann),
+  308              ],
+  309              [&quot;insuficiente&quot;, &quot;atendimento&quot;],
+  310              default=&quot;nao_atendimento&quot;,
+  311          )
+  312  
+  313      gdf = gpd.GeoDataFrame(
+  314          out,
+  315          geometry=gpd.points_from_xy(out[&quot;X&quot;], out[&quot;Y&quot;]),
+  316          crs=config.CRS_PROJECT,
+  317      )
+  318      return gdf, yearly, info
+  319  
+  320  # Infer pollutant
+  321  def _infer_pollutant(path: Path):
+  322      t = re.sub(r&quot;[^A-Z0-9]+&quot;, &quot;&quot;, str(path).upper())
+  323      if &quot;PM10&quot; in t or &quot;MP10&quot; in t:
+  324          return &quot;PM10&quot;
+  325      if any(x in t for x in [&quot;PM25&quot;, &quot;PM2_5&quot;, &quot;PM2-5&quot;, &quot;MP25&quot;, &quot;MP2-5&quot;]):
+  326          return &quot;PM25&quot;
+  327  
+  328      if &quot;PM25&quot; in t or &quot;MP25&quot; in t:
+  329          return &quot;PM25&quot;
+  330      return None
+  331  
+  332  # Discover post 24h
+  333  def discover_post_24h(post_dir: Path, pollutant: str):
+  334      override = config.POST_OVERRIDE[pollutant].get(&quot;24H&quot;)
+  335      if override:
+  336          p = Path(override)
+  337          if p.exists():
+  338              return p
+  339  
+  340      candidates = []
+  341      for p in post_dir.rglob(&quot;*.POS&quot;):
+  342          pol = _infer_pollutant(p)
+  343          info = inspect_pos_header(p)
+  344          if pol == pollutant and info.get(&quot;ave&quot;) and &quot;24&quot; in str(info[&quot;ave&quot;]):
+  345              candidates.append(p)
+  346      if len(candidates) == 1:
+  347          return candidates[0]
+  348      if len(candidates) &gt; 1:
+  349  
+  350          allc = [p for p in candidates if &quot;GALL&quot; in p.name.upper() or &quot;ALL&quot; in p.name.upper()]
+  351          return sorted(allc or candidates)[0]
+  352      return None
+  353  
+  354  # Discover group posts
+  355  def discover_group_posts(post_dir: Path, pollutant: str):
+  356      files = []
+  357      for p in post_dir.rglob(&quot;*.POS&quot;):
+  358          if _infer_pollutant(p) not in {None, pollutant}:
+  359              continue
+  360          info = inspect_pos_header(p)
+  361          if info.get(&quot;ave&quot;) and &quot;24&quot; in str(info[&quot;ave&quot;]):
+  362              files.append((p, info))
+  363      return files
+  364  
+  365  # Discover post hourly
+  366  def discover_post_hourly(post_dir: Path, pollutant: str):
+  367      &quot;&quot;&quot;Localiza preferencialmente um POSTFILE 1-HR do grupo ALL/GALL.&quot;&quot;&quot;
+  368      candidates = []
+  369      for p in post_dir.rglob(&quot;*.POS&quot;):
+  370          pol = _infer_pollutant(p)
+  371          if pol != pollutant:
+  372              continue
+  373          info = inspect_pos_header(p)
+  374          if _ave_kind(info.get(&quot;ave&quot;)) == &quot;1H&quot;:
+  375              candidates.append(p)
+  376      if len(candidates) == 1:
+  377          return candidates[0]
+  378      if len(candidates) &gt; 1:
+  379          allc = [p for p in candidates if &quot;GALL&quot; in p.name.upper() or &quot;ALL&quot; in p.name.upper()]
+  380          return sorted(allc or candidates)[0]
+  381      return None
+  382  
+  383  # Read post hourly for day
+  384  def read_post_hourly_for_day(path: Path, target_date, background=0.0, chunk_rows=350_000, progress=False):
+  385      &quot;&quot;&quot;Extrai a série horária de um único dia a partir de POST 1-HR.&quot;&quot;&quot;
+  386      target = pd.Timestamp(target_date).normalize()
+  387      parts = []
+  388      for ch in iter_pos_chunks(path, chunk_rows=chunk_rows, progress=progress, progress_label=path.name):
+  389          if ch.empty:
+  390              continue
+  391          ch[&quot;_kind&quot;] = ch[&quot;AVE&quot;].map(_ave_kind)
+  392          ch = ch[ch[&quot;_kind&quot;] == &quot;1H&quot;].copy()
+  393          if ch.empty:
+  394              continue
+  395          dt, hh = parse_datecode(ch[&quot;DATECODE&quot;])
+  396          ch[&quot;date&quot;] = dt
+  397          ch[&quot;hour&quot;] = pd.to_numeric(hh, errors=&quot;coerce&quot;)
+  398          ch[&quot;CONC&quot;] = pd.to_numeric(ch[&quot;CONC&quot;], errors=&quot;coerce&quot;) + float(background)
+  399          ch = ch.dropna(subset=[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;date&quot;, &quot;hour&quot;])
+  400          ch = ch[ch[&quot;date&quot;] == target]
+  401          if ch.empty:
+  402              continue
+  403          ch = ch[[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;date&quot;, &quot;hour&quot;, &quot;GRP&quot;]].copy()
+  404          parts.append(ch)
+  405      if not parts:
+  406          return pd.DataFrame(columns=[&quot;X&quot;,&quot;Y&quot;,&quot;CONC&quot;,&quot;date&quot;,&quot;hour&quot;,&quot;GRP&quot;])
+  407      out = pd.concat(parts, ignore_index=True)
+  408      out = out.groupby([&quot;X&quot;,&quot;Y&quot;,&quot;date&quot;,&quot;hour&quot;,&quot;GRP&quot;], observed=True, as_index=False)[&quot;CONC&quot;].mean()
+  409      return out
+  410  
+  411  # Ave kind
+  412  def _ave_kind(value):
+  413      t = re.sub(r&quot;[^A-Z0-9]+&quot;, &quot;&quot;, str(value or &quot;&quot;).upper())
+  414      if t in {&quot;24&quot;, &quot;24HR&quot;, &quot;24H&quot;} or t.startswith(&quot;24HR&quot;):
+  415          return &quot;24H&quot;
+  416      if t in {&quot;1&quot;, &quot;01&quot;, &quot;1HR&quot;, &quot;01HR&quot;, &quot;1H&quot;} or t.startswith(&quot;1HR&quot;):
+  417          return &quot;1H&quot;
+  418      return None
+  419  
+  420  # Read post daily
+  421  def read_post_daily(path: Path, background=0.0, chunk_rows=350_000, progress=False, progress_label=None):
+  422      &quot;&quot;&quot;Retorna uma série diária por receptor a partir de POST 24-HR ou 1-HR.
+  423  
+  424      Colunas: X, Y, CONC, date, year, GRP, N_HOURS, SOURCE_AVERAGING.
+  425      Para POST 1-HR, um dia é mantido apenas quando possui pelo menos
+  426      ``config.MIN_VALID_HOURS_DAY`` horas. Para POST 24-HR, o valor é usado
+  427      diretamente como média de 24 h.
+  428      &quot;&quot;&quot;
+  429      info = inspect_pos_header(path)
+  430      direct_parts = []
+  431      hourly_parts = []
+  432      detected = set()
+  433  
+  434      for ch in iter_pos_chunks(path, chunk_rows=chunk_rows, progress=progress, progress_label=progress_label):
+  435          if ch.empty:
+  436              continue
+  437          ch[&quot;_kind&quot;] = ch[&quot;AVE&quot;].map(_ave_kind)
+  438          detected.update(ch[&quot;_kind&quot;].dropna().unique().tolist())
+  439          ch = ch[ch[&quot;_kind&quot;].isin([&quot;1H&quot;, &quot;24H&quot;])].copy()
+  440          if ch.empty:
+  441              continue
+  442          code = ch[&quot;DATECODE&quot;].astype(str).str.replace(r&quot;\.0$&quot;, &quot;&quot;, regex=True).str.zfill(8)
+  443          yy = pd.to_numeric(code.str.slice(0, 2), errors=&quot;coerce&quot;)
+  444          mm = pd.to_numeric(code.str.slice(2, 4), errors=&quot;coerce&quot;)
+  445          dd = pd.to_numeric(code.str.slice(4, 6), errors=&quot;coerce&quot;)
+  446          ch[&quot;date&quot;] = pd.to_datetime(dict(year=2000 + yy, month=mm, day=dd), errors=&quot;coerce&quot;)
+  447          ch[&quot;CONC&quot;] = pd.to_numeric(ch[&quot;CONC&quot;], errors=&quot;coerce&quot;) + float(background)
+  448          ch = ch.dropna(subset=[&quot;X&quot;, &quot;Y&quot;, &quot;CONC&quot;, &quot;date&quot;])
+  449  
+  450          d24 = ch[ch[&quot;_kind&quot;] == &quot;24H&quot;]
+  451          if not d24.empty:
+  452  
+  453              a = d24.groupby([&quot;X&quot;, &quot;Y&quot;, &quot;date&quot;, &quot;GRP&quot;], observed=True, as_index=False).agg(CONC=(&quot;CONC&quot;, &quot;mean&quot;))
+  454              a[&quot;N_HOURS&quot;] = 24
+  455              direct_parts.append(a)
+  456  
+  457          d1 = ch[ch[&quot;_kind&quot;] == &quot;1H&quot;]
+  458          if not d1.empty:
+  459  
+  460              a = d1.groupby([&quot;X&quot;, &quot;Y&quot;, &quot;date&quot;, &quot;GRP&quot;], observed=True, as_index=False).agg(
+  461                  SUM_CONC=(&quot;CONC&quot;, &quot;sum&quot;), N_HOURS=(&quot;CONC&quot;, &quot;count&quot;)
+  462              )
+  463              hourly_parts.append(a)
+  464  
+  465      if direct_parts:
+  466          daily = pd.concat(direct_parts, ignore_index=True)
+  467          daily = daily.groupby([&quot;X&quot;, &quot;Y&quot;, &quot;date&quot;, &quot;GRP&quot;], observed=True, as_index=False).agg(
+  468              CONC=(&quot;CONC&quot;, &quot;mean&quot;), N_HOURS=(&quot;N_HOURS&quot;, &quot;max&quot;)
+  469          )
+  470          source_ave = &quot;24H&quot;
+  471      elif hourly_parts:
+  472          h = pd.concat(hourly_parts, ignore_index=True)
+  473          h = h.groupby([&quot;X&quot;, &quot;Y&quot;, &quot;date&quot;, &quot;GRP&quot;], observed=True, as_index=False).agg(
+  474              SUM_CONC=(&quot;SUM_CONC&quot;, &quot;sum&quot;), N_HOURS=(&quot;N_HOURS&quot;, &quot;sum&quot;)
+  475          )
+  476          h = h[h[&quot;N_HOURS&quot;] &gt;= int(config.MIN_VALID_HOURS_DAY)].copy()
+  477          h[&quot;CONC&quot;] = h[&quot;SUM_CONC&quot;] / h[&quot;N_HOURS&quot;]
+  478          daily = h[[&quot;X&quot;, &quot;Y&quot;, &quot;date&quot;, &quot;GRP&quot;, &quot;CONC&quot;, &quot;N_HOURS&quot;]]
+  479          source_ave = &quot;1H→24H&quot;
+  480      else:
+  481          raise ValueError(f&quot;Nenhum registro 1-HR ou 24-HR encontrado em {path}&quot;)
+  482  
+  483      daily[&quot;year&quot;] = daily[&quot;date&quot;].dt.year.astype(&quot;Int64&quot;)
+  484      daily[&quot;SOURCE_AVERAGING&quot;] = source_ave
+  485      info = dict(info)
+  486      info[&quot;daily_source&quot;] = source_ave
+  487      info[&quot;detected_averaging&quot;] = &quot;,&quot;.join(sorted(detected))
+  488      return daily, info
+  489  
+  490  # Safe pollutant name
+  491  def _safe_pollutant_name(pollutant, path):
+  492      if pollutant:
+  493          return str(pollutant).replace(&quot;/&quot;, &quot;_&quot;)
+  494      inferred = _infer_pollutant(path)
+  495      return inferred or &quot;GEN&quot;
+  496  
+  497  # Pos fingerprint
+  498  def _pos_fingerprint(path: Path):
+  499      path = Path(path)
+  500      st = path.stat()
+  501      n = int(getattr(config, &quot;POS_CACHE_SAMPLE_BYTES&quot;, 1024 * 1024))
+  502      h = hashlib.sha256()
+  503      with path.open(&quot;rb&quot;) as f:
+  504          head = f.read(n)
+  505          h.update(head)
+  506          if st.st_size &gt; n:
+  507              f.seek(max(0, st.st_size - n))
+  508              h.update(f.read(n))
+  509      return {
+  510          &quot;size&quot;: int(st.st_size),
+  511          &quot;mtime_ns&quot;: int(st.st_mtime_ns),
+  512          &quot;sample_sha256&quot;: h.hexdigest(),
+  513      }
+  514  
+  515  # Pos cache paths
+  516  def _pos_cache_paths(path: Path, pollutant=None):
+  517      cache_root = Path(getattr(config, &quot;DIRS&quot;, {}).get(&quot;pos_cache&quot;, Path(config.BASE) / &quot;cache&quot; / &quot;pos&quot;))
+  518      pol = _safe_pollutant_name(pollutant, path)
+  519      folder = cache_root / pol
+  520      folder.mkdir(parents=True, exist_ok=True)
+  521      resolved = Path(path).resolve()
+  522      try:
+  523          identity = resolved.relative_to(Path(config.BASE).resolve()).as_posix().lower()
+  524      except ValueError:
+  525          identity = str(resolved).lower()
+  526      key = hashlib.sha1(identity.encode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)).hexdigest()[:10]
+  527      stem = re.sub(r&quot;[^A-Za-z0-9_.-]+&quot;, &quot;_&quot;, Path(path).stem)
+  528      base = folder / f&quot;{stem}_{key}&quot;
+  529      return {
+  530          &quot;daily&quot;: Path(str(base) + &quot;_daily.pkl.gz&quot;),
+  531          &quot;meta&quot;: Path(str(base) + &quot;_meta.json&quot;),
+  532      }
+  533  
+  534  # Cache signature
+  535  def _cache_signature(background):
+  536      return {
+  537          &quot;cache_version&quot;: int(getattr(config, &quot;POS_CACHE_VERSION&quot;, 1)),
+  538          &quot;min_valid_hours_day&quot;: int(config.MIN_VALID_HOURS_DAY),
+  539          &quot;background&quot;: float(background),
+  540      }
+  541  
+  542  # Cache is valid
+  543  def _cache_is_valid(path: Path, meta_path: Path, background):
+  544      if not meta_path.exists():
+  545          return False, None
+  546      try:
+  547          meta = json.loads(meta_path.read_text(encoding=&quot;utf-8&quot;))
+  548      except Exception:
+  549          return False, None
+  550      if meta.get(&quot;signature&quot;) != _cache_signature(background):
+  551          return False, meta
+  552      try:
+  553          fp = _pos_fingerprint(path)
+  554      except Exception:
+  555          return False, meta
+  556      return meta.get(&quot;source_fingerprint&quot;) == fp, meta
+  557  
+  558  # Read post daily cached
+  559  def read_post_daily_cached(path: Path, background=0.0, pollutant=None, chunk_rows=350_000):
+  560      &quot;&quot;&quot;Lê o POST e mantém cache persistente da série diária tratada.
+  561  
+  562      O cache é invalidado automaticamente quando o .POS muda em tamanho, data
+  563      de modificação ou amostra binária do início/fim.
+  564      &quot;&quot;&quot;
+  565      path = Path(path)
+  566      use_cache = bool(getattr(config, &quot;USE_POS_CACHE&quot;, True))
+  567      force = bool(getattr(config, &quot;FORCE_REBUILD_POS_CACHE&quot;, False))
+  568      paths = _pos_cache_paths(path, pollutant)
+  569  
+  570      if use_cache and not force and paths[&quot;daily&quot;].exists():
+  571          valid, meta = _cache_is_valid(path, paths[&quot;meta&quot;], background)
+  572          if valid:
+  573              t0 = time.perf_counter()
+  574              print(f&quot;    [CACHE HIT] {path.name} -&gt; usando série diária tratada&quot;, flush=True)
+  575              daily = pd.read_pickle(paths[&quot;daily&quot;], compression=&quot;gzip&quot;)
+  576              load_elapsed = time.perf_counter() - t0
+  577              print(
+  578                  f&quot;    [CACHE OK] {path.name}: {len(daily):,} registros diários carregados em &quot;
+  579                  f&quot;{_fmt_elapsed(load_elapsed)}&quot;, flush=True
+  580              )
+  581              info = dict((meta or {}).get(&quot;info&quot;) or {})
+  582              info[&quot;cache_used&quot;] = True
+  583              info[&quot;cache_file&quot;] = str(paths[&quot;daily&quot;])
+  584              info[&quot;cache_load_seconds&quot;] = round(time.perf_counter() - t0, 3)
+  585              return daily, info
+  586  
+  587      reason = &quot;forçado&quot; if force else &quot;primeira leitura ou .POS alterado&quot;
+  588      print(f&quot;    [CACHE MISS] {path.name} -&gt; {reason}; processando arquivo bruto...&quot;, flush=True)
+  589      t0 = time.perf_counter()
+  590      progress_enabled = bool(getattr(config, &quot;SHOW_POS_PROGRESS&quot;, True))
+  591      chunk_rows = int(getattr(config, &quot;POS_PROGRESS_CHUNK_ROWS&quot;, chunk_rows))
+  592      daily, info = read_post_daily(
+  593          path, background=background, chunk_rows=chunk_rows,
+  594          progress=progress_enabled, progress_label=path.name,
+  595      )
+  596      elapsed = time.perf_counter() - t0
+  597  
+  598      if use_cache:
+  599          t1 = time.perf_counter()
+  600  
+  601          tmp_daily = Path(str(paths[&quot;daily&quot;]) + &quot;.tmp&quot;)
+  602          tmp_meta = Path(str(paths[&quot;meta&quot;]) + &quot;.tmp&quot;)
+  603          for tmp in (tmp_daily, tmp_meta):
+  604              if tmp.exists():
+  605                  try:
+  606                      tmp.unlink()
+  607                  except OSError:
+  608                      pass
+  609          daily.to_pickle(tmp_daily, compression=&quot;gzip&quot;)
+  610          meta = {
+  611              &quot;source_file&quot;: str(path.resolve()),
+  612              &quot;source_fingerprint&quot;: _pos_fingerprint(path),
+  613              &quot;signature&quot;: _cache_signature(background),
+  614              &quot;info&quot;: dict(info),
+  615              &quot;rows_daily&quot;: int(len(daily)),
+  616              &quot;created_epoch&quot;: time.time(),
+  617              &quot;raw_processing_seconds&quot;: round(elapsed, 3),
+  618          }
+  619          tmp_meta.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding=&quot;utf-8&quot;)
+  620          os.replace(tmp_daily, paths[&quot;daily&quot;])
+  621          os.replace(tmp_meta, paths[&quot;meta&quot;])
+  622          print(
+  623              f&quot;    [CACHE SAVE] {path.name}: {len(daily):,} registros diários tratados &quot;
+  624              f&quot;salvos em {paths[&#x27;daily&#x27;].name} ({time.perf_counter()-t1:.1f}s)&quot;,
+  625              flush=True,
+  626          )
+  627      info = dict(info)
+  628      info[&quot;cache_used&quot;] = False
+  629      info[&quot;cache_file&quot;] = str(paths[&quot;daily&quot;]) if use_cache else &quot;&quot;
+  630      info[&quot;raw_processing_seconds&quot;] = round(elapsed, 3)
+  631      return daily, info
+  632  
+  633  # Summarize post for pm
+  634  def summarize_post_for_pm(path: Path, pollutant: str, background=0.0):
+  635      &quot;&quot;&quot;Calcula P98 diário e média anual por receptor usando POST 24h ou horário.&quot;&quot;&quot;
+  636      daily, info = read_post_daily_cached(path, background=background, pollutant=pollutant)
+  637      yearly_parts = []
+  638      for year, dyear in daily.groupby(&quot;year&quot;, observed=True):
+  639          agg = dyear.groupby([&quot;X&quot;, &quot;Y&quot;], observed=True).agg(
+  640              ANNUAL_MEAN=(&quot;CONC&quot;, &quot;mean&quot;),
+  641              N_DAYS=(&quot;CONC&quot;, &quot;count&quot;),
+  642              P98=(&quot;CONC&quot;, lambda x: nearest_rank_percentile(x, config.SHORT_TERM_PERCENTILE)),
+  643          ).reset_index()
+  644          year = int(year)
+  645          expected = 366 if pd.Timestamp(year, 12, 31).is_leap_year else 365
+  646          agg[&quot;year&quot;] = year
+  647          agg[&quot;EXPECTED_DAYS&quot;] = expected
+  648          agg[&quot;COMPLETENESS&quot;] = agg[&quot;N_DAYS&quot;] / expected
+  649          agg[&quot;VALID_YEAR&quot;] = agg[&quot;COMPLETENESS&quot;] &gt;= config.MIN_QUARTER_COMPLETENESS
+  650          yearly_parts.append(agg)
+  651  
+  652      if not yearly_parts:
+  653          raise ValueError(f&quot;Sem médias diárias válidas em {path}&quot;)
+  654      yearly = pd.concat(yearly_parts, ignore_index=True)
+  655      n_required = int(config.MODEL_N_YEARS_DESIGN)
+  656  
+  657      summaries = []
+  658      for (x, y), sub in yearly.groupby([&quot;X&quot;, &quot;Y&quot;], sort=False):
+  659          valid_years = sorted(sub.loc[sub[&quot;VALID_YEAR&quot;], &quot;year&quot;].astype(int).tolist())
+  660          valid = pd.DataFrame(columns=sub.columns)
+  661          for end_year in sorted(valid_years, reverse=True):
+  662              wanted = list(range(end_year - n_required + 1, end_year + 1))
+  663              if all(yv in valid_years for yv in wanted):
+  664                  valid = sub[sub[&quot;year&quot;].isin(wanted)].sort_values(&quot;year&quot;)
+  665                  break
+  666          row = {
+  667              &quot;X&quot;: float(x), &quot;Y&quot;: float(y),
+  668              &quot;n_model_years&quot;: int(len(valid)),
+  669              &quot;years_model&quot;: &quot;,&quot;.join(map(str, valid[&quot;year&quot;].astype(int).tolist())) if len(valid) else &quot;&quot;,
+  670              &quot;SOURCE_AVERAGING&quot;: info.get(&quot;daily_source&quot;, &quot;&quot;),
+  671          }
+  672          if len(valid) == n_required:
+  673              row[&quot;P98_MODEL&quot;] = float(valid[&quot;P98&quot;].mean())
+  674              row[&quot;ANNUAL_MODEL&quot;] = float(valid[&quot;ANNUAL_MEAN&quot;].mean())
+  675          else:
+  676              row[&quot;P98_MODEL&quot;] = np.nan
+  677              row[&quot;ANNUAL_MODEL&quot;] = np.nan
+  678          row[&quot;n_design_years&quot;] = row[&quot;n_model_years&quot;]
+  679          row[&quot;years_valid&quot;] = row[&quot;years_model&quot;]
+  680          row[&quot;P98_3YR&quot;] = row[&quot;P98_MODEL&quot;]
+  681          row[&quot;ANNUAL_3YR&quot;] = row[&quot;ANNUAL_MODEL&quot;]
+  682          summaries.append(row)
+  683  
+  684      out = pd.DataFrame(summaries)
+  685      for scenario in (&quot;PV&quot;, &quot;PF&quot;):
+  686          lim24 = STANDARDS[pollutant][scenario][&quot;24H&quot;]
+  687          limann = STANDARDS[pollutant][scenario][&quot;ANNUAL&quot;]
+  688          out[f&quot;ratio24_{scenario}&quot;] = out[&quot;P98_MODEL&quot;] / lim24
+  689          out[f&quot;ratioann_{scenario}&quot;] = out[&quot;ANNUAL_MODEL&quot;] / limann
+  690          out[f&quot;status_{scenario}&quot;] = np.select(
+  691              [
+  692                  out[&quot;n_model_years&quot;] &lt; n_required,
+  693                  (out[&quot;P98_MODEL&quot;] &lt;= lim24) &amp; (out[&quot;ANNUAL_MODEL&quot;] &lt;= limann),
+  694              ],
+  695              [&quot;insuficiente&quot;, &quot;atendimento&quot;],
+  696              default=&quot;nao_atendimento&quot;,
+  697          )
+  698  
+  699      gdf = gpd.GeoDataFrame(out, geometry=gpd.points_from_xy(out[&quot;X&quot;], out[&quot;Y&quot;]), crs=config.CRS_PROJECT)
+  700      return gdf, yearly, info
+  701  
+  702  # Pollutant folder
+  703  def _pollutant_folder(post_dir: Path, pollutant: str):
+  704      names = [&quot;PM10&quot;] if pollutant == &quot;PM10&quot; else [&quot;PM2-5&quot;, &quot;PM25&quot;, &quot;PM2_5&quot;]
+  705      for name in names:
+  706          p = post_dir / name
+  707          if p.exists() and p.is_dir():
+  708              return p
+  709      return post_dir
+  710  
+  711  # Discover post main
+  712  def discover_post_main(post_dir: Path, pollutant: str):
+  713      &quot;&quot;&quot;Localiza o cenário ALL do poluente.
+  714  
+  715      Prioriza arquivos do grupo ALL dentro da pasta do poluente e aceita tanto
+  716      POST 24-HR quanto POST 1-HR. O período é verificado pelo cabeçalho.
+  717      &quot;&quot;&quot;
+  718      override = config.POST_OVERRIDE[pollutant].get(&quot;24H&quot;)
+  719      if override:
+  720          p = Path(override)
+  721          if p.exists():
+  722              return p
+  723      folder = _pollutant_folder(post_dir, pollutant)
+  724      files = _unique_paths(sorted(folder.glob(&quot;*.POS&quot;)) + sorted(folder.glob(&quot;*.pos&quot;)))
+  725      if not files and folder == post_dir:
+  726          files = _unique_paths(sorted(post_dir.rglob(&quot;*.POS&quot;)) + sorted(post_dir.rglob(&quot;*.pos&quot;)))
+  727  
+  728      compatible = []
+  729      for p in files:
+  730          pol = _infer_pollutant(p)
+  731          if pol not in {None, pollutant}:
+  732              continue
+  733          info = inspect_pos_header(p)
+  734          kind = _ave_kind(info.get(&quot;ave&quot;))
+  735          if kind not in {&quot;1H&quot;, &quot;24H&quot;}:
+  736              continue
+  737          text = re.sub(r&quot;[^A-Z0-9]+&quot;, &quot;&quot;, p.stem.upper())
+  738          is_all = &quot;GALL&quot; in text or text.endswith(&quot;ALL&quot;) or str(info.get(&quot;group&quot;, &quot;&quot;)).upper() == &quot;ALL&quot;
+  739          compatible.append((p, kind, is_all))
+  740  
+  741      all_files = [x for x in compatible if x[2]]
+  742      pool = all_files or compatible
+  743      if not pool:
+  744          return None
+  745  
+  746      pool.sort(key=lambda x: (0 if x[1] == &quot;24H&quot; else 1, x[0].name))
+  747      return pool[0][0]
+  748  
+  749  # Discover group posts any
+  750  def discover_group_posts_any(post_dir: Path, pollutant: str):
+  751      &quot;&quot;&quot;Lista POSTFILEs 1-HR/24-HR na pasta específica do poluente.&quot;&quot;&quot;
+  752      folder = _pollutant_folder(post_dir, pollutant)
+  753      files = _unique_paths(sorted(folder.glob(&quot;*.POS&quot;)) + sorted(folder.glob(&quot;*.pos&quot;)))
+  754      if not files and folder == post_dir:
+  755          files = _unique_paths(sorted(post_dir.rglob(&quot;*.POS&quot;)) + sorted(post_dir.rglob(&quot;*.pos&quot;)))
+  756      out = []
+  757      for p in files:
+  758          pol = _infer_pollutant(p)
+  759          if pol not in {None, pollutant}:
+  760              continue
+  761          info = inspect_pos_header(p)
+  762          if _ave_kind(info.get(&quot;ave&quot;)) in {&quot;1H&quot;, &quot;24H&quot;}:
+  763              out.append((p, info))
+  764      return out</code></pre></article></html>

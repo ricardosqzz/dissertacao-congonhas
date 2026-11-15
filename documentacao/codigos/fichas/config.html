@@ -1,0 +1,319 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/config.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/config.py</h2>
+<p>Config. Processamento ou módulo de apoio. A organização passa por _resolve_project_root.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\config.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>os</td><td>Integração com sistema operacional e variáveis de ambiente.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>DIRS: emission, grade_generated, limite_cong, limite_emp, qar, uso_terra, vias, zoneamento.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>_resolve_project_root()</td><td>25-31</td><td>Chamadas efetivas: _cp_raiz Retorno: _cp_raiz().</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/config.py, linhas 25-33.</p>
+<pre><code>def _resolve_project_root() -&gt; Path:
+    &quot;&quot;&quot;Resolve a raiz do projeto sem depender do diretório de execução.
+
+    A pasta acima de codigo é a raiz, inclusive após migrações entre discos.
+    EMI_PROJECT_ROOT permite uma substituição explícita para testes e executores.
+    &quot;&quot;&quot;
+    return _cp_raiz()
+
+BASE = _resolve_project_root()</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Campos/chaves em DIRS: emission, grade_generated, limite_cong, limite_emp, qar, uso_terra, vias, zoneamento.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  from pathlib import Path
+   22  import os
+   23  
+   24  # Resolve project root
+   25  def _resolve_project_root() -&gt; Path:
+   26      &quot;&quot;&quot;Resolve a raiz do projeto sem depender do diretório de execução.
+   27  
+   28      A pasta acima de codigo é a raiz, inclusive após migrações entre discos.
+   29      EMI_PROJECT_ROOT permite uma substituição explícita para testes e executores.
+   30      &quot;&quot;&quot;
+   31      return _cp_raiz()
+   32  
+   33  BASE = _resolve_project_root()
+   34  
+   35  DIRS = {
+   36      &quot;ref&quot;: BASE / &quot;0_ref&quot;,
+   37      &quot;disp&quot;: BASE / &quot;cen_dispersao&quot;,
+   38      &quot;limite_cong&quot;: BASE / &quot;limite_cong&quot;,
+   39      &quot;limite_emp&quot;: BASE / &quot;limite_emp&quot;,
+   40      &quot;qar&quot;: BASE / &quot;qar&quot;,
+   41      &quot;qar_met&quot;: BASE / &quot;qar_met&quot;,
+   42      &quot;uso_terra&quot;: BASE / &quot;uso_terra&quot;,
+   43      &quot;vias&quot;: BASE / &quot;vias&quot;,
+   44      &quot;zoneamento&quot;: BASE / &quot;zoneamento&quot;,
+   45      &quot;emission&quot;: BASE / &quot;emission&quot;,
+   46      &quot;post&quot;: BASE / &quot;out-aermod&quot;,
+   47      &quot;aermod_logs&quot;: BASE / &quot;adi_ado_sum&quot;,
+   48      &quot;grade&quot;: BASE / &quot;grade&quot;,
+   49      &quot;grade_generated&quot;: BASE / &quot;grade&quot; / &quot;gerada&quot;,
+   50      &quot;out&quot;: BASE / &quot;output&quot;,
+   51      &quot;cache&quot;: BASE / &quot;cache&quot;,
+   52      &quot;pos_cache&quot;: BASE / &quot;cache&quot; / &quot;pos&quot;,
+   53      &quot;regional&quot;: BASE / &quot;base_regional&quot;,
+   54  }
+   55  
+   56  CRS_PROJECT = &quot;EPSG:31983&quot;
+   57  CRS_GEOGRAPHIC = &quot;EPSG:4674&quot;
+   58  
+   59  ZERO_AS_MISSING = True
+   60  MIN_VALID_HOURS_DAY = 18
+   61  MIN_QUARTER_COMPLETENESS = 0.75
+   62  MONITOR_MIN_VALID_HOURS_DAY = 16
+   63  MONITOR_MIN_QUADRIMESTER_COMPLETENESS = 0.50
+   64  MONITOR_PERIOD_LABEL = &quot;2023–2025&quot;
+   65  N_YEARS_DESIGN = 3
+   66  MODEL_N_YEARS_DESIGN = 3
+   67  MODEL_PERIOD_LABEL = &quot;2021–2023&quot;
+   68  SHORT_TERM_PERCENTILE = 0.98
+   69  
+   70  SHORT_TERM_METHOD = &quot;P98_3YR&quot;
+   71  
+   72  INITIAL_REPRESENTATIVITY_CLASS = &quot;Bairro&quot;
+   73  REPRESENTATIVITY_RADIUS_M = 4000.0
+   74  STATION_COVERAGE_RADIUS_M = {}
+   75  MIN_ADT_MAIN_ROAD = 1000
+   76  
+   77  ADT_FIELD_CANDIDATES = [
+   78      &quot;ADT&quot;, &quot;AADT&quot;, &quot;VMDA&quot;, &quot;VMD&quot;, &quot;trafego&quot;, &quot;TRAFEGO&quot;,
+   79      &quot;veic_dia&quot;, &quot;VEIC_DIA&quot;, &quot;volume&quot;, &quot;VOLUME&quot;
+   80  ]
+   81  
+   82  USE_POS_CACHE = True
+   83  FORCE_REBUILD_POS_CACHE = False
+   84  POS_CACHE_VERSION = 1
+   85  POS_CACHE_SAMPLE_BYTES = 1024 * 1024
+   86  
+   87  SHOW_POS_PROGRESS = True
+   88  POS_PROGRESS_MIN_SECONDS = 8.0
+   89  POS_PROGRESS_CHUNK_ROWS = 350_000
+   90  
+   91  BACKGROUND_UGM3 = {
+   92      &quot;PM10&quot;: 0.0,
+   93      &quot;PM25&quot;: 0.0,
+   94  }
+   95  
+   96  MODEL_BUFFER_M = 3500.0
+   97  GRID_NOMINAL_M = 500.0
+   98  
+   99  RUN_RECEPTOR_GRID = True
+  100  GRID_REQUIRE_POPULATION_DATA = True
+  101  GRID_MODE = &quot;population_communities_optimized_coverage&quot;
+  102  GRID_COVERAGE_RADIUS_M = 500.0
+  103  GRID_INTERNAL_COVERAGE_METHOD = &quot;coverage&quot;
+  104  GRID_INTERNAL_SPACING_M = 500.0
+  105  GRID_INTERNAL_MIN_SPACING_M = 1.0
+  106  GRID_INTERNAL_GAP_FILL_STEP_M = 250.0
+  107  GRID_BOUNDARY_SPACING_M = 500.0
+  108  
+  109  GRID_BOUNDARY_SIMPLIFY_M = 50.0
+  110  GRID_BOUNDARY_LINK_TOLERANCE_M = 2.0
+  111  
+  112  GRID_INCLUDE_INTERNAL_BOUNDARIES = False
+  113  GRID_INCLUDE_INTERNAL_COVERAGE_POINTS = True
+  114  GRID_INCLUDE_STATION_RECEPTORS = True
+  115  GRID_REQUIRE_FULL_COVERAGE = True
+  116  
+  117  GRID_COMMUNITY_LINK_DISTANCE_M = 1000.0
+  118  GRID_COMMUNITY_MIN_POPULATION = 0.0
+  119  GRID_ONE_REPRESENTATIVE_PER_ZONE = False
+  120  GRID_USE_LANDUSE_FOR_POP_ANCHOR = True
+  121  GRID_POPULATED_LANDUSE_CLASSES = [24]
+  122  GRID_COVERAGE_CHECK_STEP_M = 100.0
+  123  
+  124  GRID_UNCOVERED_AREA_TOLERANCE_M2 = 200.0
+  125  GRID_UNCOVERED_AREA_REL_TOLERANCE_PCT = 0.001
+  126  GRID_POINT_DEDUPLICATION_M = 1.0
+  127  GRID_EXTERNAL_INNER_LIMIT_M = 500.0
+  128  GRID_EXTERNAL_INNER_SPACING_M = 500.0
+  129  GRID_EXTERNAL_OUTER_LIMIT_M = 3500.0
+  130  GRID_EXTERNAL_OUTER_SPACING_M = 1000.0
+  131  GRID_EXTERNAL_INTERNAL_DEDUPLICATION_M = 300.0
+  132  
+  133  HIGH_LOW_METHOD = &quot;q75&quot;
+  134  HIGH_LOW_METHOD_EMISSION = &quot;q75&quot;
+  135  HIGH_LOW_METHOD_CONCENTRATION = &quot;median&quot;
+  136  EMISSION_HIGH_MIN_FRACTION_OF_MAX = 0.05
+  137  EMISSION_CLASS_METRIC = &quot;EMIS_DENS_GS_KM2&quot;
+  138  
+  139  EMISSION_PRESSURE_QUANTILE = 0.75
+  140  EMISSION_FOCAL_THRESHOLD_RELATIVE_TOLERANCE = 0.01
+  141  EMISSION_INDUSTRIAL_HIGH_QUANTILE = 0.67
+  142  EMISSION_URBAN_HIGH_QUANTILE = 0.90
+  143  EMISSION_POINT_SUPPORT_RADIUS_M = 250.0
+  144  EMISSION_LINE_SUPPORT_HALF_WIDTH_M = 50.0
+  145  CONCENTRATION_CLASS_METRIC_24H = &quot;P98_MODEL&quot;
+  146  CONCENTRATION_CLASS_METRIC_ANNUAL = &quot;ANNUAL_MODEL&quot;
+  147  MIN_ZONE_MONITOR_COVERAGE_PCT = 50.0
+  148  MIN_BUFFER_ZONE_OVERLAP_PCT = 10.0
+  149  
+  150  MAP_DPI = 600
+  151  MAP_LEVELS = 12
+  152  MAP_CMAP = &quot;turbo&quot;
+  153  SHOW_ZONE_OUTLINES_ON_SURFACE = True
+  154  WRF_SURFACE_BLACK_BACKGROUND = False
+  155  MAP_OUTSIDE_FACE = &quot;#eff4f8&quot;
+  156  MAP_BACKGROUND_FILL = &quot;#f7fafc&quot;
+  157  REGIONAL_BACKGROUND_BUFFER_M = 2500.0
+  158  REGIONAL_MUNICIPALITY_SEARCH_BUFFER_M = 15000.0
+  159  
+  160  ROAD_FCLASS_FIELD = &quot;fclass&quot;
+  161  ROAD_SHOW_LEGEND = True
+  162  
+  163  FILES = {
+  164      &quot;station_coords&quot;: DIRS[&quot;qar&quot;] / &quot;station_id.xlsx&quot;,
+  165      &quot;station_network&quot;: DIRS[&quot;qar&quot;] / &quot;est_cong.kmz&quot;,
+  166      &quot;municipality&quot;: DIRS[&quot;limite_cong&quot;] / &quot;congonhas.kml&quot;,
+  167      &quot;enterprises&quot;: DIRS[&quot;limite_emp&quot;] / &quot;limite_emp.kmz&quot;,
+  168      &quot;roads&quot;: DIRS[&quot;vias&quot;] / &quot;vias_cong.shp&quot;,
+  169      &quot;zoning&quot;: DIRS[&quot;zoneamento&quot;] / &quot;zon_cong.shp&quot;,
+  170      &quot;landuse_1985&quot;: DIRS[&quot;uso_terra&quot;] / &quot;mapbiomas-brazil-collection-101-congonhas-1985.tif&quot;,
+  171      &quot;landuse_2024&quot;: DIRS[&quot;uso_terra&quot;] / &quot;mapbiomas-brazil-collection-101-congonhas-2024.tif&quot;,
+  172      &quot;sources_PM10&quot;: DIRS[&quot;emission&quot;] / &quot;PM10_Sources.xlsx&quot;,
+  173      &quot;sources_PM25&quot;: DIRS[&quot;emission&quot;] / &quot;PM2-5_Sources.xlsx&quot;,
+  174  
+  175      &quot;grid_500m&quot;: DIRS[&quot;grade_generated&quot;] / &quot;grade_receptores_adaptativa.csv&quot;,
+  176      &quot;regional_municipalities&quot;: None,
+  177  }
+  178  
+  179  POST_OVERRIDE = {
+  180      &quot;PM10&quot;: {&quot;24H&quot;: None, &quot;ANNUAL&quot;: None},
+  181      &quot;PM25&quot;: {&quot;24H&quot;: None, &quot;ANNUAL&quot;: None},
+  182  }
+  183  
+  184  QAR_EXCLUDE_XLSX = {&quot;station_id.xlsx&quot;}
+  185  
+  186  RUN_LANDUSE = True
+  187  RUN_SOURCE_APPORTIONMENT = True
+  188  RUN_ENTERPRISE_ASSOCIATION = True
+  189  
+  190  RUN_MODEL_SURFACE_MAPS = True
+  191  
+  192  PREFERRED_LANDUSE_DIR_ALIASES = [&quot;uso_terra&quot;, &quot;uso terra&quot;]
+  193  
+  194  RUN_PLUME_GIF = True
+  195  PLUME_FRAME_DPI = 220
+  196  PLUME_GIF_FPS = 1
+  197  PLUME_MAX_HOURS = 24
+  198  
+  199  STATION_DISPLAY_NAMES = {
+  200      &quot;motas&quot;: &quot;Motas&quot;,
+  201      &quot;pires&quot;: &quot;Pires&quot;,
+  202      &quot;n-plat&quot;: &quot;Novo Plataforma&quot;,
+  203      &quot;matriz&quot;: &quot;Matriz&quot;,
+  204      &quot;basilica&quot;: &quot;Basílica&quot;,
+  205      &quot;j-prof&quot;: &quot;Jardim Profeta&quot;,
+  206      &quot;lobo-leite&quot;: &quot;Lobo Leite&quot;,
+  207  }
+  208  
+  209  POLLUTANT_DISPLAY = {
+  210      &quot;PM10&quot;: &quot;MP₁₀&quot;,
+  211      &quot;PM25&quot;: &quot;MP₂,₅&quot;,
+  212  }
+  213  
+  214  MONITOR_ZONE_CLASSIFICATION = &quot;coverage&quot;
+  215  MODEL_ZONE_STATUS_METHOD = &quot;zone_mean&quot;
+  216  MODEL_ZONE_EXCEEDANCE_FRACTION = 0.50
+  217  
+  218  SOURCE_GEOMETRY_SEARCH_PATTERNS = [
+  219      &quot;*Area Source*.kml&quot;, &quot;*Circular Area Source*.kml&quot;, &quot;*Line Area Source*.kml&quot;,
+  220      &quot;*Line Source*.kml&quot;, &quot;*Point Source*.kml&quot;, &quot;*Polygon Area Source*.kml&quot;,
+  221      &quot;*Volume Source*.kml&quot;, &quot;*Area Source*.kmz&quot;, &quot;*Circular Area Source*.kmz&quot;,
+  222      &quot;*Line Area Source*.kmz&quot;, &quot;*Line Source*.kmz&quot;, &quot;*Point Source*.kmz&quot;,
+  223      &quot;*Polygon Area Source*.kmz&quot;, &quot;*Volume Source*.kmz&quot;,
+  224  ]
+  225  
+  226  IBGE_MG_MUNICIPALITIES_URL = &quot;https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/UFs/MG/MG_Municipios_2024.zip&quot;
+  227  AUTO_DOWNLOAD_REGIONAL_MUNICIPALITIES = True
+  228  
+  229  MAP_FOCUS_BUFFER_M = 2500.0
+  230  SATELLITE_BASEMAP_ALPHA = 0.28
+  231  
+  232  USE_SATELLITE_BASEMAP = False
+  233  
+  234  PLUME_ANIMATION_MODE = &quot;both&quot;
+  235  PLUME_GIF_FPS = 1
+  236  PLUME_MAX_FRAMES = 31
+  237  
+  238  REGIONAL_FALLBACK_LABELS = [
+  239      (&quot;Ouro Preto&quot;, 0.58, 0.92),
+  240      (&quot;Conselheiro Lafaiete&quot;, 0.88, 0.50),
+  241      (&quot;Ouro Branco&quot;, 0.72, 0.16),
+  242      (&quot;Jeceaba&quot;, 0.28, 0.16),
+  243      (&quot;Belo Vale&quot;, 0.12, 0.50),
+  244      (&quot;São Brás do Suaçuí&quot;, 0.78, 0.80),
+  245  ]
+  246  
+  247  PLUME_MIN_PERCENTILE = 25.0
+  248  PLUME_MIN_FRACTION_OF_MAX = 0.05
+  249  
+  250  PLUME_HOURLY_MAX_FRAMES = 24
+  251  
+  252  PLUME_DAILY_MIN_PERCENTILE = 30.0
+  253  
+  254  PLUME_DAILY_MIN_FRACTION_OF_MAX = 0.06
+  255  
+  256  PLUME_HOURLY_MIN_PERCENTILE = 45.0
+  257  
+  258  PLUME_HOURLY_MIN_FRACTION_OF_MAX = 0.10
+  259  
+  260  RUN_HEALTH_IMPACT = True
+  261  HEALTH_COUNTERFACTUAL_UGM3 = 5.0
+  262  HEALTH_ENDPOINTS_TEMPLATE = BASE / &quot;insumos_saude&quot; / &quot;saude_endpoints_template.csv&quot;
+  263  HEALTH_POPULATION_TEMPLATE = BASE / &quot;insumos_saude&quot; / &quot;saude_populacao_zonas_template.csv&quot;
+  264  HEALTH_NOTES_TEMPLATE = BASE / &quot;insumos_saude&quot; / &quot;LEIA-ME_impacto_saude.txt&quot;
+  265  HEALTH_INPUT_DIRNAME = &quot;05_impacto_saude&quot;
+  266  REGIONAL_BOUNDARIES_CACHE = BASE / &quot;base_regional&quot; / &quot;municipios_vizinhos_cache.geojson&quot;
+  267  
+  268  ABC_A_LIMIT_PCT = 80.0
+  269  ABC_B_LIMIT_PCT = 95.0
+  270  ABC_REDUCTION_SCENARIOS = [0.10, 0.20, 0.30, 0.50]
+  271  
+  272  MANAGEMENT_WEIGHT_CONCENTRATION = 0.35
+  273  MANAGEMENT_WEIGHT_EMISSION = 0.25
+  274  MANAGEMENT_WEIGHT_STANDARD_STATUS = 0.25
+  275  MANAGEMENT_WEIGHT_MONITOR_GAP = 0.15
+  276  
+  277  CENSO_DIR = BASE / &quot;censo_ibge&quot;
+  278  CENSO_AUTO_DOWNLOAD = True
+  279  CENSO_AUTO_DOWNLOAD_BASICO_FINAL = True
+  280  IBGE_DEMOGRAFIA_URL = &quot;https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/Agregados_por_Setor_csv/Agregados_por_setores_demografia_BR.zip&quot;
+  281  IBGE_DICIONARIO_URL = &quot;https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/dicionario_de_dados_agregados_por_setores_censitarios_20260520.xlsx&quot;
+  282  IBGE_BASICO_URL = &quot;https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/Agregados_por_Setor_csv/Agregados_por_setores_basico_BR_20260520.zip&quot;
+  283  CENSO_POP_ALLOCATION_METHOD = &quot;area_weighted&quot;
+  284  
+  285  ABC_TOP_N_DEFAULT = 9
+  286  ABC_DASHBOARD = True
+  287  
+  288  MODEL_MAP_FOCUS_BUFFER_M = 3800.0
+  289  
+  290  HEALTH_SCREENING_COUNTERFACTUAL_UGM3 = 5.0
+  291  HEALTH_SCREENING_PV_ANNUAL_UGM3 = 17.0
+  292  HEALTH_SCREENING_GENERATE_AF = True
+  293  ABC_EXPORT_ZONE_PRIORITY_MAPS = True</code></pre></article></html>

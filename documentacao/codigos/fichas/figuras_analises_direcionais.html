@@ -1,0 +1,328 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/figuras_analises_direcionais.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/figuras_analises_direcionais.py</h2>
+<p>Pranchas das análises de cada direção no encarte cartográfico consolidado.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\figuras_analises_direcionais.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>argparse</td><td>Parâmetros fornecidos ao iniciar o programa.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>concurrent.futures</td><td>Execução concorrente quando prevista pela rotina; não equivale a um novo método de cálculo.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>html</td><td>Escape e construção de páginas HTML de documentação/visualização.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.pyplot</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>paleta_concentracoes</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>subprocess</td><td>Chamada de outros programas e verificação de seus resultados de execução.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_{&#x27;horarios&#x27; if period == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv — chamada pd.read_csv, linha 103.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gpd.read_file, linha 246.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gpd.read_file, linha 119.</li>
+<li>E:/projeto/output/11_integracao/apendices/resumo_figuras.json — chamada .read_text, linha 247.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/resumo.json — chamada .read_text, linha 122.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/comparacao_agrupamentos.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/correlogramas.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/limiares_cinco_faixas.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/regioes_direcionais.csv — chamada pd.read_csv, linha 125.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/ABC_contribuicoes_regioes.csv — chamada pd.read_csv, linha 125.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada pd.read_csv, linha 126.</li>
+<li>E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv — chamada pd.read_csv, linha 127.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv — chamada pd.read_csv, linha 128.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_receptores.csv — chamada pd.read_csv, linha 248.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/catalogo_{pol}_{period}.json — chamada .read_text, linha 201.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/PM10_1h_receptores.csv — chamada pd.read_csv, linha 203.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada main.read_text, linha 239.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/{name}.{ext} — chamada fig.savefig, linha 96.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_cortes_comuns.csv — chamada .to_csv, linha 135.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_referencia_comum.json — chamada .write_text, linha 136.</li>
+<li>{fig} — chamada save, linha 228.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/catalogo_{polls[0]}_{periods[0]}.json — chamada .write_text, linha 196.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/legendas.json — chamada .write_text, linha 229.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/index.html — chamada .write_text, linha 238.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada main.write_text, linha 241.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>table.loc: concentration.</li>
+<li>raw: direction.</li>
+<li>table: concentration, direction, dominant_group, period, pollutant, quintile, quintile_reference_union, receptor_id.</li>
+<li>cells: geometry, receptor_id.</li>
+<li>v: name.</li>
+<li>eligible: n_design_years, pollutant.</li>
+<li>limits: basis, direction, period, pollutant.</li>
+<li>abc: label, period, pollutant, region_type.</li>
+<li>regions: area_km2, concentration_area_mean, region_id.</li>
+<li>joint_table: direction.</li>
+<li>corr: direction, period, pollutant.</li>
+<li>cluster: direction, method.</li>
+<li>r: direction, five_emission_bands_identifiable, lisa_counts, management_counts, period, pollutant.</li>
+<li>summary: cases.</li>
+<li>counts: five_emission_bands, pollutant.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>table: quintile_reference_union.</li>
+<li>f: Q, Q_common, best_cluster_label, dominant_name, label, ward4_label.</li>
+<li>opts: station_overlay.</li>
+<li>joined: weighted_C.</li>
+<li>plot: Demais grupos.</li>
+<li>counts: five_emission_bands, pollutant.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>save(fig, name, caption, catalog)</td><td>95-97</td><td>grava produtos</td></tr><tr><td>concentration_maps(pol, period, z, muni, extent, table)</td><td>100-114</td><td>lê dados; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr><tr><td>run(polls=None, periods=None, worker=False, finalize_only=False)</td><td>117-241</td><td>lê dados; grava produtos; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/figuras_analises_direcionais.py, linhas 105-111.</p>
+<pre><code>    positive=table.loc[table.concentration&gt;0,&#x27;concentration&#x27;]
+    low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit);norm=LogNorm(low,cap)
+    ticks=np.unique(np.r_[low,np.power(10.,np.arange(np.ceil(np.log10(low)),np.floor(np.log10(cap))+1)),cap])
+    surfaces=[]
+    for direction in DIRS:
+        f=raw[raw.direction.eq(direction)].copy()
+        geo=gpd.GeoSeries(gpd.points_from_xy(f.X,f.Y),crs=z.crs).to_crs(4674)</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_{&#x27;horarios&#x27; if period == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv | pd.read_csv.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gpd.read_file.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gpd.read_file.
+    7  # Entrada: E:/projeto/output/11_integracao/apendices/resumo_figuras.json | .read_text.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/resumo.json | .read_text.
+    9  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/comparacao_agrupamentos.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/correlogramas.csv | pd.read_csv.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/limiares_cinco_faixas.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/regioes_direcionais.csv | pd.read_csv.
+   13  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/ABC_contribuicoes_regioes.csv | pd.read_csv.
+   14  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | pd.read_csv.
+   15  # Entrada: E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv | pd.read_csv.
+   16  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv | pd.read_csv.
+   17  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_receptores.csv | pd.read_csv.
+   18  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/catalogo_{pol}_{period}.json | .read_text.
+   19  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/PM10_1h_receptores.csv | pd.read_csv.
+   20  # Entrada: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | main.read_text.
+   21  # Campos/chaves em table.loc: concentration.
+   22  # Campos/chaves em raw: direction.
+   23  # Campos/chaves em table: concentration, direction, dominant_group, period, pollutant, quintile, quintile_reference_union, receptor_id.
+   24  # Campos/chaves em cells: geometry, receptor_id.
+   25  # Campos/chaves em v: name.
+   26  # Campos/chaves em eligible: n_design_years, pollutant.
+   27  # Campos/chaves em limits: basis, direction, period, pollutant.
+   28  # Campos/chaves em abc: label, period, pollutant, region_type.
+   29  # Campos/chaves em regions: area_km2, concentration_area_mean, region_id.
+   30  # Campos/chaves em joint_table: direction.
+   31  # Campos/chaves em corr: direction, period, pollutant.
+   32  # Campos/chaves em cluster: direction, method.
+   33  # Campos/chaves em r: direction, five_emission_bands_identifiable, lisa_counts, management_counts, period, pollutant.
+   34  # Campos/chaves em summary: cases.
+   35  # Campos/chaves em counts: five_emission_bands, pollutant.
+   36  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/{name}.{ext} | fig.savefig.
+   37  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_cortes_comuns.csv | .to_csv.
+   38  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{pol}_{period}_referencia_comum.json | .write_text.
+   39  # Saída: {fig} | save.
+   40  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/catalogo_{polls[0]}_{periods[0]}.json | .write_text.
+   41  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/figuras/legendas.json | .write_text.
+   42  # Saída: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/index.html | .write_text.
+   43  # Saída: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | main.write_text.
+   44  # Campos/chaves gerados em table: quintile_reference_union.
+   45  # Campos/chaves gerados em f: Q, Q_common, best_cluster_label, dominant_name, label, ward4_label.
+   46  # Campos/chaves gerados em opts: station_overlay.
+   47  # Campos/chaves gerados em joined: weighted_C.
+   48  # Campos/chaves gerados em plot: Demais grupos.
+   49  # Campos/chaves gerados em counts: five_emission_bands, pollutant.
+   50  # receptor_id: identificador do receptor.
+   51  # concentration: concentração do período em µg/m³.
+   52  # CÓDIGO DO PROCESSAMENTO
+   53  
+   54  &quot;&quot;&quot;Pranchas das análises de cada direção no encarte cartográfico consolidado.&quot;&quot;&quot;
+   55  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   56  import sys as _cp_sys
+   57  from pathlib import Path as _cp_Path
+   58  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   59  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   60      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   61      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   62          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   63          break
+   64  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   65  # FIM DOS CAMINHOS PORTÁTEIS
+   66  
+   67  import json,html
+   68  import argparse,sys,subprocess
+   69  from concurrent.futures import ThreadPoolExecutor
+   70  from pathlib import Path
+   71  import numpy as np
+   72  import pandas as pd
+   73  import geopandas as gpd
+   74  import matplotlib
+   75  matplotlib.use(&#x27;Agg&#x27;)
+   76  import matplotlib.pyplot as plt
+   77  from matplotlib.colors import LogNorm
+   78  from paleta_concentracoes import concentration_cmap
+   79  import config
+   80  import cartografia_apendices as cart
+   81  from groups import GROUPS
+   82  
+   83  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   84  DATA=ROOT/&#x27;vento/analises_espaciais&#x27;
+   85  OUT=DATA/&#x27;figuras&#x27;
+   86  DIRS=[&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;]
+   87  QUINT={f&#x27;Q{i}&#x27;:c for i,c in enumerate([&#x27;#b8dce9&#x27;,&#x27;#a9d7b6&#x27;,&#x27;#f2dc87&#x27;,&#x27;#ee9d58&#x27;,&#x27;#ce4147&#x27;],1)}
+   88  LISA={&#x27;Alto–alto&#x27;:&#x27;#ce4147&#x27;,&#x27;Baixo–baixo&#x27;:&#x27;#377ea3&#x27;,&#x27;Alto–baixo&#x27;:&#x27;#e3a279&#x27;,&#x27;Baixo–alto&#x27;:&#x27;#84bdb5&#x27;,&#x27;Não significativo&#x27;:&#x27;#e3e3df&#x27;}
+   89  MATRIX={&#x27;Demais C / Demais E&#x27;:&#x27;#d8e1de&#x27;,&#x27;Demais C / Alta E&#x27;:&#x27;#428e99&#x27;,&#x27;Alta C / Demais E&#x27;:&#x27;#e69a52&#x27;,&#x27;Alta C / Alta E&#x27;:&#x27;#894f78&#x27;}
+   90  ROLES={&#x27;Prioridade receptora&#x27;:&#x27;#ce4147&#x27;,&#x27;Controle de fontes&#x27;:&#x27;#478c9c&#x27;,&#x27;Menor impacto relativo&#x27;:&#x27;#a9d3b8&#x27;,&#x27;Acompanhamento&#x27;:&#x27;#e9d295&#x27;}
+   91  NETWORK={&#x27;Prioridade: cobertura ≥50%&#x27;:&#x27;#287c90&#x27;,&#x27;Prioridade: cobertura &lt;50%&#x27;:&#x27;#e2a357&#x27;,&#x27;Demais áreas&#x27;:&#x27;#e3e7e2&#x27;}
+   92  CLUSTERS={f&#x27;Grupo {i}&#x27;:c for i,c in enumerate([&#x27;#d1e5e3&#x27;,&#x27;#8bc5bc&#x27;,&#x27;#47a4a5&#x27;,&#x27;#467f9d&#x27;,&#x27;#a287b2&#x27;,&#x27;#bb695d&#x27;],1)}
+   93  
+   94  # Save
+   95  def save(fig,name,caption,catalog):
+   96      for ext in [&#x27;svg&#x27;,&#x27;png&#x27;,&#x27;pdf&#x27;]:fig.savefig(OUT/f&#x27;{name}.{ext}&#x27;,dpi=450,bbox_inches=&#x27;tight&#x27;,facecolor=&#x27;white&#x27;)
+   97      plt.close(fig);catalog[name]=caption
+   98  
+   99  # Concentration maps
+  100  def concentration_maps(pol,period,z,muni,extent,table):
+  101      &quot;&quot;&quot;Receptores externos sustentam a interpolação junto à divisa municipal.&quot;&quot;&quot;
+  102      old_out=cart.OUT;cart.OUT=ROOT/&#x27;figuras&#x27;
+  103      raw=pd.read_csv(ROOT/&#x27;vento&#x27;/f&#x27;{pol}_envelopes_{&quot;horarios&quot; if period==&quot;1h&quot; else &quot;diarios_persistentes&quot;}.csv&#x27;)
+  104      field=&#x27;max_1h&#x27; if period==&#x27;1h&#x27; else &#x27;daily_from_1h&#x27;
+  105      positive=table.loc[table.concentration&gt;0,&#x27;concentration&#x27;]
+  106      low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit);norm=LogNorm(low,cap)
+  107      ticks=np.unique(np.r_[low,np.power(10.,np.arange(np.ceil(np.log10(low)),np.floor(np.log10(cap))+1)),cap])
+  108      surfaces=[]
+  109      for direction in DIRS:
+  110          f=raw[raw.direction.eq(direction)].copy()
+  111          geo=gpd.GeoSeries(gpd.points_from_xy(f.X,f.Y),crs=z.crs).to_crs(4674)
+  112          surfaces.append(dict(x=geo.x.to_numpy(),y=geo.y.to_numpy(),values=f[field].to_numpy(),limits=[low,cap],norm=norm,cmap=concentration_cmap(),ticks=ticks,actual_max=float(table.concentration.max())))
+  113      cart.render(z,muni,[&#x27;concentration&#x27;]*8,&#x27;PB15_&#x27;+pol+&#x27;_&#x27;+period,[&#x27;Vento de &#x27;+v for v in DIRS],&#x27;&#x27;,extent,surfaces=surfaces,panel_shape=(4,2),zone_layer=z,atlas_scale=440000,figure_title=(&#x27;MP₁₀&#x27; if pol==&#x27;PM10&#x27; else &#x27;MP₂,₅&#x27;)+&#x27; · concentrações máximas &#x27;+period)
+  114      cart.OUT=old_out
+  115  
+  116  # Run
+  117  def run(polls=None,periods=None,worker=False,finalize_only=False):
+  118      OUT.mkdir(parents=True,exist_ok=True);cart.OUT=OUT
+  119      z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);cells=gpd.read_file(ROOT/&#x27;celulas_analise.gpkg&#x27;)
+  120      muni=gpd.GeoDataFrame(geometry=[z.geometry.union_all()],crs=z.crs)
+  121      extent=json.loads((config.BASE/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+  122      summary=json.loads((DATA/&#x27;resumo.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+  123      catalog={};title=lambda pol:&#x27;MP₁₀&#x27; if pol==&#x27;PM10&#x27; else &#x27;MP₂,₅&#x27;
+  124      cluster=pd.read_csv(DATA/&#x27;comparacao_agrupamentos.csv&#x27;);corr=pd.read_csv(DATA/&#x27;correlogramas.csv&#x27;);limits=pd.read_csv(DATA/&#x27;limiares_cinco_faixas.csv&#x27;)
+  125      regions=pd.read_csv(DATA/&#x27;regioes_direcionais.csv&#x27;);abc=pd.read_csv(DATA/&#x27;ABC_contribuicoes_regioes.csv&#x27;)
+  126      present=pd.read_csv(ROOT/&#x27;perfis_grupos/perfis_normalizados_grupos_estacoes.csv&#x27;)[[&#x27;pollutant&#x27;,&#x27;station_id&#x27;]].drop_duplicates()
+  127      stations=pd.read_csv(config.BASE/&#x27;output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv&#x27;).merge(present,on=[&#x27;pollutant&#x27;,&#x27;station_id&#x27;],validate=&#x27;one_to_one&#x27;)
+  128      eligible=pd.read_csv(config.BASE/&#x27;output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv&#x27;)
+  129      for period in ([] if finalize_only else (periods or [&#x27;1h&#x27;,&#x27;24h&#x27;])):
+  130          for pol in (polls or [&#x27;PM10&#x27;,&#x27;PM25&#x27;]):
+  131              table=pd.read_csv(DATA/f&#x27;{pol}_{period}_receptores.csv&#x27;);layers=[]
+  132              union_peak=table.groupby(&#x27;receptor_id&#x27;).concentration.max()
+  133              reference_cuts=np.quantile(union_peak,[.2,.4,.6,.8])
+  134              table[&#x27;quintile_reference_union&#x27;]=np.searchsorted(reference_cuts,table.concentration,side=&#x27;left&#x27;)+1
+  135              table[[&#x27;receptor_id&#x27;,&#x27;pollutant&#x27;,&#x27;period&#x27;,&#x27;direction&#x27;,&#x27;concentration&#x27;,&#x27;quintile&#x27;,&#x27;quintile_reference_union&#x27;]].to_csv(DATA/f&#x27;{pol}_{period}_cortes_comuns.csv&#x27;,index=False)
+  136              (DATA/f&#x27;{pol}_{period}_referencia_comum.json&#x27;).write_text(json.dumps(dict(pollutant=pol,period=period,reference=&#x27;Quintis do envelope união das oito direções, nos 1008 receptores&#x27;,cuts=reference_cuts.tolist()),ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  137              for direction in DIRS:
+  138                  f=cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(table[table.direction.eq(direction)],on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+  139                  f[&#x27;Q&#x27;]=f.quintile.map(lambda v:&#x27;Q&#x27;+str(v));f[&#x27;dominant_name&#x27;]=f.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})
+  140                  f[&#x27;Q_common&#x27;]=f.quintile_reference_union.map(lambda v:&#x27;Q&#x27;+str(v))
+  141                  f[&#x27;best_cluster_label&#x27;]=f.best_cluster.map(lambda v:&#x27;Grupo &#x27;+str(v));f[&#x27;ward4_label&#x27;]=f.ward4.map(lambda v:&#x27;Grupo &#x27;+str(v))
+  142                  layers.append(f)
+  143              common=dict(panel_layers=layers,panel_shape=(4,2),zone_layer=z,atlas_scale=440000)
+  144              stem=f&#x27;{pol}_{period}&#x27;
+  145              specs=[(&#x27;Quintis&#x27;,&#x27;Q&#x27;,QUINT,&#x27;Quintis dos máximos condicionados à direção, com P20/P40/P60/P80 recalculados em cada direção. As cores expressam posições relativas e não o atendimento a padrões.&#x27;),
+  146                     (&#x27;Quintis_referencia_comum&#x27;,&#x27;Q_common&#x27;,QUINT,&#x27;Os quatro cortes são os quintis do envelope união das oito direções, para o mesmo poluente e duração. Eles permanecem fixos nos oito painéis, permitindo comparar a magnitude relativa entre direções. No produto de 24 h, a união considera os dias de direção persistente.&#x27;),
+  147                     (&#x27;Moran_local&#x27;,&#x27;lisa&#x27;,LISA,&#x27;Moran local de log(1+C), oito vizinhos, 999 permutações condicionais bilaterais e ajuste BH nominal de 5% em cada mapa. Cinza não significa ausência de concentração. A correção adicional conjunta dos oito campos direcionais está nas tabelas.&#x27;),
+  148                     (&#x27;Moran_bivariado&#x27;,&#x27;bivariate&#x27;,LISA,&#x27;Moran local bivariado entre concentração do envelope e densidade anual de emissão na vizinhança. Não representa uma trajetória de transporte ou emissão do evento.&#x27;),
+  149                     (&#x27;Emissao_concentracao&#x27;,&#x27;matrix&#x27;,MATRIX,&#x27;Alta concentração acima de P80 de cada envelope; alta emissão acima do corte associativo treinado para esse alvo. Massa anual inventariada, sem transformar o corte em emissão permissível.&#x27;),
+  150                     (&#x27;Regioes_gestao&#x27;,&#x27;management&#x27;,ROLES,&#x27;Papéis propostos de gestão. A prioridade receptora está acima de P80; controle de fontes destaca emissão elevada fora dessa faixa. Classes relativas ao cenário e direção.&#x27;),
+  151                     (&#x27;Cobertura_prioridades&#x27;,&#x27;network_priority&#x27;,NETWORK,&#x27;Regiões de prioridade receptora com pelo menos 50% ou menos de 50% da área dentro dos entornos de 4 km das estações elegíveis em 2021-2023. Pontos são as estações. O raio é uma aproximação do estudo, sem demonstrar representatividade física uniforme.&#x27;),
+  152                     (&#x27;Grupo_predominante&#x27;,&#x27;dominant_name&#x27;,cart.COLORS,&#x27;Grupo com maior contribuição no mesmo horário ou dia do máximo ALL de cada receptor. AEX e subgrupos urbanos não disputam com as empresas e Urbano Total, para evitar dupla contagem.&#x27;)]
+  153              for name,field,palette,caption in specs:
+  154                  name_full=f&#x27;{stem}_{name}&#x27;;categories=list(palette) if name!=&#x27;Grupo_predominante&#x27; else sorted(set(table.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})))
+  155                  opts={}
+  156                  if name==&#x27;Cobertura_prioridades&#x27;:
+  157                      st=stations[stations.pollutant.eq(pol)].copy();st=st[st.station_id.isin(eligible[eligible.pollutant.eq(pol)&amp;eligible.n_design_years.eq(3)].station_id)]
+  158                      sg=gpd.GeoDataFrame(st,geometry=gpd.points_from_xy(st.X,st.Y),crs=cells.crs);opts[&#x27;station_overlay&#x27;]=[sg]*8
+  159                  cart.render(z,muni,[field]*8,name_full,[&#x27;Vento de &#x27;+v for v in DIRS],&#x27;&#x27;,extent,palette=palette,legend_categories=categories,filename=name_full,figure_title=title(pol)+&#x27; · &#x27;+period+&#x27; · &#x27;+name.replace(&#x27;_&#x27;,&#x27; &#x27;),**common,**opts)
+  160                  catalog[name_full]=caption
+  161                  print(&#x27;Prancha&#x27;,name_full,flush=True)
+  162  
+  163              concentration_maps(pol,period,z,muni,extent,table)
+  164  
+  165              fig,axs=plt.subplots(4,2,figsize=(8.27,11.69),layout=&#x27;constrained&#x27;)
+  166              for ax,direction in zip(axs.ravel(),DIRS):
+  167                  f=table[table.direction.eq(direction)];lim=limits[limits.pollutant.eq(pol)&amp;limits.period.eq(period)&amp;limits.direction.eq(direction)&amp;limits.basis.eq(&#x27;density_tpy_km2&#x27;)]
+  168                  ax.scatter(f.emission_density,f.concentration,s=5,c=f.quintile.map(lambda v:QUINT[&#x27;Q&#x27;+str(v)]),alpha=.65,linewidths=0)
+  169                  for _,r in lim.drop_duplicates(&#x27;percentile_target&#x27;).iterrows():
+  170                      if np.isfinite(r.cut_all_data):ax.axvline(r.cut_all_data,color=&#x27;#405b64&#x27;,lw=.55,ls=&#x27;--&#x27;)
+  171                      ax.axhline(r.concentration_cut,color=&#x27;#405b64&#x27;,lw=.45,ls=&#x27;:&#x27;)
+  172                  ax.set_xscale(&#x27;symlog&#x27;,linthresh=.001);ax.set_yscale(&#x27;log&#x27;);ax.set_xlim(left=0);ax.set(title=&#x27;Vento de &#x27;+direction,xlabel=&#x27;Emissão anual (t/ano/km²)&#x27;,ylabel=&#x27;Concentração (µg/m³)&#x27;);ax.tick_params(labelsize=7)
+  173              fig.suptitle(title(pol)+&#x27; · &#x27;+period+&#x27; · associação emissão e concentração&#x27;,fontweight=&#x27;bold&#x27;)
+  174              save(fig,stem+&#x27;_Limiares&#x27;,&#x27;Cada ponto corresponde a um receptor e sua célula. As linhas mostram os alvos de concentração e os cortes associativos de emissão. Cortes podem coincidir ou não ser crescentes; nesse caso não se afirmam cinco classes de emissão identificáveis.&#x27;,catalog)
+  175              fig,axs=plt.subplots(4,2,figsize=(8.27,11.69),layout=&#x27;constrained&#x27;)
+  176              for ax,direction in zip(axs.ravel(),DIRS):
+  177                  ss=limits[limits.pollutant.eq(pol)&amp;limits.period.eq(period)&amp;limits.direction.eq(direction)&amp;limits.basis.eq(&#x27;density_tpy_km2&#x27;)]
+  178                  data=[ss[ss.percentile_target.eq(v)].cut_train.dropna() for v in [20,40,60,80]]
+  179                  ax.boxplot(data,tick_labels=[&#x27;P20&#x27;,&#x27;P40&#x27;,&#x27;P60&#x27;,&#x27;P80&#x27;],patch_artist=True,boxprops=dict(facecolor=&#x27;#94c7c5&#x27;),medianprops=dict(color=&#x27;#194f68&#x27;))
+  180                  ax.set_yscale(&#x27;symlog&#x27;,linthresh=.01);ax.set(title=&#x27;Vento de &#x27;+direction,ylabel=&#x27;Corte (t/ano/km²)&#x27;);ax.tick_params(labelsize=7)
+  181              fig.suptitle(title(pol)+&#x27; · &#x27;+period+&#x27; · estabilidade dos cortes&#x27;,fontweight=&#x27;bold&#x27;)
+  182              save(fig,stem+&#x27;_Estabilidade_limiares&#x27;,&#x27;Variação dos cortes nos dez ajustes de treino em blocos de 2 e 4 km. Não são intervalos de confiança de uma emissão autorizável.&#x27;,catalog)
+  183  
+  184              sub=abc[abc.pollutant.eq(pol)&amp;abc.period.eq(period)&amp;abc.region_type.eq(&#x27;gestao&#x27;)&amp;abc.label.eq(&#x27;Prioridade receptora&#x27;)]
+  185              joined=sub.merge(regions[[&#x27;region_id&#x27;,&#x27;area_km2&#x27;,&#x27;concentration_area_mean&#x27;]],on=&#x27;region_id&#x27;,validate=&#x27;many_to_one&#x27;)
+  186              joined[&#x27;weighted_C&#x27;]=joined.contribution*joined.area_km2;contribution=joined.groupby([&#x27;direction&#x27;,&#x27;group_name&#x27;]).weighted_C.sum().unstack(fill_value=0).reindex(DIRS)
+  187              shares=100*contribution.div(contribution.sum(axis=1),axis=0)
+  188              top=contribution.sum().nlargest(6).index.tolist();plot=shares[top].copy();plot[&#x27;Demais grupos&#x27;]=shares.drop(columns=top).sum(axis=1)
+  189              fig,ax=plt.subplots(figsize=(9,4.4),layout=&#x27;constrained&#x27;);left=np.zeros(8);colors=[&#x27;#247c96&#x27;,&#x27;#64ada8&#x27;,&#x27;#bdc77c&#x27;,&#x27;#d6b06a&#x27;,&#x27;#b77f79&#x27;,&#x27;#8c83aa&#x27;,&#x27;#d9e1de&#x27;]
+  190              for group,color in zip(plot.columns,colors):ax.barh(DIRS,plot[group],left=left,label=group,color=color);left+=plot[group].to_numpy()
+  191              ax.set(xlim=(0,100),xlabel=&#x27;Contribuição nas regiões prioritárias (%)&#x27;,ylabel=&#x27;Direção de origem do vento&#x27;);ax.invert_yaxis()
+  192              fig.set_layout_engine(None);fig.subplots_adjust(left=.12,right=.99,top=.98,bottom=.31)
+  193              handles,_=ax.get_legend_handles_labels();cart.centered_legend(fig,handles,ncol=3,y=.16,fontsize=9,row_step=.055,center=.535)
+  194              save(fig,stem+&#x27;_Contribuicoes_prioridades&#x27;,&#x27;Razão das contribuições ponderadas pela área nas regiões acima de P80 em cada direção. A ABC de cada região está no CSV. Os máximos selecionados não são simultâneos entre receptores.&#x27;,catalog)
+  195      if worker:
+  196          (OUT/f&#x27;catalogo_{polls[0]}_{periods[0]}.json&#x27;).write_text(json.dumps(catalog,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  197          return
+  198      if finalize_only:
+  199          for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  200              for period in [&#x27;1h&#x27;,&#x27;24h&#x27;]:
+  201                  catalog.update(json.loads((OUT/f&#x27;catalogo_{pol}_{period}.json&#x27;).read_text(encoding=&#x27;utf8&#x27;)))
+  202  
+  203      joint_table=pd.read_csv(DATA/&#x27;PM10_1h_receptores.csv&#x27;)
+  204      for field,caption in [(&#x27;best_cluster&#x27;,&#x27;Agrupamento com melhor silhueta entre Ward e k-means, K de 2 a 6, usando os máximos de 1 h e 24 h dos dois poluentes. Os grupos podem ser espacialmente descontínuos.&#x27;),
+  205                            (&#x27;ward4&#x27;,&#x27;Solução Ward com quatro grupos, mantida como comparação ao agrupamento de melhor silhueta.&#x27;)]:
+  206          layers=[]
+  207          for direction in DIRS:
+  208              f=cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(joint_table[joint_table.direction.eq(direction)],on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;);f[&#x27;label&#x27;]=f[field].map(lambda v:&#x27;Grupo &#x27;+str(v));layers.append(f)
+  209          name=&#x27;Conjunto_&#x27;+field
+  210          categories=sorted(set(v for f in layers for v in f.label))
+  211          cart.render(z,muni,[&#x27;label&#x27;]*8,name,[&#x27;Vento de &#x27;+v for v in DIRS],&#x27;&#x27;,extent,panel_layers=layers,panel_shape=(4,2),zone_layer=z,atlas_scale=440000,palette=CLUSTERS,legend_categories=categories,filename=name,figure_title=&#x27;Agrupamentos · dois poluentes · máximos 1 h e 24 h&#x27;)
+  212          catalog[name]=caption
+  213      for period in [&#x27;1h&#x27;,&#x27;24h&#x27;]:
+  214          fig,axs=plt.subplots(4,2,figsize=(8.27,11.69),layout=&#x27;constrained&#x27;)
+  215          for ax,direction in zip(axs.ravel(),DIRS):
+  216              for pol,color,marker in [(&#x27;PM10&#x27;,&#x27;#176b88&#x27;,&#x27;o&#x27;),(&#x27;PM25&#x27;,&#x27;#bd5b4b&#x27;,&#x27;s&#x27;)]:
+  217                  ss=corr[corr.period.eq(period)&amp;corr.direction.eq(direction)&amp;corr.pollutant.eq(pol)]
+  218                  ax.plot((ss.min_distance_m+ss.max_distance_m)/2000,ss.I,marker+&#x27;-&#x27;,ms=3,lw=1.1,label=title(pol),color=color)
+  219              ax.axhline(0,color=&#x27;#777&#x27;,ls=&#x27;:&#x27;,lw=.6);ax.set(title=&#x27;Vento de &#x27;+direction,xlabel=&#x27;Distância média da banda (km)&#x27;,ylabel=&#x27;Moran I&#x27;);ax.tick_params(labelsize=8)
+  220          axs.ravel()[0].legend(frameon=False,fontsize=8);fig.suptitle(&#x27;Correlogramas · máximos &#x27;+period,fontweight=&#x27;bold&#x27;)
+  221          save(fig,&#x27;Correlogramas_&#x27;+period,&#x27;Moran em bandas de 750 m até 7,5 km, com 199 permutações por banda. Mostra a escala de associação do envelope, sem estimar sozinho uma distância de transporte de fontes.&#x27;,catalog)
+  222      fig,axs=plt.subplots(4,2,figsize=(8.27,11.69),layout=&#x27;constrained&#x27;)
+  223      for ax,direction in zip(axs.ravel(),DIRS):
+  224          for method,color in [(&#x27;ward&#x27;,&#x27;#176b88&#x27;),(&#x27;kmeans&#x27;,&#x27;#bd5b4b&#x27;)]:
+  225              ss=cluster[cluster.direction.eq(direction)&amp;cluster.method.eq(method)];ax.plot(ss.k,ss.silhouette,&#x27;o-&#x27;,ms=3,label=method,color=color)
+  226          ax.set(title=&#x27;Vento de &#x27;+direction,xlabel=&#x27;Número de grupos&#x27;,ylabel=&#x27;Silhueta média&#x27;,xticks=range(2,7));ax.tick_params(labelsize=8)
+  227      axs.ravel()[0].legend(frameon=False,fontsize=8);fig.suptitle(&#x27;Separação dos agrupamentos por direção&#x27;,fontweight=&#x27;bold&#x27;)
+  228      save(fig,&#x27;Comparacao_agrupamentos&#x27;,&#x27;Silhueta interna para Ward e k-means, K=2 a 6. Não representa concordância do AERMOD com as observações.&#x27;,catalog)
+  229      (OUT/&#x27;legendas.json&#x27;).write_text(json.dumps(catalog,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  230      sections=[]
+  231      for name,caption in catalog.items():
+  232          sections.append(&#x27;&lt;section id=&quot;&#x27;+name+&#x27;&quot;&gt;&lt;h2&gt;&#x27;+html.escape(name.replace(&#x27;_&#x27;,&#x27; &#x27;))+&#x27;&lt;/h2&gt;&lt;a href=&quot;figuras/&#x27;+name+&#x27;.svg&quot;&gt;&lt;img loading=&quot;lazy&quot; src=&quot;figuras/&#x27;+name+&#x27;.svg&quot;&gt;&lt;/a&gt;&lt;p&gt;&#x27;+html.escape(caption)+&#x27;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;figuras/&#x27;+name+&#x27;.pdf&quot;&gt;PDF&lt;/a&gt; · &lt;a href=&quot;figuras/&#x27;+name+&#x27;.png&quot;&gt;PNG&lt;/a&gt;&lt;/p&gt;&lt;/section&gt;&#x27;)
+  233      intro=&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;&lt;title&gt;Análises por direção do vento&lt;/title&gt;&lt;style&gt;body{font:16px/1.6 Arial;max-width:1120px;margin:30px auto;padding:0 22px;color:#183d4c}img{width:100%;height:auto}section{margin-top:40px;border-top:1px solid #dbe3e5}a{color:#176b88}table{border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #ddd}&lt;/style&gt;&lt;h1&gt;Análises dos piores cenários por direção do vento&lt;/h1&gt;&lt;p&gt;Os 32 campos correspondem a oito direções, dois poluentes e duas durações. Os máximos de cada receptor podem ocorrer em datas distintas. Todos os testes numéricos usam os receptores originais. A interpolação aparece apenas nas pranchas de concentração.&lt;/p&gt;&lt;p&gt;Percentis e limiares são recalculados em cada direção. A emissão é a massa anual inventariada, e não uma massa estimada para o evento. Os cortes associativos não são limites de emissão. As participações dos grupos são recuperadas no mesmo horário ou dia do máximo ALL em cada receptor.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;../../figuras/index.html&quot;&gt;Índice geral&lt;/a&gt; · &lt;a href=&quot;../../perfis_grupos/index.html&quot;&gt;Séries nas estações&lt;/a&gt; · &lt;a href=&quot;zoneamento_direcional.csv&quot;&gt;311 zonas em cada campo&lt;/a&gt; · &lt;a href=&quot;regioes_direcionais.csv&quot;&gt;Regiões e cobertura da rede&lt;/a&gt; · &lt;a href=&quot;ABC_contribuicoes_regioes.csv&quot;&gt;ABC e contribuições&lt;/a&gt; · &lt;a href=&quot;limiares_cinco_faixas.csv&quot;&gt;Limiares e validação&lt;/a&gt; · &lt;a href=&quot;sensibilidade_espacial.csv&quot;&gt;Estabilidade espacial e anual&lt;/a&gt;&lt;/p&gt;&#x27;&#x27;&#x27;
+  234      counts=pd.DataFrame([dict(pollutant=r[&#x27;pollutant&#x27;],period=r[&#x27;period&#x27;],direction=r[&#x27;direction&#x27;],HH=r[&#x27;lisa_counts&#x27;].get(&#x27;Alto–alto&#x27;,0),priority=r[&#x27;management_counts&#x27;].get(&#x27;Prioridade receptora&#x27;,0),five_emission_bands=r[&#x27;five_emission_bands_identifiable&#x27;]) for r in summary[&#x27;cases&#x27;]])
+  235      counts[&#x27;pollutant&#x27;]=counts.pollutant.map({&#x27;PM10&#x27;:&#x27;MP₁₀&#x27;,&#x27;PM25&#x27;:&#x27;MP₂,₅&#x27;});counts[&#x27;five_emission_bands&#x27;]=counts.five_emission_bands.map({True:&#x27;Sim&#x27;,False:&#x27;Não&#x27;})
+  236      counts=counts.rename(columns={&#x27;pollutant&#x27;:&#x27;Poluente&#x27;,&#x27;period&#x27;:&#x27;Duração&#x27;,&#x27;direction&#x27;:&#x27;Vento&#x27;,&#x27;priority&#x27;:&#x27;Receptores prioritários&#x27;,&#x27;five_emission_bands&#x27;:&#x27;Cinco faixas de emissão&#x27;})
+  237      navigation=&#x27;&lt;details&gt;&lt;summary&gt;Localizar uma análise&lt;/summary&gt;&lt;ul&gt;&#x27;+&#x27;&#x27;.join(&#x27;&lt;li&gt;&lt;a href=&quot;#&#x27;+k+&#x27;&quot;&gt;&#x27;+html.escape(k.replace(&#x27;_&#x27;,&#x27; &#x27;))+&#x27;&lt;/a&gt;&lt;/li&gt;&#x27; for k in catalog)+&#x27;&lt;/ul&gt;&lt;/details&gt;&#x27;
+  238      (DATA/&#x27;index.html&#x27;).write_text(intro+&#x27;&lt;p&gt;&lt;a href=&quot;LEIA_ME_metodologia.md&quot;&gt;Métodos e interpretação dos resultados&lt;/a&gt;&lt;/p&gt;&#x27;+navigation+counts.to_html(index=False,border=0)+&#x27;&#x27;.join(sections)+&#x27;&lt;/html&gt;&#x27;,encoding=&#x27;utf8&#x27;)
+  239      main=ROOT/&#x27;figuras/index.html&#x27;;content=main.read_text(encoding=&#x27;utf8&#x27;);link=&#x27;&lt;p&gt;&lt;a href=&quot;../vento/analises_espaciais/index.html&quot;&gt;Análises espaciais completas dos oito cenários direcionais, para os dois poluentes e durações&lt;/a&gt;&lt;/p&gt;&#x27;
+  240      if link not in content:content=content.replace(&#x27;&lt;/h1&gt;&#x27;,&#x27;&lt;/h1&gt;&#x27;+link,1)
+  241      main.write_text(content,encoding=&#x27;utf8&#x27;);print(&#x27;Pranchas direcionais e índices concluídos.&#x27;,flush=True)
+  242  
+  243  if __name__==&#x27;__main__&#x27;:
+  244      parser=argparse.ArgumentParser();parser.add_argument(&#x27;--worker&#x27;,nargs=2,metavar=(&#x27;POL&#x27;,&#x27;PERIOD&#x27;));parser.add_argument(&#x27;--plume&#x27;,nargs=2);parser.add_argument(&#x27;--plumes-only&#x27;,action=&#x27;store_true&#x27;);parser.add_argument(&#x27;--finalize-only&#x27;,action=&#x27;store_true&#x27;);args=parser.parse_args()
+  245      if args.plume:
+  246          pol,period=args.plume;z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);muni=gpd.GeoDataFrame(geometry=[z.geometry.union_all()],crs=z.crs)
+  247          extent=json.loads((config.BASE/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+  248          concentration_maps(pol,period,z,muni,extent,pd.read_csv(DATA/f&#x27;{pol}_{period}_receptores.csv&#x27;))
+  249      elif args.worker:run([args.worker[0]],[args.worker[1]],worker=True)
+  250      elif args.finalize_only:run(finalize_only=True)
+  251      else:
+  252          jobs=[(p,t) for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;] for t in [&#x27;1h&#x27;,&#x27;24h&#x27;]]
+  253          def execute(job):
+  254              subprocess.run([sys.executable,str(Path(__file__).resolve()),&#x27;--plume&#x27; if args.plumes_only else &#x27;--worker&#x27;,*job],check=True,cwd=Path(__file__).parent)
+  255          with ThreadPoolExecutor(max_workers=2) as pool:list(pool.map(execute,jobs))
+  256          if not args.plumes_only:run(finalize_only=True)</code></pre></article></html>

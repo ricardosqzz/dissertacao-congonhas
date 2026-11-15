@@ -1,0 +1,263 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/methodology_rules.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/methodology_rules.py</h2>
+<p>Regras compartilhadas do seminário; não executa simulações nem grava arquivos.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\methodology_rules.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>__future__</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>standards</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>a: annual_hours, emission_tpy.</li>
+<li>sub.loc: emission_tpy, group_id.</li>
+<li>daily: CONC, X, Y, date.</li>
+<li>row: ANNUAL_MODEL, P98_MODEL.</li>
+<li>lim: 24H, ANNUAL.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>a: _annual_hours, emission_gs, emission_tpy, group_id.</li>
+<li>groups: annual_hours_max, annual_hours_min, annualization_basis, emission_class, high_emission, minor_threshold_tpy, threshold_tpy.</li>
+<li>d: CONC, date, quarter, year.</li>
+<li>result: MIN_QUARTER_COMPLETENESS, VALID_YEAR.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>group_mass_classes(allocations, zone_ids, pollutant, *, annual_hours=8760.0, annualization_basis=&#x27;cenario_continuo&#x27;)</td><td>42-107</td><td>Chamadas efetivas: list, allocations.copy, a.group_id.fillna, pd.to_numeric, .any, .sum, .to_numpy, np.select Retorno: (pd.DataFrame(rows).set_index(&#x27;zone_index&#x27;), groups).</td></tr><tr><td>concentration_priority(statuses)</td><td>110-115</td><td>Chamadas efetivas: any, statuses.get, str, max, enumerate Retorno: &#x27;P&#x27; + str(max([0] + [i for i, v in enumerate(values, 1) if v == &#x27;nao_atendimento&#x27;])), &#x27;Informação insuficiente&#x27;.</td></tr><tr><td>add_zone_priorities(zones, pollutant)</td><td>118-123</td><td>Chamadas efetivas: zones.copy, concentration_priority, z.iterrows Retorno: z.</td></tr><tr><td>model_annual_metrics(daily)</td><td>126-142</td><td>Chamadas efetivas: .copy, .dt.normalize, .any, pd.to_numeric, .agg, .fillna, range, counts.min Retorno: result.reset_index().</td></tr><tr><td>model_period_metrics(yearly, years, pollutant)</td><td>145-159</td><td>Chamadas efetivas: tuple, yearly.groupby, pd.DataFrame, .reindex, bool, rows.append, np.isfinite, valid.all Retorno: pd.DataFrame(rows).</td></tr><tr><td>abc_classes(values, a_limit=80.0, b_limit=95.0)</td><td>162-184</td><td>Chamadas efetivas: np.asarray, np.any, enumerate, ValueError, np.full, result.append, np.diff, len Retorno: np.asarray(result, dtype=object), np.full(len(v), &#x27;insuficiente&#x27;, dtype=object).</td></tr><tr><td>rolling_station_metrics(yearly, start_year=2018, end_year=None)</td><td>187-217</td><td>Chamadas efetivas: .any, int, yearly.groupby, pd.DataFrame, ValueError, yearly.year.max, group.set_index, range Retorno: pd.DataFrame(rows), pd.DataFrame().</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/methodology_rules.py, linhas 75-81.</p>
+<pre><code>        a[&#x27;_annual_hours&#x27;]=hours
+    groups=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;],as_index=False)[[&#x27;emission_gs&#x27;,&#x27;emission_tpy&#x27;]].sum()
+    groups[&#x27;threshold_tpy&#x27;]=100.
+    groups[&#x27;minor_threshold_tpy&#x27;]=minor
+    groups[&#x27;annualization_basis&#x27;]=annualization_basis
+    groups[&#x27;annual_hours_min&#x27;]=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;])._annual_hours.min().to_numpy()
+    groups[&#x27;annual_hours_max&#x27;]=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;])._annual_hours.max().to_numpy()</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/methodology_rules.py, linhas 93-99.</p>
+<pre><code>        mx=float(sub.emission_tpy.max()) if len(sub) else 0.0
+        unknown=float(sub.loc[sub.group_id.eq(&#x27;NAO_IDENTIFICADO&#x27;),&#x27;emission_tpy&#x27;].sum())
+        total=float(sub.emission_tpy.sum())
+        high=total&gt;100 and not np.isclose(total,100,rtol=0,atol=1e-10)
+        rows.append({&#x27;zone_index&#x27;:zid,&#x27;emission_total_gs&#x27;:float(sub.emission_gs.sum()),
+                     &#x27;emission_max_group_gs&#x27;:float(sub.emission_gs.max()) if len(sub) else 0.,
+                     &#x27;emission_total_tpy&#x27;:float(sub.emission_tpy.sum()),&#x27;emission_max_group_tpy&#x27;:mx,</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Campos/chaves em a: annual_hours, emission_tpy.
+    6  # Campos/chaves em sub.loc: emission_tpy, group_id.
+    7  # Campos/chaves em daily: CONC, X, Y, date.
+    8  # Campos/chaves em row: ANNUAL_MODEL, P98_MODEL.
+    9  # Campos/chaves em lim: 24H, ANNUAL.
+   10  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+   11  # Campos/chaves gerados em a: _annual_hours, emission_gs, emission_tpy, group_id.
+   12  # Campos/chaves gerados em groups: annual_hours_max, annual_hours_min, annualization_basis, emission_class, high_emission, minor_threshold_tpy, threshold_tpy.
+   13  # Campos/chaves gerados em d: CONC, date, quarter, year.
+   14  # Campos/chaves gerados em result: MIN_QUARTER_COMPLETENESS, VALID_YEAR.
+   15  # X: coordenada leste em metros.
+   16  # Y: coordenada norte em metros.
+   17  # CÓDIGO DO PROCESSAMENTO
+   18  
+   19  &quot;&quot;&quot;Regras compartilhadas do seminário; não executa simulações nem grava arquivos.&quot;&quot;&quot;
+   20  from __future__ import annotations
+   21  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   22  import sys as _cp_sys
+   23  from pathlib import Path as _cp_Path
+   24  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   25  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   26      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   27      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   28          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   29          break
+   30  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   31  # FIM DOS CAMINHOS PORTÁTEIS
+   32  
+   33  
+   34  import numpy as np
+   35  import pandas as pd
+   36  from standards import STANDARDS, STAGE_ORDER
+   37  
+   38  MINOR_TPY = {&#x27;PM10&#x27;:5., &#x27;PM25&#x27;:3., &#x27;PTS&#x27;:10., &#x27;CO&#x27;:10.,
+   39               &#x27;NOX&#x27;:10., &#x27;SOX&#x27;:10., &#x27;COVNM&#x27;:5.}
+   40  
+   41  # Group mass classes
+   42  def group_mass_classes(allocations, zone_ids, pollutant, *, annual_hours=8760.,
+   43                         annualization_basis=&#x27;cenario_continuo&#x27;):
+   44      &quot;&quot;&quot;MMA 2026 §3.4 adaptado ao grupo dentro da zona; &gt;100 t/ano é alta.
+   45  
+   46      Entrada: taxas TOTAIS em g/s, já convertidas da unidade nativa da fonte.
+   47      Sem calendário, 8760 h é cenário contínuo, NÃO emissão real/potencial máximo.
+   48      A coluna annual_hours, quando presente, prevalece por fonte. Sua ausência
+   49      não deve ser preenchida silenciosamente dentro de uma coluna existente.
+   50      Zero significa sem emissão alocada, não ausência real de fontes.
+   51      &quot;&quot;&quot;
+   52      minor=MINOR_TPY[pollutant.upper()]
+   53      if annualization_basis not in (&#x27;cenario_continuo&#x27;,&#x27;efetiva&#x27;,&#x27;potencial_maximo&#x27;,&#x27;inventario_conciliado&#x27;):
+   54          raise ValueError(&#x27;Base de anualização não reconhecida.&#x27;)
+   55      if annualization_basis in (&#x27;efetiva&#x27;,&#x27;potencial_maximo&#x27;) and &#x27;annual_hours&#x27; not in allocations:
+   56          raise ValueError(&#x27;Emissão efetiva/potencial exige calendário documentado por fonte.&#x27;)
+   57      zone_ids=list(zone_ids)
+   58      a=allocations.copy()
+   59      if a.zone_index.isna().any() or not a.zone_index.isin(zone_ids).all():
+   60          raise ValueError(&#x27;Alocação com zona ausente ou fora da lista de zonas.&#x27;)
+   61      a[&#x27;group_id&#x27;]=a.group_id.fillna(&#x27;NAO_IDENTIFICADO&#x27;)
+   62      a[&#x27;emission_gs&#x27;]=pd.to_numeric(a.emission_gs,errors=&#x27;raise&#x27;)
+   63      if (~np.isfinite(a.emission_gs) | (a.emission_gs&lt;0)).any():
+   64          raise ValueError(&#x27;Emissão inválida; não substituir ausência por zero.&#x27;)
+   65      hours=pd.to_numeric(a[&#x27;annual_hours&#x27;],errors=&#x27;raise&#x27;) if &#x27;annual_hours&#x27; in a else pd.Series(annual_hours,index=a.index,dtype=float)
+   66      if (~np.isfinite(hours)|(hours&lt;0)|(hours&gt;8784)).any():
+   67          raise ValueError(&#x27;Horas anuais inválidas; máximo de 8784 para ano bissexto.&#x27;)
+   68      if annualization_basis==&#x27;inventario_conciliado&#x27;:
+   69          a[&#x27;emission_tpy&#x27;]=pd.to_numeric(a[&#x27;emission_tpy&#x27;],errors=&#x27;raise&#x27;)
+   70          if (~np.isfinite(a.emission_tpy)|(a.emission_tpy&lt;0)).any():
+   71              raise ValueError(&#x27;Massa anual inválida no inventário conciliado.&#x27;)
+   72          a[&#x27;_annual_hours&#x27;]=np.nan
+   73      else:
+   74          a[&#x27;emission_tpy&#x27;]=a.emission_gs*hours*3600./1_000_000.
+   75          a[&#x27;_annual_hours&#x27;]=hours
+   76      groups=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;],as_index=False)[[&#x27;emission_gs&#x27;,&#x27;emission_tpy&#x27;]].sum()
+   77      groups[&#x27;threshold_tpy&#x27;]=100.
+   78      groups[&#x27;minor_threshold_tpy&#x27;]=minor
+   79      groups[&#x27;annualization_basis&#x27;]=annualization_basis
+   80      groups[&#x27;annual_hours_min&#x27;]=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;])._annual_hours.min().to_numpy()
+   81      groups[&#x27;annual_hours_max&#x27;]=a.groupby([&#x27;zone_index&#x27;,&#x27;group_id&#x27;])._annual_hours.max().to_numpy()
+   82  
+   83      groups[&#x27;high_emission&#x27;]=(groups.emission_tpy&gt;100)&amp;~np.isclose(groups.emission_tpy,100,rtol=0,atol=1e-10)
+   84      mid=(groups.emission_tpy&gt;minor)&amp;~np.isclose(groups.emission_tpy,minor,rtol=0,atol=1e-10)
+   85      groups[&#x27;emission_class&#x27;]=np.select([groups.high_emission,mid,groups.emission_tpy.gt(0)],
+   86                                       [&#x27;Majoritária&#x27;,&#x27;Intermediária&#x27;,&#x27;Minoritária&#x27;],default=&#x27;Sem emissão alocada&#x27;)
+   87      unidentified=groups.group_id.eq(&#x27;NAO_IDENTIFICADO&#x27;)&amp;groups.emission_tpy.gt(0)
+   88      groups.loc[unidentified,&#x27;emission_class&#x27;]=&#x27;Informação insuficiente&#x27;
+   89      groups.loc[unidentified,&#x27;high_emission&#x27;]=False
+   90      rows=[]
+   91      for zid in zone_ids:
+   92          sub=groups[groups.zone_index==zid].sort_values([&#x27;emission_tpy&#x27;,&#x27;group_id&#x27;],ascending=[False,True])
+   93          mx=float(sub.emission_tpy.max()) if len(sub) else 0.0
+   94          unknown=float(sub.loc[sub.group_id.eq(&#x27;NAO_IDENTIFICADO&#x27;),&#x27;emission_tpy&#x27;].sum())
+   95          total=float(sub.emission_tpy.sum())
+   96          high=total&gt;100 and not np.isclose(total,100,rtol=0,atol=1e-10)
+   97          rows.append({&#x27;zone_index&#x27;:zid,&#x27;emission_total_gs&#x27;:float(sub.emission_gs.sum()),
+   98                       &#x27;emission_max_group_gs&#x27;:float(sub.emission_gs.max()) if len(sub) else 0.,
+   99                       &#x27;emission_total_tpy&#x27;:float(sub.emission_tpy.sum()),&#x27;emission_max_group_tpy&#x27;:mx,
+  100                       &#x27;emission_threshold_tpy&#x27;:100.,&#x27;emission_minor_threshold_tpy&#x27;:minor,
+  101                       &#x27;emission_annualization_basis&#x27;:annualization_basis,
+  102                       &#x27;emission_unidentified_tpy&#x27;:unknown,
+  103                       &#x27;emission_high&#x27;:True if high else pd.NA if unknown&gt;0 else False,
+  104                       &#x27;emission_dominant_group&#x27;:&#x27; | &#x27;.join(sub.loc[sub.emission_tpy.eq(mx)&amp;sub.emission_tpy.gt(0),&#x27;group_id&#x27;]),
+  105                       &#x27;emission_high_groups&#x27;:&#x27; | &#x27;.join(sub.loc[sub.high_emission,&#x27;group_id&#x27;]),
+  106                       &#x27;emission_class&#x27;:&#x27;Majoritária&#x27; if high else &#x27;Informação insuficiente&#x27; if unknown&gt;0 else &#x27;Intermediária&#x27; if total&gt;minor else &#x27;Minoritária&#x27; if total&gt;0 else &#x27;Sem emissão alocada&#x27;})
+  107      return pd.DataFrame(rows).set_index(&#x27;zone_index&#x27;),groups
+  108  
+  109  # Concentration priority
+  110  def concentration_priority(statuses):
+  111      &quot;&quot;&quot;P0–P5 da menor à maior superação; lacuna impede classe conclusiva.&quot;&quot;&quot;
+  112      values=[statuses.get(stage) for stage in STAGE_ORDER]
+  113      if any(v not in (&#x27;atendimento&#x27;,&#x27;nao_atendimento&#x27;) for v in values):
+  114          return &#x27;Informação insuficiente&#x27;
+  115      return &#x27;P&#x27;+str(max([0]+[i for i,v in enumerate(values,1) if v==&#x27;nao_atendimento&#x27;]))
+  116  
+  117  # Add zone priorities
+  118  def add_zone_priorities(zones, pollutant):
+  119      &quot;&quot;&quot;Usa a classificação espacial já calculada, não sua média descritiva.&quot;&quot;&quot;
+  120      z=zones.copy()
+  121      z[f&#x27;{pollutant}_concentration_priority&#x27;]=[concentration_priority(
+  122          {s:r[f&#x27;{pollutant}_{s}_status&#x27;] for s in STAGE_ORDER}) for _,r in z.iterrows()]
+  123      return z
+  124  
+  125  # Model annual metrics
+  126  def model_annual_metrics(daily):
+  127      &quot;&quot;&quot;Indicadores pareados por receptor/ano; 75% em CADA trimestre.&quot;&quot;&quot;
+  128      from standards import annual_p98
+  129      d=daily[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;date&#x27;,&#x27;CONC&#x27;]].copy()
+  130      d[&#x27;date&#x27;]=pd.to_datetime(d.date).dt.normalize()
+  131      if d.duplicated([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;date&#x27;]).any():raise ValueError(&#x27;Receptor/data duplicado entre POSTFILEs.&#x27;)
+  132      d[&#x27;CONC&#x27;]=pd.to_numeric(d.CONC,errors=&#x27;coerce&#x27;)
+  133      d.loc[~np.isfinite(d.CONC)|(d.CONC&lt;0),&#x27;CONC&#x27;]=np.nan
+  134      d[&#x27;year&#x27;]=d.date.dt.year;d[&#x27;quarter&#x27;]=d.date.dt.quarter
+  135      result=d.groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;year&#x27;]).agg(ANNUAL_MEAN=(&#x27;CONC&#x27;,&#x27;mean&#x27;),P98=(&#x27;CONC&#x27;,annual_p98),N_DAYS=(&#x27;CONC&#x27;,&#x27;count&#x27;))
+  136      counts=d.groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;year&#x27;,&#x27;quarter&#x27;]).CONC.count().unstack(&#x27;quarter&#x27;).reindex(columns=[1,2,3,4],fill_value=0).fillna(0)
+  137      for quarter in range(1,5):
+  138          expected=[(pd.Timestamp(int(y),quarter*3,1)+pd.offsets.MonthEnd(0)-pd.Timestamp(int(y),quarter*3-2,1)).days+1 for y in counts.index.get_level_values(&#x27;year&#x27;)]
+  139          counts[quarter]=counts[quarter]/np.asarray(expected)
+  140      result[&#x27;MIN_QUARTER_COMPLETENESS&#x27;]=counts.min(axis=1)
+  141      result[&#x27;VALID_YEAR&#x27;]=result.MIN_QUARTER_COMPLETENESS.ge(.75)
+  142      return result.reset_index()
+  143  
+  144  # Model period metrics
+  145  def model_period_metrics(yearly, years, pollutant):
+  146      &quot;&quot;&quot;Janela explícita, sem procurar outro ano para substituir lacunas.&quot;&quot;&quot;
+  147      years=tuple(years); rows=[]
+  148      for (x,y),sub in yearly.groupby([&#x27;X&#x27;,&#x27;Y&#x27;],sort=False):
+  149          sub=sub.set_index(&#x27;year&#x27;).reindex(years)
+  150          valid=sub.VALID_YEAR.eq(True)&amp;np.isfinite(sub.ANNUAL_MEAN)&amp;np.isfinite(sub.P98)
+  151          complete=bool(valid.all())
+  152          row={&#x27;X&#x27;:x,&#x27;Y&#x27;:y,&#x27;n_model_years&#x27;:int(valid.sum()),&#x27;years_model&#x27;:&#x27;,&#x27;.join(map(str,years)),
+  153               &#x27;ANNUAL_MODEL&#x27;:float(sub.ANNUAL_MEAN.mean()) if complete else np.nan,
+  154               &#x27;P98_MODEL&#x27;:float(sub.P98.mean()) if complete else np.nan}
+  155          for scenario in (&#x27;PV&#x27;,)+STAGE_ORDER:
+  156              lim=STANDARDS[pollutant][scenario]
+  157              row[&#x27;status_&#x27;+scenario]=&#x27;insuficiente&#x27; if not complete else &#x27;nao_atendimento&#x27; if row[&#x27;ANNUAL_MODEL&#x27;]&gt;lim[&#x27;ANNUAL&#x27;] or row[&#x27;P98_MODEL&#x27;]&gt;lim[&#x27;24H&#x27;] else &#x27;atendimento&#x27;
+  158          rows.append(row)
+  159      return pd.DataFrame(rows)
+  160  
+  161  # Abc classes
+  162  def abc_classes(values, a_limit=80.0, b_limit=95.0):
+  163      &quot;&quot;&quot;Inclui o grupo que cruza o limite; empates exatos ficam na mesma classe.
+  164  
+  165      A classificação usa o acumulado ANTES do bloco de valores empatados.
+  166      A entrada deve estar em ordem decrescente, como nas tabelas ABC existentes.
+  167      Zero fica em C; ausência, negativo e infinito não são contribuições válidas.
+  168      &quot;&quot;&quot;
+  169      if not 0 &lt; a_limit &lt; b_limit &lt; 100:
+  170          raise ValueError(&#x27;Limites ABC devem satisfazer 0 &lt; A &lt; B &lt; 100.&#x27;)
+  171      v=np.asarray(values,dtype=float)
+  172      if np.any(~np.isfinite(v)) or np.any(v&lt;0):
+  173          raise ValueError(&#x27;Contribuições devem ser finitas e não negativas.&#x27;)
+  174      if np.any(np.diff(v)&gt;0):
+  175          raise ValueError(&#x27;Ordene as contribuições de forma decrescente.&#x27;)
+  176      if not len(v) or v.sum()&lt;=0:
+  177          return np.full(len(v),&#x27;insuficiente&#x27;,dtype=object)
+  178      result=[];before=0.0
+  179      for i,x in enumerate(v):
+  180          if i==0 or x!=v[i-1]:
+  181              cls=&#x27;C&#x27; if x==0 else (&#x27;A&#x27; if before&lt;a_limit-1e-10 else &#x27;B&#x27; if before&lt;b_limit-1e-10 else &#x27;C&#x27;)
+  182          result.append(cls)
+  183          before+=100.0*x/v.sum()
+  184      return np.asarray(result,dtype=object)
+  185  
+  186  # Rolling station metrics
+  187  def rolling_station_metrics(yearly, start_year=2018, end_year=None):
+  188      &quot;&quot;&quot;Uma linha por estação/poluente/janela; nunca pula anos inválidos.
+  189  
+  190      Consome a tabela anual validada de stations.station_yearly_metrics.
+  191      Não transforma ausência de dados em atendimento e não cria anos futuros.
+  192      &quot;&quot;&quot;
+  193      if yearly is None or yearly.empty:return pd.DataFrame()
+  194      keys=[&#x27;station_id&#x27;,&#x27;pollutant&#x27;,&#x27;year&#x27;]
+  195      if yearly.duplicated(keys).any():raise ValueError(&#x27;Estação/poluente/ano duplicado.&#x27;)
+  196      observed_end=int(yearly.year.max())
+  197      last=observed_end if end_year is None else int(end_year)
+  198      rows=[]
+  199      for (sid,pol),group in yearly.groupby(keys[:2],sort=True):
+  200          if pol not in STANDARDS:continue
+  201          byyear=group.set_index(&#x27;year&#x27;)
+  202          for end in range(start_year+2,last+1):
+  203              years=list(range(end-2,end+1));d=byyear.reindex(years)
+  204              valid=d.valid_year.eq(True) &amp; d.annual_mean.notna() &amp; d.p98.notna()
+  205              valid &amp;= np.isfinite(d.annual_mean) &amp; np.isfinite(d.p98)
+  206              complete=bool(valid.all())
+  207              ann=float(d.annual_mean.mean()) if complete else np.nan
+  208              p98=float(d.p98.mean()) if complete else np.nan
+  209              r={&#x27;station_id&#x27;:sid,&#x27;pollutant&#x27;:pol,&#x27;start_year&#x27;:end-2,&#x27;end_year&#x27;:end,
+  210                 &#x27;period&#x27;:f&#x27;{end-2}-{end}&#x27;,&#x27;n_design_years&#x27;:int(valid.sum()),
+  211                 &#x27;years_valid&#x27;:&#x27;,&#x27;.join(str(y) for y in years) if complete else &#x27;&#x27;,
+  212                 &#x27;ANNUAL_3YR&#x27;:ann,&#x27;P98_3YR&#x27;:p98}
+  213              for scenario in (&#x27;PV&#x27;,)+STAGE_ORDER:
+  214                  lim=STANDARDS[pol][scenario]
+  215                  r[&#x27;status_&#x27;+scenario]=&#x27;insuficiente&#x27; if not complete else &#x27;nao_atendimento&#x27; if ann&gt;lim[&#x27;ANNUAL&#x27;] or p98&gt;lim[&#x27;24H&#x27;] else &#x27;atendimento&#x27;
+  216              rows.append(r)
+  217      return pd.DataFrame(rows)</code></pre></article></html>

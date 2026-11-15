@@ -61,3 +61,8 @@ Documentação: [livros e Word no Quarto](https://quarto.org/docs/books/book-out
 
 
 [Guia detalhado do pôster e dos grupos contribuintes](poster/guia-detalhado.md) e [roteiro ampliado em inglês](poster/roteiro-detalhado-em-ingles.md).
+
+
+## Códigos e reprodução
+
+[Códigos e cálculos](https://ricardosqzz.github.io/dissertacao-congonhas/codigos/) apresenta as rotinas científicas atuais. `codigo/` contém as fontes, `config/` os parâmetros e `dados/` a matriz mínima consolidada para reproduzir o agrupamento atual. Execute `python codigo/reproduzir_analise_configuravel.py`. Os arquivos horários completos e demais bases brutas são documentados, sem duplicação neste repositório.

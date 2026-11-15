@@ -1,0 +1,156 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/mapas_direcionais_pareados.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/mapas_direcionais_pareados.py</h2>
+<p>Um encarte MP10/MP2,5 por direção e duração, sem recalcular os dados.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\mapas_direcionais_pareados.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>argparse</td><td>Parâmetros fornecidos ao iniciar o programa.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>concurrent.futures</td><td>Execução concorrente quando prevista pela rotina; não equivale a um novo método de cálculo.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>figuras_analises_direcionais</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>html</td><td>Escape e construção de páginas HTML de documentação/visualização.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>os</td><td>Integração com sistema operacional e variáveis de ambiente.</td></tr><tr><td>paleta_concentracoes</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>subprocess</td><td>Chamada de outros programas e verificação de seus resultados de execução.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gpd.read_file, linha 51.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gpd.read_file, linha 51.</li>
+<li>E:/projeto/output/11_integracao/apendices/resumo_figuras.json — chamada .read_text, linha 52.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{p}_{t}_receptores.csv — chamada pd.read_csv, linha 53.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{p}_envelopes_{&#x27;horarios&#x27; if t == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv — chamada pd.read_csv, linha 54.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada pd.read_csv, linha 55.</li>
+<li>E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv — chamada pd.read_csv, linha 56.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv — chamada pd.read_csv, linha 57.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada p.read_text, linha 105.</li>
+<p><strong>Saídas.</strong></p>
+<li>os.environ.get(&#x27;CONGONHAS_PAIRED_OUTPUT&#x27;, str(DATA / &#x27;pares&#x27;))/index.html — chamada .write_text, linha 96.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada p.write_text, linha 108.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>eligible: n_design_years, pollutant.</li>
+<li>v: name.</li>
+<li>cells: geometry, receptor_id.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>sub: Q, Q_common, dominant_name.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>run(directions, periods=None, concentrations_only=False)</td><td>49-82</td><td>lê dados; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr><tr><td>index()</td><td>85-108</td><td>lê dados; grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/mapas_direcionais_pareados.py, linhas 65-71.</p>
+<pre><code>                table=tables[pol,period];sub=table[table.direction.eq(direction)].copy()
+                common=np.quantile(table.groupby(&#x27;receptor_id&#x27;).concentration.max(),[.2,.4,.6,.8])
+                sub[&#x27;Q&#x27;]=sub.quintile.map(lambda v:&#x27;Q&#x27;+str(v));sub[&#x27;Q_common&#x27;]=[&#x27;Q&#x27;+str(v) for v in np.searchsorted(common,sub.concentration,side=&#x27;left&#x27;)+1]
+                sub[&#x27;dominant_name&#x27;]=sub.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})
+                pair.append(cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(sub,on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;))
+                raw=envelopes[pol,period];raw=raw[raw.direction.eq(direction)];v=table.concentration;positive=v[v&gt;0]
+                low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit)</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gpd.read_file.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gpd.read_file.
+    6  # Entrada: E:/projeto/output/11_integracao/apendices/resumo_figuras.json | .read_text.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/{p}_{t}_receptores.csv | pd.read_csv.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/{p}_envelopes_{&#x27;horarios&#x27; if t == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv | pd.read_csv.
+   11  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | p.read_text.
+   13  # Campos/chaves em eligible: n_design_years, pollutant.
+   14  # Campos/chaves em v: name.
+   15  # Campos/chaves em cells: geometry, receptor_id.
+   16  # Saída: os.environ.get(&#x27;CONGONHAS_PAIRED_OUTPUT&#x27;, str(DATA / &#x27;pares&#x27;))/index.html | .write_text.
+   17  # Saída: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | p.write_text.
+   18  # Campos/chaves gerados em sub: Q, Q_common, dominant_name.
+   19  # receptor_id: identificador do receptor.
+   20  # CÓDIGO DO PROCESSAMENTO
+   21  
+   22  &quot;&quot;&quot;Um encarte MP10/MP2,5 por direção e duração, sem recalcular os dados.&quot;&quot;&quot;
+   23  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   24  import sys as _cp_sys
+   25  from pathlib import Path as _cp_Path
+   26  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   27  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   28      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   29      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   30          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   31          break
+   32  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   33  # FIM DOS CAMINHOS PORTÁTEIS
+   34  
+   35  import json,html,sys,argparse,subprocess,os
+   36  from pathlib import Path
+   37  from concurrent.futures import ThreadPoolExecutor
+   38  import numpy as np,pandas as pd,geopandas as gpd
+   39  from matplotlib.colors import LogNorm
+   40  from paleta_concentracoes import concentration_cmap
+   41  import config,cartografia_apendices as cart
+   42  from figuras_analises_direcionais import QUINT,LISA,MATRIX,ROLES,NETWORK
+   43  from groups import GROUPS
+   44  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;;DATA=ROOT/&#x27;vento/analises_espaciais&#x27;;OUT=Path(os.environ.get(&#x27;CONGONHAS_PAIRED_OUTPUT&#x27;,str(DATA/&#x27;pares&#x27;)))
+   45  DIRS=[&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;];NAMES=[&#x27;Norte&#x27;,&#x27;Nordeste&#x27;,&#x27;Leste&#x27;,&#x27;Sudeste&#x27;,&#x27;Sul&#x27;,&#x27;Sudoeste&#x27;,&#x27;Oeste&#x27;,&#x27;Noroeste&#x27;]
+   46  SPECS=[(&#x27;Quintis&#x27;,&#x27;Q&#x27;,QUINT),(&#x27;Quintis_referencia_comum&#x27;,&#x27;Q_common&#x27;,QUINT),(&#x27;Moran_local&#x27;,&#x27;lisa&#x27;,LISA),(&#x27;Moran_bivariado&#x27;,&#x27;bivariate&#x27;,LISA),(&#x27;Emissao_concentracao&#x27;,&#x27;matrix&#x27;,MATRIX),(&#x27;Regioes_gestao&#x27;,&#x27;management&#x27;,ROLES),(&#x27;Cobertura_prioridades&#x27;,&#x27;network_priority&#x27;,NETWORK),(&#x27;Grupo_predominante&#x27;,&#x27;dominant_name&#x27;,cart.COLORS)]
+   47  
+   48  # Run
+   49  def run(directions,periods=None,concentrations_only=False):
+   50      OUT.mkdir(parents=True,exist_ok=True);cart.OUT=OUT
+   51      z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);cells=gpd.read_file(ROOT/&#x27;celulas_analise.gpkg&#x27;);muni=gpd.GeoDataFrame(geometry=[z.geometry.union_all()],crs=z.crs)
+   52      extent=json.loads((config.BASE/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+   53      tables={(p,t):pd.read_csv(DATA/f&#x27;{p}_{t}_receptores.csv&#x27;) for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;] for t in [&#x27;1h&#x27;,&#x27;24h&#x27;]}
+   54      envelopes={(p,t):pd.read_csv(ROOT/&#x27;vento&#x27;/f&#x27;{p}_envelopes_{&quot;horarios&quot; if t==&quot;1h&quot; else &quot;diarios_persistentes&quot;}.csv&#x27;) for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;] for t in [&#x27;1h&#x27;,&#x27;24h&#x27;]}
+   55      present=pd.read_csv(ROOT/&#x27;perfis_grupos/perfis_normalizados_grupos_estacoes.csv&#x27;)[[&#x27;pollutant&#x27;,&#x27;station_id&#x27;]].drop_duplicates()
+   56      st=pd.read_csv(config.BASE/&#x27;output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv&#x27;).merge(present,on=[&#x27;pollutant&#x27;,&#x27;station_id&#x27;],validate=&#x27;one_to_one&#x27;)
+   57      eligible=pd.read_csv(config.BASE/&#x27;output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv&#x27;);stations=[]
+   58      for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+   59          f=st[st.pollutant.eq(p)&amp;st.station_id.isin(eligible[eligible.pollutant.eq(p)&amp;eligible.n_design_years.eq(3)].station_id)]
+   60          stations.append(gpd.GeoDataFrame(f,geometry=gpd.points_from_xy(f.X,f.Y),crs=cells.crs))
+   61      for direction in directions:
+   62          for period in periods or [&#x27;1h&#x27;,&#x27;24h&#x27;]:
+   63              pair=[];surfaces=[]
+   64              for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+   65                  table=tables[pol,period];sub=table[table.direction.eq(direction)].copy()
+   66                  common=np.quantile(table.groupby(&#x27;receptor_id&#x27;).concentration.max(),[.2,.4,.6,.8])
+   67                  sub[&#x27;Q&#x27;]=sub.quintile.map(lambda v:&#x27;Q&#x27;+str(v));sub[&#x27;Q_common&#x27;]=[&#x27;Q&#x27;+str(v) for v in np.searchsorted(common,sub.concentration,side=&#x27;left&#x27;)+1]
+   68                  sub[&#x27;dominant_name&#x27;]=sub.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})
+   69                  pair.append(cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(sub,on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;))
+   70                  raw=envelopes[pol,period];raw=raw[raw.direction.eq(direction)];v=table.concentration;positive=v[v&gt;0]
+   71                  low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit)
+   72                  ticks=np.unique(np.r_[low,10.**np.arange(np.ceil(np.log10(low)),np.floor(np.log10(cap))+1),cap])
+   73                  geo=gpd.GeoSeries(gpd.points_from_xy(raw.X,raw.Y),crs=z.crs).to_crs(4674);col=&#x27;max_1h&#x27; if period==&#x27;1h&#x27; else &#x27;daily_from_1h&#x27;
+   74                  surfaces.append(dict(x=geo.x.to_numpy(),y=geo.y.to_numpy(),values=raw[col].to_numpy(),limits=[low,cap],norm=LogNorm(low,cap),cmap=concentration_cmap(),ticks=ticks,actual_max=float(sub.concentration.max()),max_in_label=True))
+   75              base=f&#x27;{period}_{direction}&#x27;;ft=&#x27;Vento de &#x27;+NAMES[DIRS.index(direction)]+&#x27; · &#x27;+(&#x27;máximos de 1 h&#x27; if period==&#x27;1h&#x27; else &#x27;máximos de 24 h&#x27;)
+   76              common=dict(zone_layer=z,wind_directions=[direction]*2,png_dpi=600)
+   77              cart.render(z,muni,[&#x27;concentration&#x27;]*2,base,[&#x27;MP₁₀&#x27;,&#x27;MP₂,₅&#x27;],&#x27;&#x27;,extent,surfaces=surfaces,filename=base+&#x27;_Concentracoes&#x27;,figure_title=ft,**common)
+   78              for name,field,palette in ([] if concentrations_only else SPECS):
+   79                  categories=list(palette) if name!=&#x27;Grupo_predominante&#x27; else sorted(set(pd.concat(pair).dominant_name))
+   80                  opts={&#x27;station_overlay&#x27;:stations} if name==&#x27;Cobertura_prioridades&#x27; else {}
+   81                  cart.render(z,muni,[field]*2,base,[&#x27;MP₁₀&#x27;,&#x27;MP₂,₅&#x27;],&#x27;&#x27;,extent,panel_layers=pair,palette=palette,legend_categories=categories,filename=base+&#x27;_&#x27;+name,figure_title=ft+&#x27; · &#x27;+name.replace(&#x27;_&#x27;,&#x27; &#x27;),**common,**opts)
+   82              print(&#x27;Concluídos pares&#x27;,direction,period,flush=True)
+   83  
+   84  # Index
+   85  def index():
+   86      sections=[]
+   87      for direction,name in zip(DIRS,NAMES):
+   88          parts=[]
+   89          for period in [&#x27;1h&#x27;,&#x27;24h&#x27;]:
+   90              figs=[]
+   91              for item in [&#x27;Concentracoes&#x27;]+[s[0] for s in SPECS]:
+   92                  stem=f&#x27;{period}_{direction}_{item}&#x27;
+   93                  figs.append(f&#x27;&lt;section&gt;&lt;h3&gt;{html.escape(item.replace(&quot;_&quot;,&quot; &quot;))}&lt;/h3&gt;&lt;a href=&quot;{stem}.svg&quot;&gt;&lt;img loading=&quot;lazy&quot; src=&quot;{stem}.svg&quot;&gt;&lt;/a&gt;&lt;p&gt;&lt;a href=&quot;{stem}.pdf&quot;&gt;PDF vetorial&lt;/a&gt; · &lt;a href=&quot;{stem}.svg&quot;&gt;SVG&lt;/a&gt; · &lt;a href=&quot;{stem}.png&quot;&gt;PNG&lt;/a&gt;&lt;/p&gt;&lt;/section&gt;&#x27;)
+   94              parts.append(&#x27;&lt;details&gt;&lt;summary&gt;&#x27;+period+&#x27;&lt;/summary&gt;&#x27;+&#x27;&#x27;.join(figs)+&#x27;&lt;/details&gt;&#x27;)
+   95          sections.append(&#x27;&lt;h2&gt;Vento de &#x27;+name+&#x27;&lt;/h2&gt;&#x27;+&#x27;&#x27;.join(parts))
+   96      (OUT/&#x27;index.html&#x27;).write_text(&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Mapas direcionais pareados&lt;/title&gt;&lt;style&gt;body{font:16px/1.6 Arial;color:#183d4c;max-width:1120px;margin:30px auto;padding:0 20px}img{width:100%}details{border:1px solid #dbe4e6;padding:14px;margin:12px 0}summary{cursor:pointer;font-size:20px}section{border-top:1px solid #ddd;margin-top:25px}a{color:#176b88}&lt;/style&gt;&lt;h1&gt;MP10 e MP2,5 por direção do vento&lt;/h1&gt;&lt;p&gt;Um mesmo encarte reúne os dois poluentes para a mesma direção e duração. O pequeno ícone destaca o setor de origem selecionado e não representa frequência ou velocidade. Os dados, os filtros meteorológicos e as análises anteriores foram preservados.&lt;/p&gt;&lt;p&gt;Os máximos podem ocorrer em eventos diferentes entre receptores e poluentes. As barras de concentração são independentes por poluente; seus limites permanecem fixos entre as oito direções do mesmo poluente e duração. Os mapas de 24 h usam os dias com direção persistente. As definições dos testes constam no índice analítico.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;../index.html&quot;&gt;Métodos e análises completas&lt;/a&gt; · &lt;a href=&quot;../../../cenario_geral/index.html&quot;&gt;Cenário geral&lt;/a&gt; · &lt;a href=&quot;../../Relatorio_recortes_vento.pdf&quot;&gt;Relatório dos recortes&lt;/a&gt;&lt;/p&gt;&#x27;&#x27;&#x27;+&#x27;&#x27;.join(sections)+&#x27;&lt;/html&gt;&#x27;,encoding=&#x27;utf8&#x27;)
+   97      p=OUT/&#x27;index.html&#x27;;s=p.read_text(encoding=&#x27;utf8&#x27;)
+   98      s=s.replace(&#x27;O pequeno ícone destaca o setor de origem selecionado e não representa frequência ou velocidade.&#x27;,&#x27;A rosa meteorológica junto à legenda preserva as frequências e as classes de velocidade da entrada. Somente o setor de origem selecionado recebe destaque em cores.&#x27;)
+   99      s=s.replace(&#x27;&lt;h1&gt;MP10 e MP2,5 por direção do vento&lt;/h1&gt;&#x27;,&#x27;&lt;h1&gt;MP10 e MP2,5 por direção do vento&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;../../../visualizador/index.html&quot;&gt;Abrir o visualizador com seleção pela rosa dos ventos&lt;/a&gt;&lt;/p&gt;&#x27;)
+  100      p.write_text(s,encoding=&#x27;utf8&#x27;)
+  101      p=DATA/&#x27;index.html&#x27;;s=p.read_text(encoding=&#x27;utf8&#x27;);link=&#x27;&lt;p&gt;&lt;a href=&quot;pares/index.html&quot;&gt;Mapas pareados: MP10 e MP2,5 lado a lado por direção e duração&lt;/a&gt;&lt;/p&gt;&#x27;
+  102      if link not in s:s=s.replace(&#x27;&lt;/h1&gt;&#x27;,&#x27;&lt;/h1&gt;&#x27;+link,1)
+  103      p.write_text(s,encoding=&#x27;utf8&#x27;)
+  104      p=ROOT/&#x27;figuras/index.html&#x27;
+  105      s=p.read_text(encoding=&#x27;utf8&#x27;)
+  106      link=&#x27;&lt;p&gt;&lt;a href=&quot;../visualizador/index.html&quot;&gt;Visualizador interativo privado&lt;/a&gt; · &lt;a href=&quot;../vento/analises_espaciais/pares/index.html&quot;&gt;Mapas pareados por direção e duração&lt;/a&gt; · &lt;a href=&quot;../../../dissertacao/_book/html/index.html&quot;&gt;Dissertação&lt;/a&gt; · &lt;a href=&quot;../../../dissertacao/artigo/_book/html/index.html&quot;&gt;Artigo&lt;/a&gt;&lt;/p&gt;&#x27;
+  107      if link not in s:s=s.replace(&#x27;&lt;/h1&gt;&#x27;,&#x27;&lt;/h1&gt;&#x27;+link,1)
+  108      p.write_text(s,encoding=&#x27;utf8&#x27;)
+  109  
+  110  if __name__==&#x27;__main__&#x27;:
+  111      parser=argparse.ArgumentParser();parser.add_argument(&#x27;--worker&#x27;,nargs=&#x27;+&#x27;);parser.add_argument(&#x27;--concentrations-only&#x27;,action=&#x27;store_true&#x27;);a=parser.parse_args()
+  112      if a.worker:run(a.worker,concentrations_only=a.concentrations_only)
+  113      else:
+  114          def job(d):subprocess.run([sys.executable,str(Path(__file__).resolve()),&#x27;--worker&#x27;,*d,*([&#x27;--concentrations-only&#x27;] if a.concentrations_only else [])],check=True,cwd=Path(__file__).parent)
+  115          with ThreadPoolExecutor(max_workers=2) as pool:list(pool.map(job,[DIRS[:4],DIRS[4:]]))
+  116          if not a.concentrations_only:index()</code></pre></article></html>

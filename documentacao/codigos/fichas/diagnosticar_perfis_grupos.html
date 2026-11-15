@@ -1,0 +1,168 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/diagnosticar_perfis_grupos.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/diagnosticar_perfis_grupos.py</h2>
+<p>Extrai somente receptores das estações dos POST fixos e documenta identificabilidade.</p>
+<p><strong>Papel.</strong> Auditoria/diagnóstico. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\diagnosticar_perfis_grupos.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>io</td><td>Fluxos em memória para imagens, tabelas e documentos.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada path.open, linha 59.</li>
+<li>io.BytesIO(subset.tobytes()) — chamada pd.read_csv, linha 71.</li>
+<li>E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv — chamada pd.read_csv, linha 76.</li>
+<li>E:/projeto/adi_ado_sum/&#x27;PM10.ADI&#x27; if pol == &#x27;PM10&#x27; else &#x27;PM25.ADI&#x27; — chamada adi.read_text, linha 80.</li>
+<li>E:/projeto/output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg — chamada gpd.read_file, linha 96.</li>
+<li>E:/projeto/output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv — chamada pd.read_csv, linha 102.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json — chamada meta.read_text, linha 106.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_estacoes.csv.gz — chamada pd.read_csv, linha 106.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_grupos_estaticos_auxiliares.INC — chamada .write_text, linha 95.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_grupos_estaticos_auxiliares.csv — chamada .to_csv, linha 95.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_estacoes.csv.gz — chamada d.to_csv, linha 108.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json — chamada meta.write_text, linha 108.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada .to_csv, linha 113.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/diagnostico_concordancia_grupos.csv — chamada .to_csv, linha 113.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/distancias_grupos_estacoes.csv — chamada .to_csv, linha 113.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/grupos_fontes_horarias_e_estaticas.csv — chamada .to_csv, linha 113.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/manifesto.json — chamada .write_text, linha 114.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>cal.loc: CODE.</li>
+<li>stations: pollutant.</li>
+<li>observed: CODE.</li>
+<li>d: CODE.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>groups: ALL.</li>
+<li>d: hour.</li>
+<li>p: group_id, group_norm, observed_norm, pollutant, station_id.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>station_records(path, stations)</td><td>56-71</td><td>lê dados Retorno: d.merge(stations, on=[&#x27;X&#x27;, &#x27;Y&#x27;], validate=&#x27;many_to_one&#x27;).</td></tr><tr><td>run()</td><td>74-114</td><td>lê dados; grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/diagnosticar_perfis_grupos.py, linhas 98-104.</p>
+<pre><code>            geom=g.geometry.union_all();weight=np.maximum(g.massa.to_numpy(),0);centers=g.geometry.centroid
+            if weight.sum():cx=np.average(centers.x,weights=weight);cy=np.average(centers.y,weights=weight)
+            else:cx=geom.centroid.x;cy=geom.centroid.y
+            for r in st.itertuples():distances.append({&#x27;pollutant&#x27;:pol,&#x27;group_id&#x27;:group,&#x27;station_id&#x27;:r.station_id,&#x27;distance_min_geometry_km&#x27;:geom.distance(Point(r.X,r.Y))/1000,&#x27;distance_emission_centroid_km&#x27;:np.hypot(cx-r.X,cy-r.Y)/1000,&#x27;bearing_station_to_emission_centroid&#x27;:np.rad2deg(np.arctan2(cx-r.X,cy-r.Y))%360})
+        observed=pd.read_csv(config.BASE/f&#x27;output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv&#x27;,usecols=[&#x27;station_id&#x27;,&#x27;CODE&#x27;,&#x27;observed&#x27;]);observed=observed[observed.CODE.isin(good)]
+        for (group,period),path in selected.items():
+            if period!=&#x27;1H&#x27;:continue</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Média com ou sem pesos. As unidades do resultado são as da variável antes de eventual normalização.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>average: Média com ou sem pesos. As unidades do resultado são as da variável antes de eventual normalização.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | path.open.
+    5  # Entrada: io.BytesIO(subset.tobytes()) | pd.read_csv.
+    6  # Entrada: E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv | pd.read_csv.
+    7  # Entrada: E:/projeto/adi_ado_sum/&#x27;PM10.ADI&#x27; if pol == &#x27;PM10&#x27; else &#x27;PM25.ADI&#x27; | adi.read_text.
+    8  # Entrada: E:/projeto/output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg | gpd.read_file.
+    9  # Entrada: E:/projeto/output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json | meta.read_text.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_estacoes.csv.gz | pd.read_csv.
+   12  # Campos/chaves em cal.loc: CODE.
+   13  # Campos/chaves em stations: pollutant.
+   14  # Campos/chaves em observed: CODE.
+   15  # Campos/chaves em d: CODE.
+   16  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_grupos_estaticos_auxiliares.INC | .write_text.
+   17  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_grupos_estaticos_auxiliares.csv | .to_csv.
+   18  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_estacoes.csv.gz | d.to_csv.
+   19  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json | meta.write_text.
+   20  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | .to_csv.
+   21  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/diagnostico_concordancia_grupos.csv | .to_csv.
+   22  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/distancias_grupos_estacoes.csv | .to_csv.
+   23  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/grupos_fontes_horarias_e_estaticas.csv | .to_csv.
+   24  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/manifesto.json | .write_text.
+   25  # Campos/chaves gerados em groups: ALL.
+   26  # Campos/chaves gerados em d: hour.
+   27  # Campos/chaves gerados em p: group_id, group_norm, observed_norm, pollutant, station_id.
+   28  # CÓDIGO DO PROCESSAMENTO
+   29  
+   30  &quot;&quot;&quot;Extrai somente receptores das estações dos POST fixos e documenta identificabilidade.&quot;&quot;&quot;
+   31  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   32  import sys as _cp_sys
+   33  from pathlib import Path as _cp_Path
+   34  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   35  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   36      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   37      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   38          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   39          break
+   40  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   41  # FIM DOS CAMINHOS PORTÁTEIS
+   42  
+   43  from pathlib import Path
+   44  import json,io,re
+   45  import numpy as np
+   46  import pandas as pd
+   47  import geopandas as gpd
+   48  from shapely.geometry import Point
+   49  from out_aermod_reader import discover,header
+   50  from groups import GROUPS,canonical_post_group
+   51  from medias_horarias_verificadas import met_calendar,identity
+   52  import config
+   53  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;;OUT=ROOT/&#x27;perfis_grupos&#x27;
+   54  
+   55  # Station records
+   56  def station_records(path,stations):
+   57      nr=header(path)[&#x27;n_receptors&#x27;]
+   58      if not nr:raise ValueError(&#x27;Número de receptores ausente do cabeçalho&#x27;)
+   59      with path.open(&#x27;rb&#x27;) as f:
+   60          offset=0
+   61          for line in f:
+   62              if not line.startswith(b&#x27;*&#x27;):break
+   63              offset+=len(line)
+   64          size=len(line);f.seek(offset);first=f.read(size*nr)
+   65      if (path.stat().st_size-offset)%size:raise ValueError(&#x27;POST sem comprimento fixo consistente&#x27;)
+   66      n=(path.stat().st_size-offset)//size;assert n%nr==0
+   67      coords=np.array([[float(r[:14]),float(r[14:28])] for r in first.splitlines()]);indexes=[]
+   68      for r in stations.itertuples():
+   69          found=np.where(np.isclose(coords[:,0],r.X,atol=.001,rtol=0)&amp;np.isclose(coords[:,1],r.Y,atol=.001,rtol=0))[0];assert len(found)==1;indexes.append(found[0])
+   70      mmap=np.memmap(path,dtype=&#x27;S&#x27;+str(size),mode=&#x27;r&#x27;,offset=offset,shape=(n//nr,nr));subset=mmap[:,indexes].copy();del mmap
+   71      d=pd.read_csv(io.BytesIO(subset.tobytes()),sep=r&#x27;\s+&#x27;,header=None,usecols=[0,1,2,8],names=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;modelled&#x27;,&#x27;CODE&#x27;]);return d.merge(stations,on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;many_to_one&#x27;)
+   72  
+   73  # Run
+   74  def run():
+   75      OUT.mkdir(exist_ok=True,parents=True);cal,met=met_calendar();good=set(cal.loc[cal.valid,&#x27;CODE&#x27;]);profiles=[];diagnostics=[];distances=[];source_flags=[]
+   76      stations=pd.read_csv(config.BASE/&#x27;output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv&#x27;)
+   77      for pol,folder in [(&#x27;PM10&#x27;,&#x27;PM10&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5&#x27;)]:
+   78          st=stations[stations.pollutant.eq(pol)][[&#x27;station_id&#x27;,&#x27;X&#x27;,&#x27;Y&#x27;]].drop_duplicates();selected,_=discover(config.BASE/f&#x27;out-aermod/{folder}&#x27;)
+   79          adi=config.BASE/&#x27;adi_ado_sum&#x27;/(&#x27;PM10.ADI&#x27; if pol==&#x27;PM10&#x27; else &#x27;PM25.ADI&#x27;);hourly=set();groups={};all_ids=set()
+   80          for line in adi.read_text(encoding=&#x27;latin1&#x27;).splitlines():
+   81              p=line.split();p=p[1:] if p[:1]==[&#x27;SO&#x27;] else p
+   82              if p[:1]==[&#x27;HOUREMIS&#x27;]:hourly.update(p[2:])
+   83              if p[:1]==[&#x27;SRCGROUP&#x27;]:groups.setdefault(canonical_post_group(p[1]),set()).update(p[2:])
+   84              if p[:1]==[&#x27;LOCATION&#x27;]:all_ids.add(p[1])
+   85          groups[&#x27;ALL&#x27;]=all_ids
+   86          for group,ids in groups.items():
+   87              source_flags.append({&#x27;pollutant&#x27;:pol,&#x27;group_id&#x27;:group,&#x27;sources&#x27;:len(ids),&#x27;hourly_sources&#x27;:len(ids&amp;hourly),&#x27;static_sources&#x27;:len(ids-hourly),&#x27;multiplication_of_whole_group_valid&#x27;:not bool(ids&amp;hourly)})
+   88  
+   89          aux=[&#x27;** Auxiliary static-source groups for a future identifiability run&#x27;,&#x27;** Insert within SO pathway; unchanged emissions and HOUREMIS files&#x27;];mapping=[]
+   90          for i,(group,ids) in enumerate(sorted(groups.items()),1):
+   91              if group not in GROUPS or GROUPS[group][&#x27;kind&#x27;]!=&#x27;primary&#x27;:continue
+   92              static=sorted(ids-hourly);gid=f&#x27;S{i:03d}&#x27;
+   93              for a in range(0,len(static),6):aux.append(&#x27;SO SRCGROUP &#x27;+gid+&#x27; &#x27;+&#x27; &#x27;.join(static[a:a+6]))
+   94              mapping.append({&#x27;pollutant&#x27;:pol,&#x27;group_id&#x27;:group,&#x27;aux_static_group&#x27;:gid,&#x27;n_static&#x27;:len(static),&#x27;n_excluded_emi&#x27;:len(ids&amp;hourly)})
+   95          (OUT/f&#x27;{pol}_grupos_estaticos_auxiliares.INC&#x27;).write_text(&#x27;\n&#x27;.join(aux)+&#x27;\n&#x27;,encoding=&#x27;ascii&#x27;);pd.DataFrame(mapping).to_csv(OUT/f&#x27;{pol}_grupos_estaticos_auxiliares.csv&#x27;,index=False)
+   96          src=gpd.read_file(config.BASE/f&#x27;output/13_rateio_emissoes/fontes_rateio_{pol}.gpkg&#x27;)
+   97          for group,g in src.groupby(&#x27;group_id&#x27;):
+   98              geom=g.geometry.union_all();weight=np.maximum(g.massa.to_numpy(),0);centers=g.geometry.centroid
+   99              if weight.sum():cx=np.average(centers.x,weights=weight);cy=np.average(centers.y,weights=weight)
+  100              else:cx=geom.centroid.x;cy=geom.centroid.y
+  101              for r in st.itertuples():distances.append({&#x27;pollutant&#x27;:pol,&#x27;group_id&#x27;:group,&#x27;station_id&#x27;:r.station_id,&#x27;distance_min_geometry_km&#x27;:geom.distance(Point(r.X,r.Y))/1000,&#x27;distance_emission_centroid_km&#x27;:np.hypot(cx-r.X,cy-r.Y)/1000,&#x27;bearing_station_to_emission_centroid&#x27;:np.rad2deg(np.arctan2(cx-r.X,cy-r.Y))%360})
+  102          observed=pd.read_csv(config.BASE/f&#x27;output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv&#x27;,usecols=[&#x27;station_id&#x27;,&#x27;CODE&#x27;,&#x27;observed&#x27;]);observed=observed[observed.CODE.isin(good)]
+  103          for (group,period),path in selected.items():
+  104              if period!=&#x27;1H&#x27;:continue
+  105              cache=OUT/f&#x27;{pol}_{group}_estacoes.csv.gz&#x27;;meta=OUT/f&#x27;{pol}_{group}_cache.json&#x27;
+  106              if cache.exists() and meta.exists() and json.loads(meta.read_text())==identity(path):d=pd.read_csv(cache)
+  107              else:
+  108                  d=station_records(path,st);d=d[d.CODE.isin(good)];d.to_csv(cache,index=False,compression=&#x27;gzip&#x27;);meta.write_text(json.dumps(identity(path)),encoding=&#x27;utf8&#x27;)
+  109              d=d.merge(observed,on=[&#x27;station_id&#x27;,&#x27;CODE&#x27;],validate=&#x27;one_to_one&#x27;);d[&#x27;hour&#x27;]=d.CODE%100-1
+  110              for station,s in d.groupby(&#x27;station_id&#x27;):
+  111                  p=s.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].mean();p[&#x27;observed_norm&#x27;]=p.observed/p.observed.mean();p[&#x27;group_norm&#x27;]=p.modelled/p.modelled.mean() if p.modelled.mean()&gt;0 else np.nan;p[&#x27;pollutant&#x27;]=pol;p[&#x27;group_id&#x27;]=group;p[&#x27;station_id&#x27;]=station;profiles.append(p.reset_index());diagnostics.append({&#x27;pollutant&#x27;:pol,&#x27;group_id&#x27;:group,&#x27;station_id&#x27;:station,&#x27;hours_paired&#x27;:len(s),&#x27;observed_mean&#x27;:s.observed.mean(),&#x27;group_mean&#x27;:s.modelled.mean(),&#x27;hourly_r&#x27;:s.observed.corr(s.modelled),&#x27;shape_r_24h&#x27;:p.observed_norm.corr(p.group_norm)})
+  112              print(pol,group,&#x27;perfis nas estações extraídos&#x27;,flush=True)
+  113      pd.concat(profiles).to_csv(OUT/&#x27;perfis_normalizados_grupos_estacoes.csv&#x27;,index=False);pd.DataFrame(diagnostics).to_csv(OUT/&#x27;diagnostico_concordancia_grupos.csv&#x27;,index=False);pd.DataFrame(distances).to_csv(OUT/&#x27;distancias_grupos_estacoes.csv&#x27;,index=False);pd.DataFrame(source_flags).to_csv(OUT/&#x27;grupos_fontes_horarias_e_estaticas.csv&#x27;,index=False)
+  114      (OUT/&#x27;manifesto.json&#x27;).write_text(json.dumps({&#x27;met&#x27;:met,&#x27;clock&#x27;:&#x27;Hipótese prévia UTC→UTC−3, início do intervalo AERMOD. Pendente confirmação documental.&#x27;,&#x27;fit_to_observations_applied&#x27;:False,&#x27;reason&#x27;:&#x27;Curvas de grupo misturam fontes horárias e estáticas; observação é mistura transportada. Requer matriz estática isolada, regularização, metadados e avaliação fora da amostra.&#x27;,&#x27;normalization&#x27;:&#x27;Média por hora do dia dividida pela média das 24 médias, nas mesmas horas pareadas.&#x27;,&#x27;distance_role&#x27;:&#x27;Diagnóstico geométrico, não peso inverso de distância para atribuir emissão.&#x27;},ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  115  
+  116  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

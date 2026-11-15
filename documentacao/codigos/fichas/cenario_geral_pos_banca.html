@@ -1,0 +1,183 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/cenario_geral_pos_banca.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/cenario_geral_pos_banca.py</h2>
+<p>Organiza a meteorologia completa e a matriz conjunta de máximos de 1 h, máximos de 24 h e média anual trienal dos dois poluentes, sem restringir a uma direção do vento.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\cenario_geral_pos_banca.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>analisar_espacial_direcoes</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>post_amostragem</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/adi_ado_sum/&#x27;PM10.ADO&#x27; if pol == &#x27;PM10&#x27; else &#x27;PM25.ADO&#x27; — chamada p.read_text, linha 55.</li>
+<li>cache.with_name(cache.stem + &#x27;_manifesto.json&#x27;) — chamada manifest.read_text, linha 79.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/eventos_{pol}_{period}.npz — chamada np.load, linha 80.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/envelope_{pol}_{period}.csv — chamada envelope.to_csv, linha 130.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>cells: X, Y.</li>
+<li>paths: ALL.</li>
+<li>check: concentration, from_1h.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>daily: day.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>excluded_days(pol)</td><td>52-59</td><td>lê dados Retorno: (result, p).</td></tr><tr><td>peak_from_valid(values, codes, valid)</td><td>62-67</td><td>Chamadas efetivas: v.argmax, np.asarray, len, ValueError, np.arange Retorno: (v[arg, np.arange(v.shape[1])], t[arg]).</td></tr><tr><td>load_general(pol, period, cells)</td><td>70-141</td><td>lê dados; grava produtos Retorno: result, {k: f[k] for k in f.files}.</td></tr><tr><td>run()</td><td>144-146</td><td>Chamadas efetivas: OUT.mkdir, spatial_run</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/cenario_geral_pos_banca.py, linhas 88-94.</p>
+<pre><code>            if group==&#x27;ALL&#x27;:yearly_full=pivot[[2021,2022,2023]].to_numpy().T
+            selected=pd.DataFrame(xy,columns=[&#x27;X&#x27;,&#x27;Y&#x27;]).merge(pivot.mean(axis=1).rename(&#x27;value&#x27;).reset_index(),on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;)
+            group_values.append(selected.value.to_numpy())
+        index=pd.MultiIndex.from_arrays(coords.T).get_indexer(pd.MultiIndex.from_arrays(xy.T))
+        if (index&lt;0).any():raise ValueError(&#x27;Receptor anual ausente&#x27;)
+        maximum=yearly_full.mean(axis=0);codes=np.zeros(len(coords),dtype=np.int64)
+        yearly=yearly_full[:,index][:,None,:];counts=cal.groupby(&#x27;year&#x27;).valid.sum().to_numpy()[:,None]</code></pre>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/adi_ado_sum/&#x27;PM10.ADO&#x27; if pol == &#x27;PM10&#x27; else &#x27;PM25.ADO&#x27; | p.read_text.
+    5  # Entrada: cache.with_name(cache.stem + &#x27;_manifesto.json&#x27;) | manifest.read_text.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/eventos_{pol}_{period}.npz | np.load.
+    7  # Campos/chaves em cells: X, Y.
+    8  # Campos/chaves em paths: ALL.
+    9  # Campos/chaves em check: concentration, from_1h.
+   10  # Saída: E:/projeto/output/16_revisao_pos_banca/cenario_geral/envelope_{pol}_{period}.csv | envelope.to_csv.
+   11  # Campos/chaves gerados em daily: day.
+   12  # concentration: concentração do período em µg/m³.
+   13  # X: coordenada leste em metros.
+   14  # Y: coordenada norte em metros.
+   15  # Novas variáveis: config/analise_extensivel.json; definir origem, campo, agregação, transformação e peso.
+   16  # CÓDIGO DO PROCESSAMENTO
+   17  
+   18  &quot;&quot;&quot;Meteorologia completa: envelopes 1h/24h e média anual nativa do triênio.
+   19  
+   20  Sem filtro por direção, hora do dia ou persistência do vento. Preserva os
+   21  filtros de validade meteorológica e recupera cada grupo no evento de ALL.
+   22  &quot;&quot;&quot;
+   23  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   24  import sys as _cp_sys
+   25  from pathlib import Path as _cp_Path
+   26  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   27  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   28      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   29      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   30          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   31          break
+   32  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   33  # FIM DOS CAMINHOS PORTÁTEIS
+   34  
+   35  from pathlib import Path
+   36  import json,re
+   37  import numpy as np
+   38  import pandas as pd
+   39  import geopandas as gpd
+   40  import config
+   41  from groups import GROUPS
+   42  from post_amostragem import FixedPost
+   43  from out_aermod_reader import discover,annual
+   44  from medias_horarias_verificadas import identity,met_calendar,cached_daily
+   45  from analisar_espacial_direcoes import run as spatial_run,dump,PRIMARY
+   46  
+   47  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   48  OUT=ROOT/&#x27;cenario_geral&#x27;
+   49  PERIODS=[&#x27;1h&#x27;,&#x27;24h&#x27;,&#x27;anual&#x27;]
+   50  
+   51  # Excluded days
+   52  def excluded_days(pol):
+   53      p=config.BASE/&#x27;adi_ado_sum&#x27;/(&#x27;PM10.ADO&#x27; if pol==&#x27;PM10&#x27; else &#x27;PM25.ADO&#x27;)
+   54      result=set()
+   55      for line in p.read_text(errors=&#x27;replace&#x27;).splitlines():
+   56          if &#x27;W732&#x27; in line:
+   57              m=re.search(r&#x27;(20\d{8})\s*$&#x27;,line)
+   58              if m:result.add(int(m[1][2:8]))
+   59      return result,p
+   60  
+   61  # Peak from valid
+   62  def peak_from_valid(values,codes,valid):
+   63      &quot;&quot;&quot;Máximo por coluna; empates mantêm o primeiro instante cronológico.&quot;&quot;&quot;
+   64      v=values[valid];t=np.asarray(codes)[valid]
+   65      if not len(t):raise ValueError(&#x27;Sem períodos válidos&#x27;)
+   66      arg=v.argmax(axis=0)
+   67      return v[arg,np.arange(v.shape[1])],t[arg]
+   68  
+   69  # Load general
+   70  def load_general(pol,period,cells):
+   71      paths_all,_=discover(config.BASE/&#x27;out-aermod&#x27;/(&#x27;PM10&#x27; if pol==&#x27;PM10&#x27; else &#x27;PM2-5&#x27;))
+   72      native={&#x27;1h&#x27;:&#x27;1H&#x27;,&#x27;24h&#x27;:&#x27;24H&#x27;,&#x27;anual&#x27;:&#x27;ANNUAL&#x27;}[period]
+   73      paths={g:p for (g,a),p in paths_all.items() if a==native}
+   74      groups=sorted(paths)
+   75      if set(groups)!=(set(GROUPS)|{&#x27;ALL&#x27;}):raise ValueError(&#x27;Esperados 29 grupos&#x27;)
+   76      cal,met=met_calendar();bad,log=excluded_days(pol)
+   77      stamp=dict(version=1,files={g:identity(p) for g,p in paths.items()},meteorology=met,log=identity(log),support=identity(ROOT/&#x27;celulas_analise.gpkg&#x27;),period=period,wind_filter=False)
+   78      cache=OUT/f&#x27;eventos_{pol}_{period}.npz&#x27;;manifest=cache.with_name(cache.stem+&#x27;_manifesto.json&#x27;)
+   79      if cache.exists() and manifest.exists() and json.loads(manifest.read_text(encoding=&#x27;utf8&#x27;))==stamp:
+   80          with np.load(cache) as f:return {k:f[k] for k in f.files}
+   81      xy=cells[[&#x27;X&#x27;,&#x27;Y&#x27;]].to_numpy()
+   82      if period==&#x27;anual&#x27;:
+   83          group_values=[];yearly=None;coords=None
+   84          for group in groups:
+   85              a=annual(paths[group]);pivot=a.pivot(index=[&#x27;X&#x27;,&#x27;Y&#x27;],columns=&#x27;year&#x27;,values=&#x27;CONC&#x27;).sort_index()
+   86              if coords is None:coords=np.array(pivot.index.tolist());yearly_full=pivot[[2021,2022,2023]].to_numpy().T
+   87              if not np.array_equal(coords,np.array(pivot.index.tolist())):raise ValueError(&#x27;Receptores anuais divergentes&#x27;)
+   88              if group==&#x27;ALL&#x27;:yearly_full=pivot[[2021,2022,2023]].to_numpy().T
+   89              selected=pd.DataFrame(xy,columns=[&#x27;X&#x27;,&#x27;Y&#x27;]).merge(pivot.mean(axis=1).rename(&#x27;value&#x27;).reset_index(),on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;)
+   90              group_values.append(selected.value.to_numpy())
+   91          index=pd.MultiIndex.from_arrays(coords.T).get_indexer(pd.MultiIndex.from_arrays(xy.T))
+   92          if (index&lt;0).any():raise ValueError(&#x27;Receptor anual ausente&#x27;)
+   93          maximum=yearly_full.mean(axis=0);codes=np.zeros(len(coords),dtype=np.int64)
+   94          yearly=yearly_full[:,index][:,None,:];counts=cal.groupby(&#x27;year&#x27;).valid.sum().to_numpy()[:,None]
+   95          envelope=pd.DataFrame(dict(X=coords[:,0],Y=coords[:,1],concentration=maximum,event_code=codes,
+   96                                     annual_max=yearly_full.max(axis=0),annual_max_year=2021+yearly_full.argmax(axis=0)))
+   97          contributions=np.stack(group_values,axis=-1)[None,:,:]
+   98      else:
+   99          f=FixedPost(paths[&#x27;ALL&#x27;])
+  100          try:
+  101              coords=f.coords.copy();index=f.receptor_indices(xy);values=f.values();codes_native=f.codes.copy()
+  102          finally:f.close()
+  103          if period==&#x27;1h&#x27;:
+  104              valid=pd.Series(codes_native).map(cal.set_index(&#x27;CODE&#x27;).valid).fillna(False).to_numpy(dtype=bool)
+  105          else:
+  106              valid_hours=cal.groupby(&#x27;day&#x27;).valid.sum()
+  107              days=codes_native//100
+  108              valid=pd.Series(days).map(valid_hours).fillna(0).ge(18).to_numpy() &amp; ~np.isin(days,list(bad))
+  109          maximum,codes=peak_from_valid(values,codes_native,valid)
+  110          yearly=np.empty((3,1,len(cells)));counts=np.zeros((3,1),int)
+  111          for yi,year in enumerate([2021,2022,2023]):
+  112              mask=valid&amp;(2000+codes_native//1_000_000==year)
+  113              yearly[yi,0]=values[mask][:,index].max(axis=0);counts[yi,0]=int(mask.sum())
+  114          envelope=pd.DataFrame(dict(X=coords[:,0],Y=coords[:,1],concentration=maximum,event_code=codes))
+  115          if period==&#x27;24h&#x27;:
+  116  
+  117              daily=cached_daily(paths[&#x27;ALL&#x27;]);daily[&#x27;day&#x27;]=daily.date.dt.strftime(&#x27;%y%m%d&#x27;).astype(int)
+  118              days=codes_native[valid]//100
+  119              peak=daily[daily.day.isin(days)].groupby([&#x27;X&#x27;,&#x27;Y&#x27;]).CONC.max().rename(&#x27;from_1h&#x27;).reset_index()
+  120              check=envelope.merge(peak,on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;)
+  121              if not np.allclose(check.concentration,check.from_1h,rtol=2e-7,atol=1e-5):raise ValueError(&#x27;Máximo 24h diverge da reconstrução de 1h&#x27;)
+  122          del values
+  123          contributions=[]
+  124          for group in groups:
+  125              f=FixedPost(paths[group])
+  126              try:contributions.append(f.sample(codes[index],xy))
+  127              finally:f.close()
+  128              print(&#x27;Geral&#x27;,pol,period,group,&#x27;mesmo evento ALL&#x27;,flush=True)
+  129          contributions=np.stack(contributions,axis=-1)[None,:,:]
+  130      envelope.to_csv(OUT/f&#x27;envelope_{pol}_{period}.csv&#x27;,index=False)
+  131      if period==&#x27;anual&#x27;:
+  132          geo=pd.DataFrame(coords,columns=[&#x27;X&#x27;,&#x27;Y&#x27;])
+  133          index=pd.MultiIndex.from_frame(geo).get_indexer(pd.MultiIndex.from_arrays(xy.T))
+  134      all_values=maximum[index][None,:];all_codes=codes[index][None,:]
+  135      if not np.allclose(contributions[:,:,groups.index(&#x27;ALL&#x27;)],all_values,rtol=2e-7,atol=1e-5):raise ValueError(&#x27;ALL não reproduz o campo geral&#x27;)
+  136      closure=contributions[:,:,[groups.index(g) for g in PRIMARY]].sum(axis=-1)
+  137      if not np.allclose(closure,all_values,rtol=3e-5,atol=2e-4):raise ValueError(&#x27;Grupos exclusivos não fecham com ALL&#x27;)
+  138      result=dict(concentrations=all_values,codes=all_codes,group_values=contributions,groups=np.array(groups),yearly=yearly,counts=counts)
+  139      np.savez_compressed(cache,**result);dump(manifest,stamp)
+  140      dump(OUT/f&#x27;periodos_{pol}_{period}.json&#x27;,dict(pollutant=pol,period=period,years=[2021,2022,2023],wind_filter=False,eligible_periods_by_year=counts.ravel().tolist(),annual_definition=&#x27;Média aritmética das três médias anuais nativas&#x27; if period==&#x27;anual&#x27; else None,daily_definition=&#x27;Máximo das médias diárias completas; mínimo 18h e exclusão W732&#x27; if period==&#x27;24h&#x27; else None,group_closure_max_abs=float(np.abs(closure-all_values).max()),regional_receptors=len(coords),municipal_receptors=len(cells)))
+  141      return result
+  142  
+  143  # Run
+  144  def run():
+  145      OUT.mkdir(parents=True,exist_ok=True)
+  146      spatial_run(directions=[&#x27;GERAL&#x27;],periods=PERIODS,output=OUT,loader=load_general)
+  147  
+  148  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

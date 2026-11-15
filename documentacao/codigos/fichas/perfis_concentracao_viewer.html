@@ -1,0 +1,126 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/perfis_concentracao_viewer.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/perfis_concentracao_viewer.py</h2>
+<p>Interface offline com valores absolutos e carregamento por estação.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\perfis_concentracao_viewer.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<li>{out}/index.html — chamada .write_text, linha 102.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>write_viewer(out, metadata)</td><td>24-102</td><td>grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/perfis_concentracao_viewer.py, linhas 24-32.</p>
+<pre><code>def write_viewer(out,metadata):
+    template=r&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;&lt;title&gt;Concentrações nas estações&lt;/title&gt;
+&lt;style&gt;
+body{font:16px/1.55 Arial,sans-serif;max-width:1250px;margin:30px auto;padding:0 22px;color:#183d4c;background:#fff}
+h1{font-size:29px}h2{font-size:21px;margin-top:35px}p{max-width:1080px}
+.controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end;padding:16px 0;border-top:1px solid #d8e0e1;border-bottom:1px solid #d8e0e1}
+label{display:flex;flex-direction:column;font-size:14px;color:#375563}select,input{font:16px Arial;padding:8px;max-width:360px;border:1px solid #abbfc7;border-radius:4px;background:#fff}
+.check{display:inline-flex;flex-direction:row;align-items:center;gap:8px}.check input{width:auto}</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Saída: {out}/index.html | .write_text.
+    6  # CÓDIGO DO PROCESSAMENTO
+    7  
+    8  &quot;&quot;&quot;Interface offline com valores absolutos e carregamento por estação.&quot;&quot;&quot;
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  from pathlib import Path
+   22  
+   23  # Write viewer
+   24  def write_viewer(out,metadata):
+   25      template=r&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+   26  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;&lt;title&gt;Concentrações nas estações&lt;/title&gt;
+   27  &lt;style&gt;
+   28  body{font:16px/1.55 Arial,sans-serif;max-width:1250px;margin:30px auto;padding:0 22px;color:#183d4c;background:#fff}
+   29  h1{font-size:29px}h2{font-size:21px;margin-top:35px}p{max-width:1080px}
+   30  .controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end;padding:16px 0;border-top:1px solid #d8e0e1;border-bottom:1px solid #d8e0e1}
+   31  label{display:flex;flex-direction:column;font-size:14px;color:#375563}select,input{font:16px Arial;padding:8px;max-width:360px;border:1px solid #abbfc7;border-radius:4px;background:#fff}
+   32  .check{display:inline-flex;flex-direction:row;align-items:center;gap:8px}.check input{width:auto}
+   33  svg{width:100%;height:auto;display:block;background:white}a{color:#176b88}small{color:#526974}
+   34  #status,#stats{padding:12px 0}.swatch{display:inline-block;width:16px;height:12px;background:#f3deb5;margin-right:6px}
+   35  table{border-collapse:collapse;margin-top:15px;font-size:14px}td,th{padding:7px 13px;border-bottom:1px solid #dce4e7;text-align:left}
+   36  .tag{font-weight:bold;color:#1b657e}#tip{min-height:24px;font-variant-numeric:tabular-nums}
+   37  &lt;/style&gt;
+   38  &lt;h1&gt;Concentrações modeladas e observadas nas estações&lt;/h1&gt;
+   39  &lt;p&gt;Valores em µg/m³ no período 2021-2023. As duas séries ocupam painéis alinhados, com eixos verticais próprios por padrão. As lacunas permanecem visíveis e os picos horários são preservados. A contribuição de uma empresa é uma parcela modelada, enquanto a estação observa a mistura das fontes.&lt;/p&gt;
+   40  &lt;div class=&quot;controls&quot;&gt;&lt;label&gt;Poluente&lt;select id=&quot;pol&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Estação&lt;select id=&quot;station&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Grupo modelado&lt;select id=&quot;group&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label class=&quot;check&quot;&gt;&lt;input id=&quot;same&quot; type=&quot;checkbox&quot;&gt;Mesma escala vertical&lt;/label&gt;&lt;/div&gt;
+   41  &lt;div id=&quot;status&quot;&gt;Carregando dados…&lt;/div&gt;
+   42  &lt;h2&gt;Perfil por hora do dia&lt;/h2&gt;&lt;div class=&quot;controls&quot;&gt;&lt;label&gt;Recorte sazonal&lt;select id=&quot;season&quot;&gt;&lt;option&gt;Total&lt;/option&gt;&lt;option&gt;Período seco&lt;/option&gt;&lt;option&gt;Demais dias&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label class=&quot;check&quot;&gt;&lt;input id=&quot;showmax&quot; type=&quot;checkbox&quot;&gt;Mostrar máximo de cada hora&lt;/label&gt;&lt;/div&gt;
+   43  &lt;p&gt;&lt;small&gt;A linha é a média nas mesmas horas pareadas. A faixa representa P10-P90 dos valores horários, e não um intervalo de confiança. O máximo pode ser ativado para examinar os extremos.&lt;/small&gt;&lt;/p&gt;
+   44  &lt;svg id=&quot;profile&quot; viewBox=&quot;0 0 1150 500&quot; role=&quot;img&quot; aria-label=&quot;Perfis horários em concentração&quot;&gt;&lt;/svg&gt;
+   45  &lt;h2&gt;Série histórica no mesmo período&lt;/h2&gt;&lt;div class=&quot;controls&quot;&gt;&lt;label&gt;Resolução&lt;select id=&quot;resolution&quot;&gt;&lt;option value=&quot;hourly&quot;&gt;Horária&lt;/option&gt;&lt;option value=&quot;daily&quot;&gt;Média diária&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;De&lt;input id=&quot;from&quot; type=&quot;date&quot; value=&quot;2021-01-01&quot; min=&quot;2021-01-01&quot; max=&quot;2023-12-31&quot;&gt;&lt;/label&gt;&lt;label&gt;Até&lt;input id=&quot;to&quot; type=&quot;date&quot; value=&quot;2023-12-31&quot; min=&quot;2021-01-01&quot; max=&quot;2023-12-31&quot;&gt;&lt;/label&gt;&lt;/div&gt;
+   46  &lt;p&gt;&lt;span class=&quot;swatch&quot;&gt;&lt;/span&gt;Período menos chuvoso identificado na rede meteorológica regional. Passe o cursor para consultar os valores de cada intervalo. Dias observados exigem pelo menos 16 horas e dias modelados pelo menos 18 horas efetivas nesta visualização.&lt;/p&gt;
+   47  &lt;svg id=&quot;history&quot; viewBox=&quot;0 0 1150 540&quot; role=&quot;img&quot; aria-label=&quot;Séries históricas em concentração com período seco&quot;&gt;&lt;/svg&gt;&lt;div id=&quot;tip&quot;&gt;&lt;/div&gt;&lt;div id=&quot;stats&quot;&gt;&lt;/div&gt;
+   48  &lt;h2&gt;Chuva e delimitação do período menos chuvoso&lt;/h2&gt;
+   49  &lt;p&gt;A referência é a mediana diária de pelo menos três pluviômetros regionais, cada um com pelo menos 18 horas de dados. O intervalo sombreado corresponde à maior queda da anomalia acumulada de chuva em cada ano, relativa à média diária de 2021-2023. As datas derivam dos dados, sem fixar abril e outubro. A meteorologia WRF/SFC é mostrada para comparação. Três anos não constituem uma climatologia.&lt;/p&gt;
+   50  &lt;svg id=&quot;rain&quot; viewBox=&quot;0 0 1150 290&quot; role=&quot;img&quot; aria-label=&quot;Chuva regional e meteorologia de entrada&quot;&gt;&lt;/svg&gt;&lt;div id=&quot;periods&quot;&gt;&lt;/div&gt;
+   51  &lt;p&gt;&lt;small&gt;O relógio segue a hipótese anterior de observações em UTC e conversão para UTC-3, ainda pendente de confirmação documental. Os dados observados válidos são mostrados mesmo quando não há hora meteorológica válida no modelo. Nenhum perfil de emissão foi ajustado por estas curvas.&lt;/small&gt;&lt;/p&gt;
+   52  &lt;p&gt;&lt;a href=&quot;perfis_concentracao_por_estacao_grupo.csv&quot;&gt;Perfis horários em concentração&lt;/a&gt; · &lt;a href=&quot;comparacao_periodo_seco_grupos_estacoes.csv&quot;&gt;Comparação seco e demais dias&lt;/a&gt; · &lt;a href=&quot;periodos_secos_meteorologicos.csv&quot;&gt;Datas do período seco&lt;/a&gt; · &lt;a href=&quot;precipitacao_referencia_diaria.csv&quot;&gt;Precipitação diária&lt;/a&gt; · &lt;a href=&quot;distancias_grupos_estacoes.csv&quot;&gt;Distâncias às fontes&lt;/a&gt; · &lt;a href=&quot;grupos_fontes_horarias_e_estaticas.csv&quot;&gt;Fontes horárias e estáticas&lt;/a&gt; · &lt;a href=&quot;../figuras/index.html&quot;&gt;Mapas e análises espaciais&lt;/a&gt;&lt;/p&gt;
+   53  &lt;h2&gt;Figuras estáticas por estação&lt;/h2&gt;&lt;div id=&quot;static&quot;&gt;&lt;/div&gt;
+   54  &lt;script src=&quot;dados_series/metadados.js&quot;&gt;&lt;/script&gt;&lt;script&gt;
+   55  const $=id=&gt;document.getElementById(id), pol=$(&#x27;pol&#x27;),st=$(&#x27;station&#x27;),gr=$(&#x27;group&#x27;);
+   56  const HOUR=3600000,BASE=Date.UTC(2021,0,1);let current=null,token=0,historyState=null;
+   57  const valid=v=&gt;typeof v===&#x27;number&#x27;&amp;&amp;Number.isFinite(v),fmt=v=&gt;valid(v)?v.toLocaleString(&#x27;pt-BR&#x27;,{maximumFractionDigits:2}):&#x27;sem dado&#x27;;
+   58  function options(el,values,labels={}){let old=el.value;el.replaceChildren();values.forEach(v=&gt;{let o=document.createElement(&#x27;option&#x27;);o.value=v;o.textContent=labels[v]||v;el.appendChild(o)});if(values.includes(old))el.value=old;}
+   59  options(pol,[&#x27;PM10&#x27;,&#x27;PM25&#x27;],{PM10:&#x27;MP10&#x27;,PM25:&#x27;MP2,5&#x27;});
+   60  function stations(){options(st,META.stations[pol.value],META.station_names);load();}
+   61  function load(){let key=pol.value+&#x27;_&#x27;+st.value;let mine=++token;$(&#x27;status&#x27;).textContent=&#x27;Carregando &#x27;+META.station_names[st.value]+&#x27;…&#x27;;const ready=()=&gt;{if(mine!==token)return;let prior=gr.value;current=window.PERFIS[key];options(gr,Object.keys(current.groups).sort(),META.names);gr.value=prior&amp;&amp;current.groups[prior]?prior:&#x27;ALL&#x27;;$(&#x27;status&#x27;).textContent=&#x27;Período 2021-2023 · valores absolutos · &#x27;+META.station_names[st.value];draw();};
+   62  if(window.PERFIS&amp;&amp;window.PERFIS[key]){ready();return;}let script=document.createElement(&#x27;script&#x27;);script.src=&#x27;dados_series/&#x27;+key+&#x27;.js&#x27;;script.onload=ready;script.onerror=()=&gt;{$(&#x27;status&#x27;).textContent=&#x27;Não foi possível carregar o arquivo local da estação.&#x27;;};document.body.appendChild(script);}
+   63  function dryRanges(){return META.periods.filter(r=&gt;r.source===&#x27;Rede regional&#x27;).map(r=&gt;[(Date.parse(r.start+&#x27;T00:00:00Z&#x27;)-BASE)/HOUR,(Date.parse(r.end+&#x27;T00:00:00Z&#x27;)-BASE)/HOUR+24]);}
+   64  function labelDate(i){return new Date(BASE+i*HOUR).toISOString().slice(0,10).split(&#x27;-&#x27;).reverse().join(&#x27;/&#x27;);}
+   65  function path(values,x,y,indices){let s=&#x27;&#x27;,on=false;for(let i=0;i&lt;values.length;i++){let v=values[i];if(!valid(v)){on=false;continue;}s+=(on?&#x27;L&#x27;:&#x27;M&#x27;)+x(indices[i]).toFixed(2)+&#x27;,&#x27;+y(v).toFixed(2);on=true;}return s;}
+   66  function panel(values,indices,top,height,label,color,lo,hi,maxOverride,bands=null,dry=false,kind=&#x27;time&#x27;,maxline=null){
+   67   const left=100,right=1120,plotTop=top+26,plotBottom=top+height-35;
+   68   let vals=values.filter(valid);if(bands)vals=vals.concat(bands[1].filter(valid));if(maxline)vals=vals.concat(maxline.filter(valid));
+   69   let max=maxOverride||Math.max(1,...vals)*1.08,x=v=&gt;left+(v-lo)/(hi-lo)*(right-left),y=v=&gt;plotBottom-v/max*(plotBottom-plotTop),s=&#x27;&#x27;;
+   70   if(dry){for(let [a,b] of dryRanges()){a=Math.max(a,lo);b=Math.min(b,hi);if(b&gt;a)s+=&#x27;&lt;rect x=&quot;&#x27;+x(a)+&#x27;&quot; y=&quot;&#x27;+plotTop+&#x27;&quot; width=&quot;&#x27;+(x(b)-x(a))+&#x27;&quot; height=&quot;&#x27;+(plotBottom-plotTop)+&#x27;&quot; fill=&quot;#f3deb5&quot; fill-opacity=&quot;.65&quot;/&gt;&#x27;;}}
+   71   for(let j=0;j&lt;=4;j++){let v=max*j/4;s+=&#x27;&lt;line x1=&quot;&#x27;+left+&#x27;&quot; x2=&quot;&#x27;+right+&#x27;&quot; y1=&quot;&#x27;+y(v)+&#x27;&quot; y2=&quot;&#x27;+y(v)+&#x27;&quot; stroke=&quot;#dde4e6&quot;/&gt;&lt;text x=&quot;89&quot; y=&quot;&#x27;+(y(v)+5)+&#x27;&quot; text-anchor=&quot;end&quot; font-size=&quot;13&quot;&gt;&#x27;+fmt(v)+&#x27;&lt;/text&gt;&#x27;;}
+   72   s+=&#x27;&lt;text x=&quot;&#x27;+left+&#x27;&quot; y=&quot;&#x27;+(top+15)+&#x27;&quot; font-size=&quot;16&quot; font-weight=&quot;bold&quot; fill=&quot;&#x27;+color+&#x27;&quot;&gt;&#x27;+label+&#x27;&lt;/text&gt;&lt;text transform=&quot;translate(27 &#x27;+((plotTop+plotBottom)/2)+&#x27;) rotate(-90)&quot; font-size=&quot;14&quot; text-anchor=&quot;middle&quot;&gt;Concentração (µg/m³)&lt;/text&gt;&#x27;;
+   73   if(bands){for(let i=0;i&lt;values.length-1;i++){if([bands[0][i],bands[1][i],bands[0][i+1],bands[1][i+1]].every(valid)){s+=&#x27;&lt;path d=&quot;M&#x27;+x(indices[i])+&#x27;,&#x27;+y(bands[0][i])+&#x27;L&#x27;+x(indices[i])+&#x27;,&#x27;+y(bands[1][i])+&#x27;L&#x27;+x(indices[i+1])+&#x27;,&#x27;+y(bands[1][i+1])+&#x27;L&#x27;+x(indices[i+1])+&#x27;,&#x27;+y(bands[0][i+1])+&#x27;Z&quot; fill=&quot;&#x27;+color+&#x27;&quot; fill-opacity=&quot;.15&quot;/&gt;&#x27;;}}}
+   74   if(maxline)s+=&#x27;&lt;path d=&quot;&#x27;+path(maxline,x,y,indices)+&#x27;&quot; fill=&quot;none&quot; stroke=&quot;&#x27;+color+&#x27;&quot; stroke-opacity=&quot;.55&quot; stroke-width=&quot;1&quot; stroke-dasharray=&quot;4 3&quot;/&gt;&#x27;;
+   75   s+=&#x27;&lt;path d=&quot;&#x27;+path(values,x,y,indices)+&#x27;&quot; fill=&quot;none&quot; stroke=&quot;&#x27;+color+&#x27;&quot; stroke-width=&quot;&#x27;+(kind===&#x27;hour&#x27;?2:1)+&#x27;&quot;/&gt;&#x27;;
+   76   const ticks=kind===&#x27;hour&#x27;?[0,3,6,9,12,15,18,21,23]:Array.from({length:7},(_,j)=&gt;lo+(hi-lo)*j/6);
+   77   for(let [j,t] of ticks.entries())s+=&#x27;&lt;text x=&quot;&#x27;+x(t)+&#x27;&quot; y=&quot;&#x27;+(plotBottom+23)+&#x27;&quot; text-anchor=&quot;&#x27;+(kind===&#x27;hour&#x27;?&#x27;middle&#x27;:j===0?&#x27;start&#x27;:j===ticks.length-1?&#x27;end&#x27;:&#x27;middle&#x27;)+&#x27;&quot; font-size=&quot;13&quot;&gt;&#x27;+(kind===&#x27;hour&#x27;?t:labelDate(t))+&#x27;&lt;/text&gt;&#x27;;
+   78   return s;}
+   79  function draw(){if(!current)return;let g=gr.value,pr=current.profiles[g][$(&#x27;season&#x27;).value],showmax=$(&#x27;showmax&#x27;).checked;let pmax=$(&#x27;same&#x27;).checked?Math.max(...[&#x27;observed&#x27;,&#x27;modelled&#x27;].flatMap(k=&gt;(showmax?pr[k].max:pr[k].p90).filter(valid)))*1.08:null;
+   80   $(&#x27;profile&#x27;).innerHTML=panel(pr.observed.mean,Array.from({length:24},(_,i)=&gt;i),0,245,&#x27;Observado&#x27;,&#x27;#1b657e&#x27;,0,23,pmax,[pr.observed.p10,pr.observed.p90],false,&#x27;hour&#x27;,showmax?pr.observed.max:null)+panel(pr.modelled.mean,Array.from({length:24},(_,i)=&gt;i),250,245,&#x27;Modelado · &#x27;+META.names[g],&#x27;#bd4e48&#x27;,0,23,pmax,[pr.modelled.p10,pr.modelled.p90],false,&#x27;hour&#x27;,showmax?pr.modelled.max:null);
+   81   const daily=$(&#x27;resolution&#x27;).value===&#x27;daily&#x27;,step=daily?24:1,source=daily?current.daily:current;
+   82   const fullObs=source.observed,fullMod=source.groups[g],a=Math.max(0,(Date.parse($(&#x27;from&#x27;).value+&#x27;T00:00:00Z&#x27;)-BASE)/HOUR),b=Math.min(META.hours-1,(Date.parse($(&#x27;to&#x27;).value+&#x27;T00:00:00Z&#x27;)-BASE)/HOUR+23);
+   83   if(b&lt;=a){$(&#x27;history&#x27;).innerHTML=&#x27;&#x27;;return;}let first=Math.ceil(a/step),last=Math.floor(b/step),indices=Array.from({length:last-first+1},(_,i)=&gt;(first+i)*step),obs=fullObs.slice(first,last+1),mod=fullMod.slice(first,last+1);
+   84   let common=$(&#x27;same&#x27;).checked?Math.max(1,...obs.filter(valid),...mod.filter(valid))*1.08:null;
+   85   $(&#x27;history&#x27;).innerHTML=panel(obs,indices,0,265,&#x27;Observado&#x27;,&#x27;#1b657e&#x27;,a,b,common,null,true)+panel(mod,indices,275,265,&#x27;Modelado · &#x27;+META.names[g],&#x27;#bd4e48&#x27;,a,b,common,null,true);historyState={a,b,step,obs:fullObs,model:fullMod};
+   86   let m=current.stats[g];$(&#x27;stats&#x27;).textContent=&#x27;Estatísticas das horas pareadas do triênio: N = &#x27;+m.paired_hours+&#x27;. Média observada &#x27;+fmt(m.observed_mean)+&#x27;; modelada &#x27;+fmt(m.modelled_mean)+&#x27;. Máximo observado &#x27;+fmt(m.observed_max)+&#x27;; modelado &#x27;+fmt(m.modelled_max)+&#x27; µg/m³. Correlação horária &#x27;+fmt(m.hourly_r)+&#x27;. O sombreado descreve sazonalidade, sem atribuir sozinho a causa dos picos.&#x27;;
+   87   let distance=META.distances?.find(r=&gt;r.pollutant===pol.value&amp;&amp;r.station_id===st.value&amp;&amp;r.group_id===g),flags=META.flags?.find(r=&gt;r.pollutant===pol.value&amp;&amp;r.group_id===g);
+   88   if(distance)$(&#x27;stats&#x27;).textContent+=&#x27; Distância mínima às fontes &#x27;+fmt(distance.distance_min_geometry_km)+&#x27; km; distância ao centro ponderado por emissão &#x27;+fmt(distance.distance_emission_centroid_km)+&#x27; km. Distâncias são contexto geométrico, sem ponderação inversa automática.&#x27;;
+   89   if(flags)$(&#x27;stats&#x27;).textContent+=&#x27; Fontes já horárias no grupo: &#x27;+flags.hourly_sources+&#x27;.&#x27;;
+   90  }
+   91  function rainfall(){let v=META.rain.observed,w=META.rain.model,idx=v.map((_,i)=&gt;i*24);let top=30,bottom=240,left=100,right=1120,max=Math.max(...v.filter(valid),...w.filter(valid))*1.05,x=i=&gt;left+i/(META.hours-1)*(right-left),y=a=&gt;bottom-a/max*(bottom-top),s=&#x27;&#x27;;
+   92  for(let [a,b] of dryRanges())s+=&#x27;&lt;rect x=&quot;&#x27;+x(a)+&#x27;&quot; width=&quot;&#x27;+(x(b)-x(a))+&#x27;&quot; y=&quot;&#x27;+top+&#x27;&quot; height=&quot;&#x27;+(bottom-top)+&#x27;&quot; fill=&quot;#f3deb5&quot; fill-opacity=&quot;.65&quot;/&gt;&#x27;;
+   93  for(let j=0;j&lt;=4;j++){let a=max*j/4;s+=&#x27;&lt;line x1=&quot;&#x27;+left+&#x27;&quot; x2=&quot;&#x27;+right+&#x27;&quot; y1=&quot;&#x27;+y(a)+&#x27;&quot; y2=&quot;&#x27;+y(a)+&#x27;&quot; stroke=&quot;#ddd&quot;/&gt;&lt;text x=&quot;88&quot; y=&quot;&#x27;+(y(a)+5)+&#x27;&quot; text-anchor=&quot;end&quot; font-size=&quot;13&quot;&gt;&#x27;+fmt(a)+&#x27;&lt;/text&gt;&#x27;;}
+   94  s+=&#x27;&lt;path d=&quot;&#x27;+path(v,x,y,idx)+&#x27;&quot; fill=&quot;none&quot; stroke=&quot;#1b657e&quot; stroke-width=&quot;1&quot;/&gt;&lt;path d=&quot;&#x27;+path(w,x,y,idx)+&#x27;&quot; fill=&quot;none&quot; stroke=&quot;#bd4e48&quot; stroke-opacity=&quot;.65&quot; stroke-width=&quot;1&quot;/&gt;&lt;text x=&quot;100&quot; y=&quot;18&quot; fill=&quot;#1b657e&quot; font-size=&quot;15&quot;&gt;Mediana regional observada&lt;/text&gt;&lt;text x=&quot;420&quot; y=&quot;18&quot; fill=&quot;#bd4e48&quot; font-size=&quot;15&quot;&gt;WRF/SFC&lt;/text&gt;&lt;text transform=&quot;translate(27 140) rotate(-90)&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot;&gt;Precipitação (mm/dia)&lt;/text&gt;&#x27;;
+   95  for(let j=0;j&lt;=6;j++){let i=(META.hours-1)*j/6;s+=&#x27;&lt;text x=&quot;&#x27;+x(i)+&#x27;&quot; y=&quot;265&quot; text-anchor=&quot;&#x27;+(j===0?&#x27;start&#x27;:j===6?&#x27;end&#x27;:&#x27;middle&#x27;)+&#x27;&quot; font-size=&quot;13&quot;&gt;&#x27;+labelDate(i)+&#x27;&lt;/text&gt;&#x27;;}
+   96  $(&#x27;rain&#x27;).innerHTML=s;let table=&#x27;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Referência&lt;/th&gt;&lt;th&gt;Ano&lt;/th&gt;&lt;th&gt;Início&lt;/th&gt;&lt;th&gt;Fim&lt;/th&gt;&lt;th&gt;Dias&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&#x27;;
+   97  for(let r of META.periods)table+=&#x27;&lt;tr&gt;&lt;td&gt;&#x27;+r.source+&#x27;&lt;/td&gt;&lt;td&gt;&#x27;+r.year+&#x27;&lt;/td&gt;&lt;td&gt;&#x27;+r.start.split(&#x27;-&#x27;).reverse().join(&#x27;/&#x27;)+&#x27;&lt;/td&gt;&lt;td&gt;&#x27;+r.end.split(&#x27;-&#x27;).reverse().join(&#x27;/&#x27;)+&#x27;&lt;/td&gt;&lt;td&gt;&#x27;+r.duration_days+&#x27;&lt;/td&gt;&lt;/tr&gt;&#x27;;
+   98  $(&#x27;periods&#x27;).innerHTML=table+&#x27;&lt;/tbody&gt;&lt;/table&gt;&#x27;;let links=&#x27;&#x27;;for(let p of [&#x27;PM10&#x27;,&#x27;PM25&#x27;])for(let s of META.stations[p])links+=&#x27;&lt;p&gt;&#x27;+p+&#x27; · &#x27;+META.station_names[s]+&#x27;: &lt;a href=&quot;Concentracoes_&#x27;+p+&#x27;_&#x27;+s+&#x27;.svg&quot;&gt;SVG&lt;/a&gt; · &lt;a href=&quot;Concentracoes_&#x27;+p+&#x27;_&#x27;+s+&#x27;.pdf&quot;&gt;PDF&lt;/a&gt; · &lt;a href=&quot;Concentracoes_&#x27;+p+&#x27;_&#x27;+s+&#x27;.png&quot;&gt;PNG&lt;/a&gt;&lt;/p&gt;&#x27;;$(&#x27;static&#x27;).innerHTML=links;}
+   99  $(&#x27;history&#x27;).addEventListener(&#x27;mousemove&#x27;,event=&gt;{if(!historyState)return;let box=$(&#x27;history&#x27;).getBoundingClientRect(),px=(event.clientX-box.left)*1150/box.width;if(px&lt;100||px&gt;1120)return;let h=historyState.a+(px-100)/1020*(historyState.b-historyState.a),i=Math.max(0,Math.min(historyState.obs.length-1,Math.round(h/historyState.step)));let text=labelDate(i*historyState.step);if(historyState.step===1)text+=&#x27; &#x27;+String(i%24).padStart(2,&#x27;0&#x27;)+&#x27;:00&#x27;;$(&#x27;tip&#x27;).textContent=text+&#x27; · Observado &#x27;+fmt(historyState.obs[i])+&#x27; · Modelado &#x27;+fmt(historyState.model[i])+&#x27; µg/m³&#x27;;});
+  100  pol.onchange=stations;st.onchange=load;gr.onchange=draw;[&#x27;same&#x27;,&#x27;season&#x27;,&#x27;showmax&#x27;,&#x27;resolution&#x27;,&#x27;from&#x27;,&#x27;to&#x27;].forEach(id=&gt;$(id).onchange=draw);rainfall();stations();
+  101  &lt;/script&gt;&lt;/html&gt;&#x27;&#x27;&#x27;
+  102      (Path(out)/&#x27;index.html&#x27;).write_text(template,encoding=&#x27;utf8&#x27;)</code></pre></article></html>

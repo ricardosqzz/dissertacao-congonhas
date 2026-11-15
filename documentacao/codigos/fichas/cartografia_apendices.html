@@ -1,0 +1,399 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/cartografia_apendices.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/cartografia_apendices.py</h2>
+<p>Cartografia em SIRGAS 2000 com escala geodésica e contexto municipal.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\cartografia_apendices.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>matplotlib.cm</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.font_manager</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.lines</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.patches</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.path</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.pyplot</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.ticker</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.tri</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>pyproj</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>rosa_vento_seletor</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>scipy.interpolate</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.ops</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>textwrap</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>vector_portable</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/base_regional/municipios_vizinhos_cache.geojson — chamada gp.read_file, linha 97.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.svg — chamada svg_path.read_text, linha 359.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.{ext} — chamada fig.savefig, linha 357.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.svg — chamada svg_path.write_text, linha 360.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>config.DIRS: out.</li>
+<li>v: name.</li>
+<li>surface: cmap, limits, norm, values, x, y.</li>
+<li>opts: ticklabels.</li>
+<li>s: cmap, norm, ticks, values.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>surface: _bar_position.</li>
+<li>handles: missing, peak.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>rounded_scale_ticks(norm)</td><td>64-73</td><td>Chamadas efetivas: norm.inverse, np.unique, np.floor, np.ceil, np.linspace, ticks.append, np.log10, float Retorno: np.unique(ticks + [float(norm.vmax)]).</td></tr><tr><td>centered_legend(fig, handles, ncol=3, *, y=0.25, fontsize=9, row_step=0.045, full_width=False, center=0.535)</td><td>76-91</td><td>Chamadas efetivas: fig.canvas.get_renderer, FontProperties, enumerate, max, sum, range, len, fig.legend</td></tr><tr><td>render(z, muni, fields, code, titles, note, extent, *, stations=None, eligible=None, numeric=False, hatches=None, panel_layers=None, numeric_options=None, palette=None, surfaces=None, surface_legend=None, panel_shape=None, filename=None, figure_title=None, legend_categories=None, zone_layer=None, show_zones=True, station_overlay=None, atlas_scale=None, wind_directions=None, png_dpi=None)</td><td>94-361</td><td>lê dados; grava produtos; Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/cartografia_apendices.py, linhas 179-185.</p>
+<pre><code>            xx,yy=np.meshgrid(gx,gy)
+            values_grid=np.expm1(CloughTocher2DInterpolator(np.c_[surface[&#x27;x&#x27;],surface[&#x27;y&#x27;]],np.log1p(values))(xx,yy))
+            values_grid=np.ma.masked_invalid(np.clip(values_grid,0,float(values.max())))
+            contours=ax.pcolormesh(xx,yy,values_grid,cmap=surface[&#x27;cmap&#x27;],norm=surface[&#x27;norm&#x27;],shading=&#x27;gouraud&#x27;,zorder=3,rasterized=True)
+            vertices=[];commands=[]
+            for polygon in getattr(municipality_union,&#x27;geoms&#x27;,[municipality_union]):
+                for ring in [polygon.exterior,*polygon.interiors]:</code></pre>
+<p>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>log1p: Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/base_regional/municipios_vizinhos_cache.geojson | gp.read_file.
+    5  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.svg | svg_path.read_text.
+    6  # Campos/chaves em config.DIRS: out.
+    7  # Campos/chaves em v: name.
+    8  # Campos/chaves em surface: cmap, limits, norm, values, x, y.
+    9  # Campos/chaves em opts: ticklabels.
+   10  # Campos/chaves em s: cmap, norm, ticks, values.
+   11  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.{ext} | fig.savefig.
+   12  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/apendices/{stem}.svg | svg_path.write_text.
+   13  # Campos/chaves gerados em surface: _bar_position.
+   14  # Campos/chaves gerados em handles: missing, peak.
+   15  # CÓDIGO DO PROCESSAMENTO
+   16  
+   17  &quot;&quot;&quot;Cartografia em SIRGAS 2000 com escala geodésica e contexto municipal.&quot;&quot;&quot;
+   18  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   19  import sys as _cp_sys
+   20  from pathlib import Path as _cp_Path
+   21  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   22  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   23      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   24      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   25          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   26          break
+   27  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   28  # FIM DOS CAMINHOS PORTÁTEIS
+   29  
+   30  import numpy as np
+   31  import matplotlib.pyplot as plt
+   32  from matplotlib.colors import Normalize,PowerNorm
+   33  from matplotlib.cm import ScalarMappable
+   34  from matplotlib.patches import Patch,Rectangle,Polygon
+   35  from matplotlib.lines import Line2D
+   36  from matplotlib.ticker import MultipleLocator,FuncFormatter
+   37  from pyproj import Geod
+   38  from shapely.geometry import box
+   39  from shapely.ops import polylabel
+   40  from vector_portable import read
+   41  import config
+   42  
+   43  OUT=config.DIRS[&#x27;out&#x27;]/&#x27;11_integracao&#x27;/&#x27;apendices&#x27;
+   44  
+   45  COLORS={&#x27;Atendimento&#x27;:&#x27;#218649&#x27;,&#x27;Não atendimento&#x27;:&#x27;#C43C39&#x27;,&#x27;Não classificado&#x27;:&#x27;#e8e8e6&#x27;,&#x27;Informação insuficiente&#x27;:&#x27;#e8e8e6&#x27;,
+   46   &#x27;Alta E / C não classificada&#x27;:&#x27;#ba8755&#x27;,
+   47   &#x27;Alta E / Alta C&#x27;:&#x27;#745779&#x27;,&#x27;Alta E / Baixa C&#x27;:&#x27;#d6a277&#x27;,&#x27;Baixa E / Alta C&#x27;:&#x27;#6b95b0&#x27;,&#x27;Baixa E / Baixa C&#x27;:&#x27;#c2d7ce&#x27;,
+   48   &#x27;Ressuspensão viária urbana&#x27;:&#x27;#d6b564&#x27;,&#x27;CSN – Casa de Pedra&#x27;:&#x27;#8a719f&#x27;,&#x27;Vale – Fábrica&#x27;:&#x27;#6f9f94&#x27;,&#x27;Vale – Viga&#x27;:&#x27;#6b91b6&#x27;,
+   49   &#x27;Ferro+&#x27;:&#x27;#c5837c&#x27;,&#x27;LGA Mineração&#x27;:&#x27;#a3ac76&#x27;,&#x27;CSN – Namisa/Pires&#x27;:&#x27;#ad8d65&#x27;,&#x27;Gerdau Ouro Branco&#x27;:&#x27;#a6a0bc&#x27;}
+   50  COLORS.update({&#x27;Ressuspensão viária urbana&#x27;:&#x27;#D8A447&#x27;,&#x27;CSN – Casa de Pedra&#x27;:&#x27;#355C7D&#x27;,&#x27;Vale – Fábrica&#x27;:&#x27;#408B82&#x27;,&#x27;Vale – Viga&#x27;:&#x27;#769CC0&#x27;,&#x27;Ferro+&#x27;:&#x27;#BC6655&#x27;,&#x27;LGA Mineração&#x27;:&#x27;#8B9561&#x27;,&#x27;CSN – Namisa/Pires&#x27;:&#x27;#937490&#x27;,&#x27;Gerdau Ouro Branco&#x27;:&#x27;#5F6679&#x27;})
+   51  LABEL={&#x27;atendimento&#x27;:&#x27;Atendimento&#x27;,&#x27;nao_atendimento&#x27;:&#x27;Não atendimento&#x27;,&#x27;insuficiente&#x27;:&#x27;Não classificado&#x27;}
+   52  COLORS.update({&#x27;Urbano Total&#x27;:&#x27;#c5a85c&#x27;,&#x27;SCOF&#x27;:&#x27;#956aa0&#x27;,&#x27;Ressuspensão urbana&#x27;:&#x27;#d8a447&#x27;})
+   53  COLORS.update({&#x27;Alta E / Alta C&#x27;:&#x27;#173f65&#x27;,&#x27;Alta E / Baixa C&#x27;:&#x27;#f4cf70&#x27;,&#x27;Baixa E / Alta C&#x27;:&#x27;#3798b3&#x27;,&#x27;Baixa E / Baixa C&#x27;:&#x27;#bfe2b8&#x27;})
+   54  
+   55  from groups import GROUPS
+   56  _group_colors=[&#x27;#8dd3c7&#x27;,&#x27;#ffffb3&#x27;,&#x27;#bebada&#x27;,&#x27;#fb8072&#x27;,&#x27;#80b1d3&#x27;,&#x27;#fdb462&#x27;,&#x27;#b3de69&#x27;,&#x27;#fccde5&#x27;,&#x27;#d9d9d9&#x27;,&#x27;#bc80bd&#x27;,&#x27;#ccebc5&#x27;,&#x27;#ffed6f&#x27;,&#x27;#a6cee3&#x27;,&#x27;#1f78b4&#x27;,&#x27;#b2df8a&#x27;,&#x27;#33a02c&#x27;,&#x27;#fb9a99&#x27;,&#x27;#e31a1c&#x27;,&#x27;#fdbf6f&#x27;,&#x27;#ff7f00&#x27;,&#x27;#cab2d6&#x27;,&#x27;#6a3d9a&#x27;,&#x27;#b15928&#x27;,&#x27;#66c2a5&#x27;,&#x27;#fc8d62&#x27;,&#x27;#8da0cb&#x27;,&#x27;#e78ac3&#x27;,&#x27;#a6d854&#x27;]
+   57  COLORS.update({v[&#x27;name&#x27;]:c for v,c in zip(GROUPS.values(),_group_colors)})
+   58  COLORS.update({&#x27;CSN – Casa de Pedra&#x27;:&#x27;#2b8cbe&#x27;,&#x27;Vale – Fábrica&#x27;:&#x27;#41ab5d&#x27;,&#x27;Gerdau Ouro Branco&#x27;:&#x27;#7fcdbb&#x27;,&#x27;Urbano Total&#x27;:&#x27;#0b6580&#x27;,&#x27;Ferro+&#x27;:&#x27;#c7e9b4&#x27;,&#x27;LGA Mineração&#x27;:&#x27;#fdd49e&#x27;,&#x27;SCOF&#x27;:&#x27;#c994c7&#x27;,&#x27;Todas as fontes&#x27;:&#x27;#f2f2f2&#x27;})
+   59  COLORS.update({&#x27;Atendimento&#x27;:&#x27;#83cdb6&#x27;,&#x27;Não atendimento&#x27;:&#x27;#df4d50&#x27;})
+   60  GEO=Geod(ellps=&#x27;GRS80&#x27;)
+   61  _LABEL_CACHE={}
+   62  
+   63  # Rounded scale ticks
+   64  def rounded_scale_ticks(norm):
+   65      &quot;&quot;&quot;Marcas legíveis nos valores reais, sem arredondar apenas os rótulos.&quot;&quot;&quot;
+   66      unit=10.**np.floor(np.log10(norm.vmax))
+   67      norm.vmax=np.ceil(norm.vmax/unit)*unit
+   68      raw=norm.inverse(np.linspace(0,1,4))
+   69      ticks=[0.]
+   70      for value in raw[1:-1]:
+   71          step=10.**np.floor(np.log10(value))
+   72          ticks.append(float(np.round(value/step)*step))
+   73      return np.unique(ticks+[float(norm.vmax)])
+   74  
+   75  # Centered legend
+   76  def centered_legend(fig,handles,ncol=3,*,y=.25,fontsize=9,row_step=.045,full_width=False,center=.535):
+   77      &quot;&quot;&quot;Bloco centralizado no encarte, com início fixo em cada coluna.&quot;&quot;&quot;
+   78      from matplotlib.font_manager import FontProperties
+   79      renderer=fig.canvas.get_renderer();font=FontProperties(size=fontsize)
+   80      em=fontsize*fig.dpi/72/fig.bbox.width
+   81      widths=[max([max(renderer.get_text_width_height_descent(line,font,False)[0] for line in h.get_label().split(&#x27;\n&#x27;))/fig.bbox.width+2.1*em for h in handles[c::ncol]] or [0]) for c in range(ncol)]
+   82      gap=1.6*em;total=sum(widths)+gap*(ncol-1)
+   83      left=center-total/2
+   84      for row,start in enumerate(range(0,len(handles),ncol)):
+   85          items=handles[start:start+ncol]
+   86          short=len(items)&lt;ncol
+   87          rowwidth=sum(widths[:len(items)])+gap*(len(items)-1)
+   88          x=center-rowwidth/2 if short else left
+   89          for column,item in enumerate(items):
+   90              anchor=.015+column*.97/ncol if full_width and not short else x+sum(widths[:column])+gap*column
+   91              fig.legend(handles=[item],loc=&#x27;upper left&#x27;,bbox_to_anchor=(anchor,y-row*row_step),ncol=1,frameon=False,fontsize=fontsize,borderaxespad=0,handlelength=1.6,handletextpad=.5)
+   92  
+   93  # Render
+   94  def render(z,muni,fields,code,titles,note,extent,*,stations=None,eligible=None,numeric=False,hatches=None,panel_layers=None,numeric_options=None,palette=None,surfaces=None,surface_legend=None,panel_shape=None,filename=None,figure_title=None,legend_categories=None,zone_layer=None,show_zones=True,station_overlay=None,atlas_scale=None,wind_directions=None,png_dpi=None):
+   95      g=z.to_crs(4674);m=muni.to_crs(4674)
+   96      import geopandas as gp
+   97      ctx=gp.read_file(config.BASE/&#x27;base_regional&#x27;/&#x27;municipios_vizinhos_cache.geojson&#x27;).to_crs(4674)
+   98      ex=[extent[0]-.018,extent[1]-.025,extent[2]+.015,extent[3]+.026]
+   99      clip=box(*ex);ctx=ctx[ctx.intersects(clip)].copy();ctx.geometry=ctx.geometry.intersection(clip)
+  100      municipality_union=m.geometry.union_all()
+  101      rows,cols=panel_shape or (1,len(fields))
+  102      atlas=rows&gt;1
+  103      borders=(zone_layer if zone_layer is not None else z).to_crs(4674)
+  104      zone_borders=borders.boundary if show_zones and borders.geom_type.isin([&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;]).all() else None
+  105      fig,axes=plt.subplots(rows,cols,figsize=(8.27,11.69) if atlas else (7.4,5.35),squeeze=False)
+  106      flat=axes.ravel()
+  107      legend_rows=int(np.ceil(len(legend_categories or [])/3))
+  108      atlas_bottom=.095+max(0,legend_rows-2)*.016
+  109      fig.subplots_adjust(left=.045 if atlas else .085,right=.99 if atlas else .985,bottom=atlas_bottom if atlas else .26,top=.94 if atlas else .92,wspace=.035 if atlas else .10,hspace=.30 if atlas else .10)
+  110  
+  111      latref=np.mean([ex[1],ex[3]])
+  112      _,_,ground_m=GEO.inv(ex[0],latref,ex[2],latref)
+  113      for ax in flat:
+  114          ax.set_xlim(ex[0],ex[2]);ax.set_ylim(ex[1],ex[3])
+  115          ax.set_aspect(1/np.cos(np.deg2rad(latref)));ax.apply_aspect()
+  116      paper_m=axes[0,0].get_position().width*fig.get_figwidth()*.0254
+  117      denominator=int(atlas_scale) if atlas and atlas_scale is not None else int(round(ground_m/paper_m/5000)*5000) if atlas else 440000
+  118      factor=ground_m/paper_m/denominator
+  119      fig.set_size_inches(*(fig.get_size_inches()*factor))
+  120      handles={}
+  121      for j,(ax,field,title) in enumerate(zip(flat,fields,titles)):
+  122          if panel_layers is not None:g=panel_layers[j].to_crs(4674)
+  123          ctx.plot(ax=ax,color=&#x27;#f7f6f2&#x27;,edgecolor=&#x27;#c0bdb5&#x27;,linewidth=.45,zorder=0)
+  124          for r in ctx.itertuples():
+  125              if r.nome in (&#x27;Congonhas&#x27;,&#x27;Itaverava&#x27;):continue
+  126              if r.geometry.area &lt; .0006:continue
+  127              cache_key=(r.nome,tuple(ex),r.geometry.wkb,municipality_union.wkb)
+  128              if cache_key in _LABEL_CACHE:
+  129                  xx,yy,name=_LABEL_CACHE[cache_key]
+  130                  ax.text(xx,yy,name,ha=&#x27;center&#x27;,va=&#x27;center&#x27;,fontsize=5.7,color=&#x27;#98948e&#x27;,fontstyle=&#x27;italic&#x27;,clip_on=True,zorder=1)
+  131                  continue
+  132  
+  133              adjusted=r.nome in (&#x27;Moeda&#x27;,&#x27;São Brás do Suaçuí&#x27;,&#x27;Conselheiro Lafaiete&#x27;,&#x27;Itabirito&#x27;)
+  134              visible=r.geometry.intersection(box(ex[0]+.005,ex[1]+(.012 if adjusted else .04),ex[2]-.005,ex[3]-.006)).difference(m.geometry.union_all())
+  135              if adjusted:
+  136                  for reserved in [box(ex[0],ex[1],ex[0]+.095,ex[1]+.038),box(ex[2]-.12,ex[1],ex[2],ex[1]+.052),box(ex[2]-.026,ex[3]-.045,ex[2],ex[3])]:
+  137                      visible=visible.difference(reserved)
+  138              parts=[v for v in getattr(visible,&#x27;geoms&#x27;,[visible]) if v.geom_type==&#x27;Polygon&#x27; and not v.is_empty]
+  139              if not parts:continue
+  140              p=polylabel(max(parts,key=lambda v:v.area),tolerance=.0003)
+  141              name=r.nome.replace(&#x27;Conselheiro Lafaiete&#x27;,&#x27;Conselheiro\nLafaiete&#x27;).replace(&#x27;São Brás do Suaçuí&#x27;,&#x27;São Brás\ndo Suaçuí&#x27;).replace(&#x27;Ouro Branco&#x27;,&#x27;Ouro\nBranco&#x27;).replace(&#x27;Santana dos Montes&#x27;,&#x27;Santana dos\nMontes&#x27;)
+  142              xx,yy=p.x,p.y
+  143  
+  144              width=(.0042 if adjusted else .0046)*max(map(len,name.split(&#x27;\n&#x27;)))+.003
+  145              height=(.009 if adjusted else .011)*len(name.split(&#x27;\n&#x27;))+.003
+  146              bx0,by0,bx1,by1=visible.bounds
+  147              candidates=[]
+  148              for cx in np.linspace(bx0+width/2,bx1-width/2,35):
+  149                  for cy in np.linspace(by0+height/2,by1-height/2,35):
+  150                      label_box=box(cx-width/2,cy-height/2,cx+width/2,cy+height/2)
+  151                      if visible.covers(label_box):candidates.append((cx,cy))
+  152              if candidates:
+  153                  if adjusted:
+  154                      xx,yy=max(candidates,key=lambda q:visible.boundary.distance(box(q[0]-width/2,q[1]-height/2,q[0]+width/2,q[1]+height/2)))
+  155                  else:xx,yy=min(candidates,key=lambda q:(q[0]-p.x)**2+(q[1]-p.y)**2)
+  156              ax.text(xx,yy,name,ha=&#x27;center&#x27;,va=&#x27;center&#x27;,fontsize=5.7,color=&#x27;#98948e&#x27;,fontstyle=&#x27;italic&#x27;,clip_on=True,zorder=1)
+  157              _LABEL_CACHE[cache_key]=(xx,yy,name)
+  158          if stations is not None:
+  159              g.plot(ax=ax,color=&#x27;#eeeadf&#x27;,edgecolor=&#x27;none&#x27;,linewidth=0)
+  160              s=stations[j];b=s.copy();b.geometry=b.buffer(4000);b=b.to_crs(4674)
+  161              ok=b.station_id.isin(eligible[j])
+  162              for yes,color in [(False,&#x27;#d69e3b&#x27;),(True,&#x27;#2276ad&#x27;)]:
+  163                  if (ok==yes).any():b.loc[ok==yes].plot(ax=ax,color=color,alpha=.40,edgecolor=color,linewidth=.60)
+  164              for r in s.to_crs(4674).itertuples():
+  165                  ax.plot(r.geometry.x,r.geometry.y,&#x27;o&#x27;,ms=2.4,color=&#x27;#536c76&#x27;)
+  166                  ax.annotate(str(r.number),(r.geometry.x,r.geometry.y),xytext=(3,3),textcoords=&#x27;offset points&#x27;,fontsize=6.8,fontweight=&#x27;bold&#x27;)
+  167          elif surfaces is not None:
+  168              from matplotlib.path import Path as PlotPath
+  169              from matplotlib.patches import PathPatch
+  170              import matplotlib.tri as mtri
+  171              surface=surfaces[j]
+  172              mesh=mtri.Triangulation(surface[&#x27;x&#x27;],surface[&#x27;y&#x27;])
+  173              values=np.asarray(surface[&#x27;values&#x27;])
+  174              limits=surface[&#x27;limits&#x27;]
+  175              from scipy.interpolate import CloughTocher2DInterpolator
+  176  
+  177              n=150 if atlas else 340
+  178              gx=np.linspace(ex[0],ex[2],n);gy=np.linspace(ex[1],ex[3],n)
+  179              xx,yy=np.meshgrid(gx,gy)
+  180              values_grid=np.expm1(CloughTocher2DInterpolator(np.c_[surface[&#x27;x&#x27;],surface[&#x27;y&#x27;]],np.log1p(values))(xx,yy))
+  181              values_grid=np.ma.masked_invalid(np.clip(values_grid,0,float(values.max())))
+  182              contours=ax.pcolormesh(xx,yy,values_grid,cmap=surface[&#x27;cmap&#x27;],norm=surface[&#x27;norm&#x27;],shading=&#x27;gouraud&#x27;,zorder=3,rasterized=True)
+  183              vertices=[];commands=[]
+  184              for polygon in getattr(municipality_union,&#x27;geoms&#x27;,[municipality_union]):
+  185                  for ring in [polygon.exterior,*polygon.interiors]:
+  186                      xy=np.asarray(ring.coords);vertices.extend(xy)
+  187                      commands.extend([PlotPath.MOVETO]+[PlotPath.LINETO]*(len(xy)-2)+[PlotPath.CLOSEPOLY])
+  188              contours.set_clip_path(PathPatch(PlotPath(vertices,commands),transform=ax.transData))
+  189              surface[&#x27;_bar_position&#x27;]=ax.get_position().bounds
+  190          elif numeric:
+  191              if panel_layers is not None:
+  192                  (z.to_crs(4674) if show_zones else m).plot(ax=ax,facecolor=&#x27;#d2dfcd&#x27; if show_zones else &#x27;#eeeadf&#x27;,edgecolor=&#x27;none&#x27;,linewidth=0,zorder=1)
+  193              v=g[field];good=v.notna()
+  194              if (~good).any():g.loc[~good].plot(ax=ax,color=&#x27;#e8e8e6&#x27;,edgecolor=&#x27;#b7b7b3&#x27;,linewidth=.15)
+  195              opts=numeric_options[j] if numeric_options else {}
+  196              vmax=max(1,float(v.max())) if good.any() else 1.
+  197              norm=opts.get(&#x27;norm&#x27;) or (PowerNorm(.5,vmin=0,vmax=vmax) if j==0 else Normalize(0,max(10,vmax)))
+  198              rounded_ticks=rounded_scale_ticks(norm) if numeric_options and &#x27;ticks&#x27; not in opts else None
+  199              cmap=opts.get(&#x27;cmap&#x27;,&#x27;YlGnBu&#x27; if j==0 else &#x27;YlOrRd&#x27;)
+  200              if good.any():g.loc[good].plot(ax=ax,color=plt.get_cmap(cmap)(norm(v[good])),edgecolor=&#x27;#9fa49e&#x27;,linewidth=opts.get(&#x27;linewidth&#x27;,.15),markersize=opts.get(&#x27;markersize&#x27;,4))
+  201              if opts.get(&#x27;highlight_max&#x27;) and good.any():
+  202                  peak=g.loc[v.eq(v.max())].geometry.representative_point()
+  203                  ax.scatter(peak.x,peak.y,s=18,facecolors=&#x27;none&#x27;,edgecolors=&#x27;#182f36&#x27;,linewidths=.7,zorder=8)
+  204                  handles[&#x27;peak&#x27;]=Line2D([],[],marker=&#x27;o&#x27;,ls=&#x27;&#x27;,mfc=&#x27;none&#x27;,mec=&#x27;#182f36&#x27;,ms=4,label=&#x27;Maior valor no município&#x27;)
+  205              pos=ax.get_position();cax=fig.add_axes([pos.x0,.22,pos.width,.022])
+  206              cb=fig.colorbar(ScalarMappable(norm=norm,cmap=cmap),cax=cax,orientation=&#x27;horizontal&#x27;)
+  207              cb.ax.tick_params(labelsize=9,length=2);cb.set_label(opts.get(&#x27;label&#x27;,&#x27;Habitantes estimados&#x27; if j==0 else &#x27;Fração potencialmente\nevitável (%)&#x27;),fontsize=9)
+  208              if not numeric_options:
+  209                  if j==0:cb.set_ticks([0,1000,3000,5000] if vmax&gt;5000 else np.linspace(0,vmax,4))
+  210                  else:cb.set_ticks([0,2,4,6,8,10])
+  211              else:
+  212                  ticks=opts.get(&#x27;ticks&#x27;)
+  213                  if ticks is None:ticks=rounded_ticks
+  214                  cb.set_ticks(ticks)
+  215                  cb.ax.xaxis.set_major_formatter(FuncFormatter(lambda v,p:f&#x27;{v:,.0f}&#x27;.replace(&#x27;,&#x27;,&#x27;.&#x27;) if abs(v)&gt;=100 else f&#x27;{v:.1f}&#x27;.rstrip(&#x27;0&#x27;).rstrip(&#x27;.&#x27;).replace(&#x27;.&#x27;,&#x27;,&#x27;)))
+  216                  if &#x27;ticklabels&#x27; in opts:
+  217                      cb.set_ticklabels(opts[&#x27;ticklabels&#x27;]);cb.ax.tick_params(labelsize=6.8)
+  218                  cb.ax.get_xticklabels()[0].set_horizontalalignment(&#x27;left&#x27;)
+  219                  cb.ax.get_xticklabels()[-1].set_horizontalalignment(&#x27;right&#x27;)
+  220              if opts.get(&#x27;show_missing&#x27;,True):handles[&#x27;missing&#x27;]=Patch(facecolor=&#x27;#e8e8e6&#x27;,edgecolor=&#x27;#aaa&#x27;,label=&#x27;Sem estimativa elegível&#x27;)
+  221          else:
+  222              if panel_layers is not None and not show_zones:m.plot(ax=ax,facecolor=&#x27;#eeeadf&#x27;,edgecolor=&#x27;none&#x27;,zorder=1)
+  223              if code==&#x27;G2&#x27;:z.to_crs(4674).plot(ax=ax,facecolor=&#x27;#e1eadc&#x27;,edgecolor=&#x27;none&#x27;,linewidth=0,zorder=2)
+  224              vals=g[field].fillna(&#x27;Informação insuficiente&#x27;).replace(LABEL)
+  225              for cat in dict.fromkeys(vals):
+  226                  color=(palette or COLORS).get(cat,&#x27;#b3aaa0&#x27;)
+  227                  road_width={&#x27;Rodovias principais&#x27;:.45,&#x27;Vias secundárias&#x27;:.30,&#x27;Vias locais e demais caminhos&#x27;:.16}.get(cat,.40)
+  228                  g.loc[vals.eq(cat)].plot(ax=ax,color=color,edgecolor=&#x27;none&#x27;,linewidth=road_width if panel_layers is not None else 0,markersize=1.5 if code==&#x27;G2&#x27; else 5,alpha=.75 if code==&#x27;G2&#x27; else 1,zorder=3)
+  229                  handles[cat]=Patch(facecolor=color,edgecolor=&#x27;#aaa&#x27;,linewidth=.4,label=cat)
+  230  
+  231          if zone_borders is not None:
+  232  
+  233              zone_borders.plot(ax=ax,color=&#x27;#405b64&#x27;,linewidth=.18 if not atlas else .065,zorder=7)
+  234          m.boundary.plot(ax=ax,color=&#x27;#35413d&#x27;,linewidth=1.05,zorder=8)
+  235          if station_overlay is not None:
+  236              overlay=station_overlay[j].to_crs(4674)
+  237              ax.scatter(overlay.geometry.x,overlay.geometry.y,s=3 if atlas else 10,facecolor=&#x27;white&#x27;,edgecolor=&#x27;#142e42&#x27;,linewidth=.5,zorder=10)
+  238          ax.set_xlim(ex[0],ex[2]);ax.set_ylim(ex[1],ex[3]);ax.set_aspect(1/np.cos(np.deg2rad(np.mean([ex[1],ex[3]]))))
+  239  
+  240          ax.set_xticks(np.arange(np.ceil(ex[0]/.10)*.10,ex[2],.10))
+  241          yt=np.round(np.mean([ex[1],ex[3]])+np.array([-.08,0,.08]),2)
+  242          ax.set_yticks(yt[(yt&gt;ex[1]+.025)&amp;(yt&lt;ex[3]-.025)])
+  243          ax.xaxis.set_major_formatter(FuncFormatter(lambda v,p:f&#x27;{abs(v):.2f}°O&#x27;.replace(&#x27;.&#x27;,&#x27;,&#x27;)))
+  244          ax.yaxis.set_major_formatter(FuncFormatter(lambda v,p:f&#x27;{abs(v):.2f}°S&#x27;.replace(&#x27;.&#x27;,&#x27;,&#x27;)))
+  245          ax.tick_params(labelsize=8.5,length=2,pad=3.5);ax.tick_params(axis=&#x27;y&#x27;,labelrotation=90,labelleft=j%cols==0)
+  246          for label in ax.get_yticklabels():
+  247              label.set_verticalalignment(&#x27;center&#x27;)
+  248              label.set_horizontalalignment(&#x27;center&#x27;)
+  249              label.set_rotation_mode(&#x27;anchor&#x27;)
+  250          ax.tick_params(axis=&#x27;y&#x27;,pad=5.5)
+  251          import textwrap
+  252          title=&#x27;\n&#x27;.join(textwrap.wrap(title,27)) if atlas else &#x27;\n&#x27;.join(textwrap.wrap(title,34 if cols&gt;1 else 65))
+  253          ax.set_xlabel(&#x27;&#x27;);ax.set_ylabel(&#x27;&#x27;);ax.set_title(title,fontsize=10.5,fontweight=&#x27;bold&#x27;,pad=4 if atlas else 4)
+  254          ax.grid(alpha=.10,linewidth=.4)
+  255  
+  256          ax.set_axis_on()
+  257          ax.set_frame_on(True)
+  258          for spine in ax.spines.values():
+  259              spine.set_visible(True)
+  260              spine.set_color(&#x27;#35413d&#x27;)
+  261              spine.set_linewidth(.55 if atlas else .65)
+  262  
+  263          ax.text(.965,.955,&#x27;N&#x27;,transform=ax.transAxes,ha=&#x27;center&#x27;,va=&#x27;bottom&#x27;,fontsize=8,fontweight=&#x27;bold&#x27;,color=&#x27;#39433f&#x27;)
+  264          ax.annotate(&#x27;&#x27;,xy=(.965,.946),xytext=(.965,.858),xycoords=&#x27;axes fraction&#x27;,
+  265                      arrowprops=dict(arrowstyle=&#x27;-|&gt;&#x27;,mutation_scale=5 if atlas else 14,lw=.55 if atlas else 1.2,color=&#x27;#39433f&#x27;,shrinkA=0,shrinkB=0),zorder=12)
+  266          ax.apply_aspect()
+  267          paper_m=ax.get_position().width*fig.get_figwidth()*.0254
+  268          assert np.isclose(ground_m/paper_m,denominator,rtol=1e-8), &#x27;Escala física incompatível&#x27;
+  269          scale_text=f&#x27;{denominator:,}&#x27;.replace(&#x27;,&#x27;,&#x27;.&#x27;)
+  270          if not atlas:ax.text(.97,.025,f&#x27;Datum: SIRGAS 2000\nGeográficas · EPSG:4674\nEscala 1:{scale_text}&#x27;,transform=ax.transAxes,ha=&#x27;right&#x27;,va=&#x27;bottom&#x27;,multialignment=&#x27;center&#x27;,fontsize=5.7,color=&#x27;#646962&#x27;,linespacing=1.2,bbox=dict(boxstyle=&#x27;round,pad=.35,rounding_size=.15&#x27;,facecolor=&#x27;white&#x27;,edgecolor=&#x27;#b9bdb6&#x27;,linewidth=.45,alpha=.93),zorder=15)
+  271  
+  272          if atlas:continue
+  273          x=ex[0]+.025;y=ex[1]+.020
+  274          xmid,_,_=GEO.fwd(x,y,90,2500);xend,_,_=GEO.fwd(x,y,90,5000)
+  275          h=(ex[3]-ex[1])*.012
+  276          ax.add_patch(Rectangle((x,y),xmid-x,h,facecolor=&#x27;#4b504c&#x27;,edgecolor=&#x27;#4b504c&#x27;,lw=.5,zorder=10))
+  277          ax.add_patch(Rectangle((xmid,y),xend-xmid,h,facecolor=&#x27;white&#x27;,edgecolor=&#x27;#4b504c&#x27;,lw=.5,zorder=10))
+  278          for xx,lab in [(x,&#x27;0&#x27;),(xmid,&#x27;2,5&#x27;),(xend,&#x27;5 km&#x27;)]:ax.text(xx,y-(ex[3]-ex[1])*.016,lab,ha=&#x27;center&#x27;,va=&#x27;top&#x27;,fontsize=6.3,zorder=11)
+  279      if atlas:
+  280  
+  281          if cols==2:
+  282              width=min(ax.get_position().width for ax in flat)
+  283              gap=.045;left=.51-(2*width+gap)/2
+  284              for j,ax in enumerate(flat):
+  285                  position=ax.get_position()
+  286                  ax.set_position([left+(j%cols)*(width+gap),position.y0,width,position.height])
+  287  
+  288          for ax in flat:
+  289              for text in [*ax.texts,ax.title,*ax.get_xticklabels(),*ax.get_yticklabels()]:text.set_fontsize(text.get_fontsize()*.46)
+  290              ax.title.set_fontsize(5.7)
+  291              ax.tick_params(length=1,pad=2)
+  292              for ann in ax.texts:
+  293                  if getattr(ann,&#x27;arrow_patch&#x27;,None) is not None:
+  294                      ann.arrow_patch.set_mutation_scale(4);ann.arrow_patch.set_linewidth(.4)
+  295              for spine in ax.spines.values():spine.set_linewidth(.55)
+  296      if stations is not None:
+  297          handles={&#x27;a&#x27;:Patch(facecolor=&#x27;#2276ad&#x27;,alpha=.55,label=&#x27;Estação elegível no triênio&#x27;),&#x27;b&#x27;:Patch(facecolor=&#x27;#d69e3b&#x27;,alpha=.55,label=&#x27;Sem elegibilidade no triênio&#x27;)}
+  298      bottom=min(ax.get_position().y0 for ax in flat)
+  299      if atlas:
+  300  
+  301              fig.text(.51,bottom-.020,f&#x27;Datum: SIRGAS 2000 · Geográficas (EPSG:4674)\nEscala 1:{denominator:,}&#x27;.replace(&#x27;,&#x27;,&#x27;.&#x27;),ha=&#x27;center&#x27;,va=&#x27;center&#x27;,multialignment=&#x27;center&#x27;,fontsize=5.5,linespacing=1.2,bbox=dict(boxstyle=&#x27;round,pad=.35,rounding_size=.15&#x27;,facecolor=&#x27;white&#x27;,edgecolor=&#x27;#b9bdb6&#x27;,linewidth=.45))
+  302              length=(20000/denominator)/(.0254*fig.get_figwidth())
+  303              sx=.51-length/2;sy=bottom-.050
+  304              for offset,color in [(0,&#x27;#35413d&#x27;),(length/2,&#x27;white&#x27;)]:
+  305                  fig.add_artist(Rectangle((sx+offset,sy),length/2,.004,transform=fig.transFigure,facecolor=color,edgecolor=&#x27;#35413d&#x27;,lw=.4))
+  306              for xx,lab in [(sx,&#x27;0&#x27;),(sx+length/2,&#x27;10&#x27;),(sx+length,&#x27;20 km&#x27;)]:fig.text(xx,sy-.003,lab,ha=&#x27;center&#x27;,va=&#x27;top&#x27;,fontsize=5)
+  307      if surfaces is not None:
+  308  
+  309          atlas_left=min(ax.get_position().x0 for ax in flat)
+  310          atlas_width=max(ax.get_position().x1 for ax in flat)-atlas_left
+  311          bar_specs=[(surfaces[0],atlas_left,bottom-.087,atlas_width)] if atlas else [(s,ax.get_position().x0,bottom-.078,ax.get_position().width) for s,ax in zip(surfaces,flat)]
+  312          for s,x,y,w in bar_specs:
+  313              cax=fig.add_axes([x,y,w,.012 if atlas else .022])
+  314              cb=fig.colorbar(ScalarMappable(norm=s[&#x27;norm&#x27;],cmap=s[&#x27;cmap&#x27;]),cax=cax,orientation=&#x27;horizontal&#x27;,extend=&#x27;max&#x27;,extendfrac=.04)
+  315              cb.set_ticks(s[&#x27;ticks&#x27;][:-1]);cb.ax.tick_params(labelsize=5 if atlas else 7.5,length=2)
+  316              cb.ax.xaxis.set_major_formatter(FuncFormatter(lambda v,p:f&#x27;{v:,.0f}&#x27;.replace(&#x27;,&#x27;,&#x27;.&#x27;) if v&gt;=100 else f&#x27;{v:g}&#x27;.replace(&#x27;.&#x27;,&#x27;,&#x27;)))
+  317              cb.set_label(&#x27;Concentração (µg/m³)&#x27;,fontsize=5.5 if atlas else 8)
+  318              vmax=s.get(&#x27;actual_max&#x27;,float(np.max(s[&#x27;values&#x27;])))
+  319              maximum=f&#x27;{vmax:,.1f}&#x27;.replace(&#x27;,&#x27;,&#x27;X&#x27;).replace(&#x27;.&#x27;,&#x27;,&#x27;).replace(&#x27;X&#x27;,&#x27;.&#x27;)
+  320              if s.get(&#x27;max_in_label&#x27;):
+  321                  cb.set_label(f&#x27;Concentração (µg/m³) · Máx. {maximum}&#x27;,fontsize=7)
+  322              else:cb.ax.text(1.035,-.85,f&#x27;Máx. {maximum}&#x27;,transform=cb.ax.transAxes,ha=&#x27;right&#x27;,va=&#x27;top&#x27;,fontsize=5 if atlas else 7)
+  323      elif code==&#x27;C1&#x27;:
+  324  
+  325          has_missing=any(k in handles for k in [&#x27;Alta E / C não classificada&#x27;,&#x27;Informação insuficiente&#x27;])
+  326          lax=fig.add_axes([.285 if has_missing else .47,.145,.13,.085]);lax.set_xlim(0,2);lax.set_ylim(0,2)
+  327          for x in range(2):
+  328              for y in range(2):lax.add_patch(Rectangle((x,y),1,1,facecolor=COLORS[(&#x27;Alta E&#x27; if x else &#x27;Baixa E&#x27;)+&#x27; / &#x27;+(&#x27;Alta C&#x27; if y else &#x27;Baixa C&#x27;)],edgecolor=&#x27;white&#x27;))
+  329          lax.set_xticks([.5,1.5],[&#x27;Baixa&#x27;,&#x27;Alta&#x27;],fontsize=8.5);lax.set_yticks([.5,1.5],[&#x27;Baixa&#x27;,&#x27;Alta&#x27;],fontsize=8.5)
+  330          lax.set_xlabel(&#x27;Emissão&#x27;,fontsize=7,labelpad=2);lax.set_ylabel(&#x27;Concentração&#x27;,fontsize=7,labelpad=2)
+  331          lax.tick_params(length=0);[s.set_visible(False) for s in lax.spines.values()]
+  332          extra=[handles[k] for k in [&#x27;Alta E / C não classificada&#x27;,&#x27;Informação insuficiente&#x27;] if k in handles]
+  333          fig.legend(handles=extra,loc=&#x27;center&#x27;,bbox_to_anchor=(.74,.19),frameon=False,fontsize=8)
+  334      elif not numeric:
+  335          if legend_categories is not None:
+  336              handles={cat:Patch(facecolor=(palette or COLORS).get(cat,&#x27;#b3aaa0&#x27;),edgecolor=&#x27;#aaa&#x27;,linewidth=.3,label=cat) for cat in legend_categories}
+  337          if code in (&#x27;B2&#x27;,&#x27;B3&#x27;,&#x27;B4&#x27;,&#x27;B5&#x27;):
+  338              categories=(&#x27;Atendimento&#x27;,&#x27;Não atendimento&#x27;) if code in (&#x27;B4&#x27;,&#x27;B5&#x27;) else (&#x27;Atendimento&#x27;,&#x27;Não atendimento&#x27;,&#x27;Não classificado&#x27;)
+  339              handles={cat:Patch(facecolor=COLORS[cat],edgecolor=&#x27;#aaa&#x27;,linewidth=.4,label=cat) for cat in categories}
+  340          ncol=len(handles) if code.startswith(&#x27;B&#x27;) else 2 if code==&#x27;S1&#x27; else 3 if legend_categories is not None else 2
+  341          if atlas:
+  342              centered_legend(fig,list(handles.values()),ncol=3,y=bottom-.078,fontsize=5.8,row_step=.016,center=.51)
+  343          elif code==&#x27;H2&#x27;:
+  344              centered_legend(fig,list(handles.values()),ncol=2,y=.205,fontsize=9,row_step=.045)
+  345          else:
+  346              centered_legend(fig,list(handles.values()),ncol=ncol,y=.205 if panel_layers is not None else .265,fontsize=9)
+  347      else:fig.legend(handles=list(handles.values()),loc=&#x27;center&#x27;,bbox_to_anchor=(.535,.085),frameon=False,fontsize=8.5)
+  348      if wind_directions is not None:
+  349          from rosa_vento_seletor import add_to_figure
+  350          assert len(set(wind_directions))==1, &#x27;A figura pareada exige uma direção comum&#x27;
+  351          base_height_pt=(fig.get_tightbbox(fig.canvas.get_renderer()).height+.09)*72
+  352          rose_top=.07 if surfaces is not None else min(.07,.205-(max(1,int(np.ceil(len(handles)/ncol)))-1)*.045-.09)
+  353          add_to_figure(fig,wind_directions[0],top=rose_top)
+  354      if figure_title:fig.suptitle(figure_title,fontsize=11 if atlas else 12,fontweight=&#x27;bold&#x27;,y=.985)
+  355      stem=filename or f&#x27;Figura_{code}&#x27;
+  356  
+  357      for ext in [&#x27;png&#x27;,&#x27;svg&#x27;,&#x27;pdf&#x27;]:fig.savefig(OUT/f&#x27;{stem}.{ext}&#x27;,dpi=png_dpi or (600 if atlas else 1000),facecolor=&#x27;white&#x27;,bbox_inches=&#x27;tight&#x27;,pad_inches=.045)
+  358      if wind_directions is not None:
+  359          svg_path=OUT/f&#x27;{stem}.svg&#x27;;svg=svg_path.read_text(encoding=&#x27;utf8&#x27;)
+  360          svg_path.write_text(svg.replace(&#x27;&lt;svg &#x27;,f&#x27;&lt;svg data-base-height=&quot;{base_height_pt:.6f}&quot; &#x27;,1),encoding=&#x27;utf8&#x27;)
+  361      plt.close(fig)</code></pre></article></html>

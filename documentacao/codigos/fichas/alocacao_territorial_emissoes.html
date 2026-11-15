@@ -1,0 +1,344 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/alocacao_territorial_emissoes.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/alocacao_territorial_emissoes.py</h2>
+<p>Distribui massas no suporte territorial e verifica a conservação. Diferencia fonte de emissão e concentração recebida, evitando dividir indevidamente fluxo por uma área adicional.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\alocacao_territorial_emissoes.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>aermod_sources</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>inventario_anual</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.ops</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/validacao_final.json — chamada validation.read_text, linha 66.</li>
+<li>E:/projeto/entrada_aermod/{name} — chamada path.read_bytes, linha 68.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/Resumo_zonas.csv — chamada pd.read_csv, linha 166.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/zoneamento_integrado.gpkg — chamada gpd.read_file, linha 185.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/Massas_fontes_2021_2023.csv — chamada pd.read_csv, linha 195.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/fontes_correntes.json — chamada .read_text, linha 196.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/{name}.csv — chamada table.to_csv, linha 272.</li>
+<li>Argumento fornecido pelo chamador — chamada table.to_json, linha 274.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/tabelas_planilha.json — chamada .write_text, linha 275.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/auditoria_rateio.json — chamada .write_text, linha 283.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>config.DIRS: out.</li>
+<li>evidence: arquivos.</li>
+<li>source: source_type.</li>
+<li>table: poluente.</li>
+<li>r: id, poluente.</li>
+<li>masses: poluente.</li>
+<li>rec: inventario_ids, status.</li>
+<li>zones.loc: nome.</li>
+<li>a: zona.</li>
+<li>sub.loc: massa_zona_t_ano.</li>
+<li>tables: Balanco_fontes, Resumo_zonas.</li>
+<li>report: classes.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>report: classes.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>refined_sources(pol, name)</td><td>62-72</td><td>lê dados Retorno: (raw, sources).</td></tr><tr><td>geometry_for_allocation(source, raw)</td><td>75-96</td><td>Chamadas efetivas: _coord_pairs, _clean_geometry, unary_union, raw.get, len, LineString, pd.notna, source_geometry Retorno: (None, &#x27;projeção horizontal ausente&#x27;), (Point(coords[0]), &#x27;ponto&#x27;) if coords else (None, &#x27;ponto ausente&#x27;).</td></tr><tr><td>partition(geom, zones, basis)</td><td>99-154</td><td>Chamadas efetivas: zones.sindex.query, measure, enumerate, unary_union, GeometryCollection, abs, sum, list Retorno: (result, outside, ambiguous, total), (result, outside / total, ambiguous / total, total).</td></tr><tr><td>emission_class(value, minor)</td><td>157-161</td><td>Chamadas efetivas: np.isclose Retorno: &#x27;Sem massa quantificada&#x27;, &#x27;Alta (&gt;100 t/ano)&#x27;.</td></tr><tr><td>apply_territorial_totals(zones)</td><td>164-180</td><td>lê dados Retorno: z.</td></tr><tr><td>run()</td><td>183-285</td><td>lê dados; grava produtos Retorno: tables.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/alocacao_territorial_emissoes.py, linhas 130-136.</p>
+<pre><code>        result=[(z,v/total,v) for z,v in allocated.items()]
+        assert abs(sum(v for _,v,_ in result)+(outside+ambiguous)/total-1)&lt;1e-6
+        return result,outside/total,ambiguous/total,total
+    positions=zones.sindex.query(geom,predicate=&#x27;intersects&#x27;)
+    hits=[(zones.index[i],geom.intersection(zones.geometry.iloc[i])) for i in positions]
+    if basis==&#x27;ponto&#x27;:
+        if len(hits)==1:return [(hits[0][0],1.,1.)],0.,0.,1.</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/alocacao_territorial_emissoes.py, linhas 152-158.</p>
+<pre><code>    ambiguous=measure(conflict)/total
+    assert abs(sum(f for _,f,_ in result)+outside+ambiguous-1)&lt;1e-6, (basis,total,sum(f for _,f,_ in result),outside,ambiguous)
+    return result,outside,ambiguous,total
+
+# Emission class
+def emission_class(value,minor):
+    if value&gt;100 and not np.isclose(value,100,atol=1e-10,rtol=0):return &#x27;Alta (&gt;100 t/ano)&#x27;</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/validacao_final.json | validation.read_text.
+    5  # Entrada: E:/projeto/entrada_aermod/{name} | path.read_bytes.
+    6  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/Resumo_zonas.csv | pd.read_csv.
+    7  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/zoneamento_integrado.gpkg | gpd.read_file.
+    8  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/Massas_fontes_2021_2023.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/14_auditoria_entradas/revalidacao_final/fontes_correntes.json | .read_text.
+   10  # Campos/chaves em config.DIRS: out.
+   11  # Campos/chaves em evidence: arquivos.
+   12  # Campos/chaves em source: source_type.
+   13  # Campos/chaves em table: poluente.
+   14  # Campos/chaves em r: id, poluente.
+   15  # Campos/chaves em masses: poluente.
+   16  # Campos/chaves em rec: inventario_ids, status.
+   17  # Campos/chaves em zones.loc: nome.
+   18  # Campos/chaves em a: zona.
+   19  # Campos/chaves em sub.loc: massa_zona_t_ano.
+   20  # Campos/chaves em tables: Balanco_fontes, Resumo_zonas.
+   21  # Campos/chaves em report: classes.
+   22  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/{name}.csv | table.to_csv.
+   23  # Saída: Argumento fornecido pelo chamador | table.to_json.
+   24  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/tabelas_planilha.json | .write_text.
+   25  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/13_rateio_emissoes/auditoria_rateio.json | .write_text.
+   26  # Campos/chaves gerados em report: classes.
+   27  # CÓDIGO DO PROCESSAMENTO
+   28  
+   29  &quot;&quot;&quot;Rateio territorial auditável, com classificação principal pela soma da zona.
+   30  
+   31  Produz uma revisão separada; não substitui concentrações nem mapas publicados.
+   32  Geometrias de rateio são distintas das usadas na conversão da taxa nativa.
+   33  &quot;&quot;&quot;
+   34  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   35  import sys as _cp_sys
+   36  from pathlib import Path as _cp_Path
+   37  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   38  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   39      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   40      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   41          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   42          break
+   43  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   44  # FIM DOS CAMINHOS PORTÁTEIS
+   45  
+   46  from pathlib import Path
+   47  import json
+   48  import hashlib
+   49  import numpy as np
+   50  import pandas as pd
+   51  import geopandas as gpd
+   52  from shapely.geometry import Point, LineString, GeometryCollection
+   53  from shapely.ops import unary_union
+   54  from aermod_sources import build_source_gdf,read_lakes_sources,_coord_pairs,_clean_geometry,source_geometry
+   55  from inventario_anual import apply_inventory
+   56  from groups import GROUPS
+   57  import config
+   58  
+   59  LINE_TYPES={&#x27;LINE&#x27;,&#x27;LINE_AREA&#x27;,&#x27;LINE_VOLUME&#x27;,&#x27;RLINE&#x27;,&#x27;RLINEXT&#x27;}
+   60  
+   61  # Refined sources
+   62  def refined_sources(pol,name):
+   63      &quot;&quot;&quot;Geometrias atuais e massas integradas; não reutiliza planilhas antigas.&quot;&quot;&quot;
+   64      path=config.BASE/&#x27;entrada_aermod&#x27;/name
+   65      validation=config.DIRS[&#x27;out&#x27;]/&#x27;14_auditoria_entradas/revalidacao_final/validacao_final.json&#x27;
+   66      evidence=json.loads(validation.read_text(encoding=&#x27;utf8&#x27;))
+   67      filepol=&#x27;PM2-5&#x27; if pol==&#x27;PM25&#x27; else pol
+   68      assert hashlib.sha256(path.read_bytes()).hexdigest()==evidence[&#x27;arquivos&#x27;][filepol][&#x27;sha256&#x27;],&#x27;Entrada alterada após validação: executar validar_massas_entrada.py&#x27;
+   69      raw=read_lakes_sources(path).set_index(&#x27;ID&#x27;,drop=False)
+   70      sources=build_source_gdf(path,pol)
+   71      assert set(raw.index)==set(sources.source_id),&#x27;Fonte sem geometria deve ser investigada&#x27;
+   72      return raw,sources
+   73  
+   74  # Geometry for allocation
+   75  def geometry_for_allocation(source,raw):
+   76      typ=source[&#x27;source_type&#x27;];coords=_coord_pairs(raw)
+   77      if typ==&#x27;POINT&#x27;:
+   78          return (Point(coords[0]),&#x27;ponto&#x27;) if coords else (None,&#x27;ponto ausente&#x27;)
+   79      if typ in LINE_TYPES:
+   80          if len(coords)&lt;2:return None,&#x27;eixo linear ausente&#x27;
+   81  
+   82          line=unary_union(LineString(coords))
+   83          return (line,&#x27;comprimento&#x27;) if line.length&gt;0 else (None,&#x27;eixo linear degenerado&#x27;)
+   84      if typ==&#x27;AREA_CIRC&#x27;:
+   85  
+   86          radius=raw.get(&#x27;Radius&#x27;,raw.get(&#x27;Diam&#x27;))
+   87          if coords and pd.notna(radius) and radius&gt;0:
+   88              return Point(coords[0]).buffer(float(radius),quad_segs=64),&#x27;área&#x27;
+   89      if typ in (&#x27;AREA&#x27;,&#x27;AREA_POLY&#x27;):
+   90          geom=_clean_geometry(source_geometry(raw))
+   91          if geom is not None and geom.geom_type in (&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;) and geom.area&gt;0:
+   92              return geom,&#x27;área&#x27;
+   93      geom=_clean_geometry(source.geometry)
+   94      if geom is not None and geom.geom_type in (&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;) and geom.area&gt;0:
+   95          return geom,&#x27;área horizontal&#x27; if typ==&#x27;VOLUME&#x27; else &#x27;área&#x27;
+   96      return None,&#x27;projeção horizontal ausente&#x27;
+   97  
+   98  # Partition
+   99  def partition(geom,zones,basis):
+  100      &quot;&quot;&quot;Retorna parcelas únicas e resíduos sem normalizar ou duplicar sobreposições.&quot;&quot;&quot;
+  101      if basis==&#x27;comprimento&#x27;:
+  102  
+  103          allocated={};outside=0.;ambiguous=0.;total=0.
+  104          lines=[geom] if geom.geom_type==&#x27;LineString&#x27; else list(geom.geoms)
+  105          def line_parts(g):
+  106              if g.geom_type==&#x27;LineString&#x27;:return [g]
+  107              if hasattr(g,&#x27;geoms&#x27;):return [p for x in g.geoms for p in line_parts(x)]
+  108              return []
+  109          for line in lines:
+  110              coords=list(line.coords)
+  111              for a,b in zip(coords,coords[1:]):
+  112                  seg=LineString([a,b]);length=seg.length
+  113                  if length==0:continue
+  114                  total+=length;intervals=[];cuts={0.,1.}
+  115                  for pos in zones.sindex.query(seg,predicate=&#x27;intersects&#x27;):
+  116                      zid=zones.index[pos]
+  117                      for part in line_parts(seg.intersection(zones.geometry.iloc[pos])):
+  118                          ts=[seg.project(Point(c),normalized=True) for c in part.coords]
+  119                          lo=max(0.,min(ts));hi=min(1.,max(ts))
+  120                          if hi&gt;lo:
+  121                              intervals.append((lo,hi,zid));cuts.update([lo,hi])
+  122                  cuts=sorted(cuts)
+  123                  for lo,hi in zip(cuts,cuts[1:]):
+  124                      mid=(lo+hi)/2;amount=(hi-lo)*length
+  125                      owners={z for l,h,z in intervals if l&lt;=mid&lt;=h}
+  126                      if len(owners)==1:
+  127                          zid=next(iter(owners));allocated[zid]=allocated.get(zid,0.)+amount
+  128                      elif owners:ambiguous+=amount
+  129                      else:outside+=amount
+  130          result=[(z,v/total,v) for z,v in allocated.items()]
+  131          assert abs(sum(v for _,v,_ in result)+(outside+ambiguous)/total-1)&lt;1e-6
+  132          return result,outside/total,ambiguous/total,total
+  133      positions=zones.sindex.query(geom,predicate=&#x27;intersects&#x27;)
+  134      hits=[(zones.index[i],geom.intersection(zones.geometry.iloc[i])) for i in positions]
+  135      if basis==&#x27;ponto&#x27;:
+  136          if len(hits)==1:return [(hits[0][0],1.,1.)],0.,0.,1.
+  137          return [],float(not hits),float(len(hits)&gt;1),1.
+  138      measure=(lambda g:g.length) if basis==&#x27;comprimento&#x27; else (lambda g:g.area)
+  139      total=measure(geom);hits=[(i,g) for i,g in hits if measure(g)&gt;0]
+  140      if not hits:return [],1.,0.,total
+  141      overlaps=[]
+  142      for i,(_,g) in enumerate(hits):
+  143          for _,h in hits[i+1:]:
+  144              overlap=g.intersection(h)
+  145              if measure(overlap)&gt;0:overlaps.append(overlap)
+  146      conflict=unary_union(overlaps) if overlaps else GeometryCollection()
+  147      result=[]
+  148      for zid,piece in hits:
+  149          amount=measure(piece.difference(conflict))
+  150          if amount&gt;0:result.append((zid,amount/total,amount))
+  151      covered=unary_union([g for _,g in hits]);outside=measure(geom.difference(covered))/total
+  152      ambiguous=measure(conflict)/total
+  153      assert abs(sum(f for _,f,_ in result)+outside+ambiguous-1)&lt;1e-6, (basis,total,sum(f for _,f,_ in result),outside,ambiguous)
+  154      return result,outside,ambiguous,total
+  155  
+  156  # Emission class
+  157  def emission_class(value,minor):
+  158      if value&gt;100 and not np.isclose(value,100,atol=1e-10,rtol=0):return &#x27;Alta (&gt;100 t/ano)&#x27;
+  159      if value&gt;minor and not np.isclose(value,minor,atol=1e-10,rtol=0):return &#x27;Intermediária&#x27;
+  160      if value&gt;0:return &#x27;Baixa / minoritária&#x27;
+  161      return &#x27;Sem massa quantificada&#x27;
+  162  
+  163  # Apply territorial totals
+  164  def apply_territorial_totals(zones):
+  165      &quot;&quot;&quot;Aplica a nova regra aos mapas sem alterar o cadastro geográfico original.&quot;&quot;&quot;
+  166      table=pd.read_csv(config.DIRS[&#x27;out&#x27;]/&#x27;13_rateio_emissoes/Resumo_zonas.csv&#x27;)
+  167      z=zones.copy()
+  168      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  169          sub=table[table.poluente.eq(pol)].set_index(&#x27;zona&#x27;).reindex(z.index)
+  170          if sub.total_quantificado_t_ano.isna().any():raise ValueError(&#x27;Zoneamento incompatível com rateio&#x27;)
+  171          mass=sub.total_quantificado_t_ano
+  172          z[f&#x27;{pol}_emission_class&#x27;]=np.where(mass&gt;100,&#x27;Majoritária&#x27;,&#x27;Não majoritária&#x27;)
+  173          pending=sub.n_fontes.eq(0)|sub.n_fontes_sem_massa.gt(0)
+  174          if &#x27;n_fontes_geometria_ambigua&#x27; in sub:pending|=sub.n_fontes_geometria_ambigua.gt(0)
+  175          z.loc[pending&amp;mass.le(100),f&#x27;{pol}_emission_class&#x27;]=&#x27;Informação insuficiente&#x27;
+  176          z[f&#x27;{pol}_massa_rateada_t_ano&#x27;]=mass
+  177          z[f&#x27;{pol}_emission_total_tpy&#x27;]=mass
+  178          z[f&#x27;{pol}_emission_basis_year&#x27;]=2023
+  179          z[f&#x27;{pol}_emission_audit_status&#x27;]=&#x27;Entradas corrigidas + HOUREMISS 2023; memoriais e ambiguidades pendentes identificados&#x27;
+  180      return z
+  181  
+  182  # Run
+  183  def run():
+  184      out=config.DIRS[&#x27;out&#x27;]/&#x27;13_rateio_emissoes&#x27;;out.mkdir(parents=True,exist_ok=True)
+  185      zones=gpd.read_file(config.DIRS[&#x27;out&#x27;]/&#x27;11_integracao/zoneamento_integrado.gpkg&#x27;).set_index(&#x27;zone_index&#x27;,drop=False).to_crs(config.CRS_PROJECT)
+  186      zones.geometry=zones.geometry.map(_clean_geometry)
+  187      assert zones.index.is_unique and len(zones)==311
+  188      conflicts=[]
+  189      for i,zid in enumerate(zones.index):
+  190          geom=zones.geometry.iloc[i]
+  191          for j in zones.sindex.query(geom,predicate=&#x27;intersects&#x27;):
+  192              if j&gt;i:conflicts.append((zid,zones.index[j],geom.intersection(zones.geometry.iloc[j])))
+  193      details=[];balances=[];associations=[];missing_all=[];summary_all=[];groups_all=[]
+  194      refined=config.DIRS[&#x27;out&#x27;]/&#x27;14_auditoria_entradas/revalidacao_final&#x27;
+  195      masses=pd.read_csv(refined/&#x27;Massas_fontes_2021_2023.csv&#x27;)
+  196      source_records={(r[&#x27;poluente&#x27;],r[&#x27;id&#x27;]):r for r in json.loads((refined/&#x27;fontes_correntes.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))}
+  197      for pol,name in [(&#x27;PM10&#x27;,&#x27;PM10_Sources.xlsx&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5_Sources.xlsx&#x27;)]:
+  198          raw,sources=refined_sources(pol,name)
+  199          annual=masses[masses.poluente.eq(pol)].pivot(index=&#x27;id&#x27;,columns=&#x27;ano&#x27;,values=&#x27;massa_t_ano&#x27;)
+  200          missing=[]
+  201          ambiguous_zones={z:set() for z in zones.index}
+  202          for _,source in sources.iterrows():
+  203              sid=source.source_id;geom,basis=geometry_for_allocation(source,raw.loc[sid])
+  204              rec=source_records[(pol,sid)];mass=float(annual.loc[sid,2023]);status=rec[&#x27;status&#x27;]
+  205              inventory=status==&#x27;conciliada&#x27;
+  206              if status==&#x27;HOUREMISS&#x27;:status=&#x27;HOUREMISS integrado em 2023; massa conservada&#x27;
+  207              if not inventory and rec[&#x27;status&#x27;]!=&#x27;HOUREMISS&#x27;:
+  208                  missing_all.append({&#x27;poluente&#x27;:pol,&#x27;id_fonte&#x27;:sid,&#x27;situacao&#x27;:status,&#x27;massa_quantificada_t_ano&#x27;:mass})
+  209              if not np.isfinite(mass) or mass&lt;0:mass=np.nan
+  210              group=source.group_id if pd.notna(source.group_id) else &#x27;NAO_IDENTIFICADO&#x27;
+  211              enterprise=GROUPS.get(group,{}).get(&#x27;name&#x27;,group)
+  212              base={&#x27;poluente&#x27;:pol,&#x27;id_fonte&#x27;:sid,&#x27;id_inventario&#x27;:rec[&#x27;inventario_ids&#x27;],
+  213                    &#x27;tipo_fonte&#x27;:source.source_type,&#x27;grupo&#x27;:group,
+  214                    &#x27;empreendimento&#x27;:enterprise,&#x27;descricao&#x27;:source.desc,&#x27;ano_base&#x27;:2023,
+  215                    &#x27;origem_massa&#x27;:&#x27;Inventário conciliado nas entradas&#x27; if inventory else status,&#x27;situacao_massa&#x27;:status,
+  216                    &#x27;taxa_nativa&#x27;:source.emission_rate_native,&#x27;unidade_nativa&#x27;:source.native_unit,
+  217                    &#x27;massa_fonte_t_ano&#x27;:mass,&#x27;taxa_equivalente_fonte_g_s&#x27;:mass/31.536,
+  218                    &#x27;metodo_rateio&#x27;:basis,&#x27;origem_geometria&#x27;:source.geometry_source,
+  219                    &#x27;criterio_vinculo&#x27;:&#x27;ID da entrada corrente; massa horária integrada ou taxa total × 31,536&#x27;,
+  220                    **{f&#x27;massa_fonte_{y}_t&#x27;:float(annual.loc[sid,y]) for y in (2021,2022,2023)}}
+  221              associations.append(base.copy())
+  222              if geom is None:
+  223                  pieces=[];outside=0.;ambiguous=1.;measure=np.nan
+  224              else:
+  225                  try:pieces,outside,ambiguous,measure=partition(geom,zones,basis)
+  226                  except AssertionError as exc:raise ValueError(f&#x27;Balanço geométrico inválido em {sid}: {exc}&#x27;) from exc
+  227                  if ambiguous&gt;1e-8:
+  228                      for za,zb,conflict in conflicts:
+  229                          hit=geom.intersection(conflict)
+  230                          affected=(not hit.is_empty) if basis==&#x27;ponto&#x27; else hit.length&gt;1e-8 if basis==&#x27;comprimento&#x27; else hit.area&gt;1e-8
+  231                          if affected:
+  232                              ambiguous_zones[za].add(sid);ambiguous_zones[zb].add(sid)
+  233              for zid,fraction,inter in pieces:
+  234                  details.append({**base,&#x27;zona&#x27;:zid,&#x27;nome_zona&#x27;:zones.loc[zid,&#x27;nome&#x27;],
+  235                                  &#x27;medida_fonte&#x27;:measure,&#x27;medida_intersecao&#x27;:inter,
+  236                                  &#x27;unidade_medida&#x27;:&#x27;m&#x27; if basis==&#x27;comprimento&#x27; else &#x27;unidade&#x27; if basis==&#x27;ponto&#x27; else &#x27;m²&#x27;,
+  237                                  &#x27;fracao&#x27;:fraction,&#x27;massa_zona_t_ano&#x27;:mass*fraction,
+  238                                  &#x27;taxa_equivalente_zona_g_s&#x27;:mass*fraction/31.536})
+  239              frac=sum(f for _,f,_ in pieces)
+  240              balances.append({**base,&#x27;fracao_alocada&#x27;:frac,&#x27;fracao_fora_zoneamento&#x27;:outside,
+  241                               &#x27;fracao_ambigua&#x27;:ambiguous,&#x27;massa_alocada_t_ano&#x27;:mass*frac,
+  242                               &#x27;massa_fora_zoneamento_t_ano&#x27;:mass*outside,&#x27;massa_ambigua_t_ano&#x27;:mass*ambiguous,
+  243                               &#x27;residuo_fracao&#x27;:1-frac-outside-ambiguous,
+  244                               &#x27;situacao_geometria&#x27;:&#x27;pendente&#x27; if ambiguous&gt;1e-8 else &#x27;sem duplicação&#x27;})
+  245          a=pd.DataFrame([r for r in details if r[&#x27;poluente&#x27;]==pol]);minor=5 if pol==&#x27;PM10&#x27; else 3
+  246          for zid in zones.index:
+  247              sub=a.loc[a.zona.eq(zid)];known=sub.massa_zona_t_ano.sum(min_count=1)
+  248              if sub.empty:known=0.
+  249              total=float(known) if pd.notna(known) else 0.
+  250              invtotal=sub.loc[sub.origem_massa.eq(&#x27;Inventário conciliado nas entradas&#x27;),&#x27;massa_zona_t_ano&#x27;].sum()
+  251              hourlytotal=sub.loc[sub.origem_massa.str.startswith(&#x27;HOUREMISS&#x27;,na=False),&#x27;massa_zona_t_ano&#x27;].sum()
+  252              summary_all.append({&#x27;poluente&#x27;:pol,&#x27;zona&#x27;:zid,&#x27;nome_zona&#x27;:zones.loc[zid,&#x27;nome&#x27;],
+  253                   &#x27;n_fontes&#x27;:sub.id_fonte.nunique(),&#x27;n_empreendimentos&#x27;:sub.grupo.nunique(),
+  254                   &#x27;n_fontes_sem_massa&#x27;:int(sub.massa_zona_t_ano.isna().sum()),
+  255                   &#x27;n_fontes_geometria_ambigua&#x27;:len(ambiguous_zones[zid]),
+  256                   &#x27;n_fontes_memorial_pendente&#x27;:int(sub.situacao_massa.eq(&#x27;massa de entrada; memorial pendente&#x27;).sum()),
+  257                   &#x27;total_quantificado_t_ano&#x27;:total,&#x27;inventario_t_ano&#x27;:invtotal,
+  258                   &#x27;houremiss_t_ano&#x27;:hourlytotal,&#x27;cenario_fallback_t_ano&#x27;:total-invtotal-hourlytotal,&#x27;g_s_equivalente&#x27;:total/31.536,
+  259                   &#x27;classe_preliminar_total&#x27;:emission_class(total,minor),
+  260                   &#x27;criterio&#x27;:&#x27;soma de todas as fontes na zona; não máximo por grupo&#x27;,
+  261                   &#x27;validade&#x27;:&#x27;massa 2023 das entradas e EMI; memoriais e ambiguidades pendentes&#x27;,
+  262                   **{f&#x27;total_{y}_t_ano&#x27;:float((sub[f&#x27;massa_fonte_{y}_t&#x27;]*sub.fracao).sum()) for y in (2021,2022,2023)}})
+  263          for (zid,grp),sub in a.groupby([&#x27;zona&#x27;,&#x27;grupo&#x27;]):
+  264              total=sub.massa_zona_t_ano.sum(min_count=1)
+  265              groups_all.append({&#x27;poluente&#x27;:pol,&#x27;zona&#x27;:zid,&#x27;grupo&#x27;:grp,&#x27;empreendimento&#x27;:sub.empreendimento.iloc[0],
+  266                  &#x27;n_fontes&#x27;:sub.id_fonte.nunique(),&#x27;massa_t_ano&#x27;:total,&#x27;g_s_equivalente&#x27;:total/31.536,
+  267                  &#x27;classe_grupo&#x27;:emission_class(total,minor) if pd.notna(total) else &#x27;Sem massa quantificada&#x27;})
+  268          print(pol,&#x27;fontes&#x27;,len(sources),&#x27;parcelas&#x27;,len(a),&#x27;inventário pendente&#x27;,len(missing),flush=True)
+  269      tables={&#x27;Resumo_zonas&#x27;:pd.DataFrame(summary_all),&#x27;Empreendimentos&#x27;:pd.DataFrame(groups_all),
+  270              &#x27;Fracoes_fontes&#x27;:pd.DataFrame(details),&#x27;Balanco_fontes&#x27;:pd.DataFrame(balances),
+  271              &#x27;Correspondencia_ID&#x27;:pd.DataFrame(associations),&#x27;Inventario_pendente&#x27;:pd.DataFrame(missing_all)}
+  272      for name,table in tables.items():table.to_csv(out/(name+&#x27;.csv&#x27;),index=False,encoding=&#x27;utf-8-sig&#x27;)
+  273  
+  274      payload={name:{&#x27;columns&#x27;:list(table.columns),&#x27;rows&#x27;:json.loads(table.to_json(orient=&#x27;values&#x27;,force_ascii=False))} for name,table in tables.items()}
+  275      (out/&#x27;tabelas_planilha.json&#x27;).write_text(json.dumps(payload,ensure_ascii=False),encoding=&#x27;utf-8&#x27;)
+  276      b=tables[&#x27;Balanco_fontes&#x27;];assert b.residuo_fracao.abs().max()&lt;1e-6
+  277      report={&#x27;zonas&#x27;:len(zones),&#x27;fontes_poluente&#x27;:len(b),&#x27;parcelas&#x27;:len(details),
+  278              &#x27;fracao_max_erro&#x27;:float(b.residuo_fracao.abs().max()),
+  279              &#x27;fontes_com_sobreposicao_ou_geometria_pendente&#x27;:int(b.fracao_ambigua.gt(1e-8).sum()),
+  280              &#x27;fontes_sem_massa_quantificada&#x27;:int(b.massa_fonte_t_ano.isna().sum()),
+  281              &#x27;classes&#x27;:tables[&#x27;Resumo_zonas&#x27;].groupby(&#x27;poluente&#x27;).classe_preliminar_total.value_counts().to_dict()}
+  282      report[&#x27;classes&#x27;]={f&#x27;{a}/{c}&#x27;:v for (a,c),v in report[&#x27;classes&#x27;].items()}
+  283      (out/&#x27;auditoria_rateio.json&#x27;).write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding=&#x27;utf-8&#x27;)
+  284      print(json.dumps(report,ensure_ascii=False,indent=2))
+  285      return tables
+  286  
+  287  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

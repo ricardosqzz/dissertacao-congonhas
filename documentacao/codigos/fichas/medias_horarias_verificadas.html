@@ -1,0 +1,213 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/medias_horarias_verificadas.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/medias_horarias_verificadas.py</h2>
+<p>Reconstrói médias diárias a partir das saídas horárias respeitando códigos, horas válidas e tratamento de calmarias, e compara o resultado com a saída nativa diária do AERMOD.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\medias_horarias_verificadas.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/houremiss/AERMET-3Y.SFC — chamada pd.read_csv, linha 71.</li>
+<li>E:/projeto/houremiss/AERMET-3Y.PFL — chamada pd.read_csv, linha 76.</li>
+<li>E:/projeto/houremiss/AERMET-3Y.SFC — chamada s.read_bytes, linha 86.</li>
+<li>E:/projeto/houremiss/AERMET-3Y.PFL — chamada p.read_bytes, linha 86.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h_manifesto.json — chamada meta.read_text, linha 94.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz — chamada pd.read_csv, linha 101.</li>
+<li>selected[&#x27;ALL&#x27;, &#x27;24H&#x27;] — chamada read_table, linha 113.</li>
+<li>selected[&#x27;ALL&#x27;, &#x27;1H&#x27;] — chamada pd.read_csv, linha 116.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz — chamada check.to_csv, linha 135.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_denominadores_diarios.csv — chamada daytable.to_csv, linha 137.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_auditoria_media_anual_horaria.csv — chamada a.to_csv, linha 142.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h_manifesto.json — chamada .write_text, linha 144.</li>
+<li>E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/auditoria_medias_horarias.json — chamada .write_text, linha 147.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>config.DIRS: out, post.</li>
+<li>cal: CODE, year.</li>
+<li>m: comparison_passed, daily_post, meteorology.</li>
+<li>d: date, day.</li>
+<li>selected: 1H, 24H, ALL, ANNUAL.</li>
+<li>raw24: CODE, X, Y, day.</li>
+<li>chunk: CONC, X, Y.</li>
+<li>sums: count, sum.</li>
+<li>a: sum.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>cal: day, year.</li>
+<li>d: date, year.</li>
+<li>raw24: day.</li>
+<li>chunk: day.</li>
+<li>sums: daily_from_1h, denominator, mean_div24, valid_hours.</li>
+<li>check: difference.</li>
+<li>a: annual_reconstructed, denominator.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>model_daily_mean(hourly_sum, valid_hours)</td><td>59-62</td><td>Chamadas efetivas: np.any, ValueError, np.asarray, np.maximum Retorno: np.asarray(hourly_sum) / np.maximum(valid_hours, 18).</td></tr><tr><td>identity(p)</td><td>65-66</td><td>Chamadas efetivas: Path, str, p.resolve, p.stat Retorno: {&#x27;path&#x27;: str(p.resolve()), &#x27;bytes&#x27;: p.stat().st_size, &#x27;mtime_ns&#x27;: p.stat().st_mtime_ns}.</td></tr><tr><td>met_calendar()</td><td>69-86</td><td>lê dados Retorno: (cal, {&#x27;sfc&#x27;: identity(s), &#x27;pfl&#x27;: identity(p), &#x27;sfc_sha256&#x27;: hashlib.sha256(s.read_bytes()).hexdigest(), &#x27;pfl_sha256&#x27;: hashlib.sha256(p.read_bytes()).hexdigest()}).</td></tr><tr><td>cached_daily(path24)</td><td>89-103</td><td>lê dados Retorno: d.rename(columns={&#x27;daily_from_1h&#x27;: &#x27;CONC&#x27;})[[&#x27;X&#x27;, &#x27;Y&#x27;, &#x27;date&#x27;, &#x27;year&#x27;, &#x27;CONC&#x27;]].</td></tr><tr><td>run()</td><td>106-148</td><td>lê dados; grava produtos Retorno: report.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/medias_horarias_verificadas.py, linhas 108-114.</p>
+<pre><code> OUT.mkdir(exist_ok=True,parents=True);cal,met=met_calendar();valid=cal.set_index(&#x27;CODE&#x27;).valid
+ days=cal.groupby(&#x27;day&#x27;).valid.sum().rename(&#x27;valid_hours&#x27;);report={}
+ for pol,folder in [(&#x27;PM10&#x27;,&#x27;PM10&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5&#x27;)]:
+  selected,_=discover(config.DIRS[&#x27;post&#x27;]/folder);path=selected[&#x27;ALL&#x27;,&#x27;1H&#x27;];parts=[];nrows=0;invalid_nonzero=0
+  print(pol,&#x27;lendo integralmente POST de 1 h&#x27;,flush=True)
+  raw24=read_table(selected[&#x27;ALL&#x27;,&#x27;24H&#x27;]);raw24[&#x27;day&#x27;]=raw24.CODE//100
+  raw24=raw24[raw24.day.between(210101,231231)][[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;,&#x27;CONC&#x27;]]</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/medias_horarias_verificadas.py, linhas 122-128.</p>
+<pre><code>   ok=chunk.CODE.map(valid);assert ok.notna().all()
+   invalid_nonzero+=int((~ok&amp;chunk.CONC.ne(0)).sum())
+   parts.append(chunk.groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;],as_index=False).CONC.agg([&#x27;sum&#x27;,&#x27;count&#x27;]).reset_index())
+  assert invalid_nonzero==0,&#x27;Concentração não nula em hora meteorológica inválida; revisar calendário.&#x27;
+  sums=pd.concat(parts).groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;],as_index=False)[[&#x27;sum&#x27;,&#x27;count&#x27;]].sum()
+  assert sums[&#x27;count&#x27;].eq(24).all() and len(sums)==nr*1095
+  sums[&#x27;valid_hours&#x27;]=sums.day.map(days);sums[&#x27;denominator&#x27;]=np.maximum(sums.valid_hours,18)</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/houremiss/AERMET-3Y.SFC | pd.read_csv.
+    5  # Entrada: E:/projeto/houremiss/AERMET-3Y.PFL | pd.read_csv.
+    6  # Entrada: E:/projeto/houremiss/AERMET-3Y.SFC | s.read_bytes.
+    7  # Entrada: E:/projeto/houremiss/AERMET-3Y.PFL | p.read_bytes.
+    8  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h_manifesto.json | meta.read_text.
+    9  # Entrada: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz | pd.read_csv.
+   10  # Entrada: selected[&#x27;ALL&#x27;, &#x27;24H&#x27;] | read_table.
+   11  # Entrada: selected[&#x27;ALL&#x27;, &#x27;1H&#x27;] | pd.read_csv.
+   12  # Campos/chaves em config.DIRS: out, post.
+   13  # Campos/chaves em cal: CODE, year.
+   14  # Campos/chaves em m: comparison_passed, daily_post, meteorology.
+   15  # Campos/chaves em d: date, day.
+   16  # Campos/chaves em selected: 1H, 24H, ALL, ANNUAL.
+   17  # Campos/chaves em raw24: CODE, X, Y, day.
+   18  # Campos/chaves em chunk: CONC, X, Y.
+   19  # Campos/chaves em sums: count, sum.
+   20  # Campos/chaves em a: sum.
+   21  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h.csv.gz | check.to_csv.
+   22  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_denominadores_diarios.csv | daytable.to_csv.
+   23  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_auditoria_media_anual_horaria.csv | a.to_csv.
+   24  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/{pol}_medias_diarias_1h_manifesto.json | .write_text.
+   25  # Saída: E:/projeto/config.DIRS[&#x27;out&#x27;]/11_integracao/nova_modelagem/auditoria_medias_horarias.json | .write_text.
+   26  # Campos/chaves gerados em cal: day, year.
+   27  # Campos/chaves gerados em d: date, year.
+   28  # Campos/chaves gerados em raw24: day.
+   29  # Campos/chaves gerados em chunk: day.
+   30  # Campos/chaves gerados em sums: daily_from_1h, denominator, mean_div24, valid_hours.
+   31  # Campos/chaves gerados em check: difference.
+   32  # Campos/chaves gerados em a: annual_reconstructed, denominator.
+   33  # X: coordenada leste em metros.
+   34  # Y: coordenada norte em metros.
+   35  # CÓDIGO DO PROCESSAMENTO
+   36  
+   37  &quot;&quot;&quot;Reconstrói 24 h dos POST de 1 h com calendário meteorológico independente.&quot;&quot;&quot;
+   38  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   39  import sys as _cp_sys
+   40  from pathlib import Path as _cp_Path
+   41  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   42  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   43      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   44      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   45          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   46          break
+   47  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   48  # FIM DOS CAMINHOS PORTÁTEIS
+   49  
+   50  from pathlib import Path
+   51  import json,hashlib
+   52  import numpy as np
+   53  import pandas as pd
+   54  import config
+   55  
+   56  OUT=config.DIRS[&#x27;out&#x27;]/&#x27;11_integracao/nova_modelagem&#x27;
+   57  
+   58  # Model daily mean
+   59  def model_daily_mean(hourly_sum,valid_hours):
+   60   &quot;&quot;&quot;Política de calmarias para 24 h: denominador válido, mínimo de 18.&quot;&quot;&quot;
+   61   if np.any(np.asarray(valid_hours)&lt;0) or np.any(np.asarray(valid_hours)&gt;24):raise ValueError(&#x27;Contagem diária fora de 0–24 h&#x27;)
+   62   return np.asarray(hourly_sum)/np.maximum(valid_hours,18)
+   63  
+   64  # Identity
+   65  def identity(p):
+   66   p=Path(p);return {&#x27;path&#x27;:str(p.resolve()),&#x27;bytes&#x27;:p.stat().st_size,&#x27;mtime_ns&#x27;:p.stat().st_mtime_ns}
+   67  
+   68  # Met calendar
+   69  def met_calendar():
+   70   s=config.BASE/&#x27;houremiss/AERMET-3Y.SFC&#x27;;p=config.BASE/&#x27;houremiss/AERMET-3Y.PFL&#x27;
+   71   f=pd.read_csv(s,sep=r&#x27;\s+&#x27;,skiprows=1,header=None)
+   72   code=((f[0]*100+f[1])*100+f[2])*100+f[4]
+   73   valid=f[15].gt(0)&amp;f[6].gt(0)&amp;f[18].gt(0)&amp;f[11].ne(0)&amp;f[11].gt(-99990)
+   74  
+   75   valid &amp;= np.where(f[5].gt(0),f[7].gt(0)&amp;f[9].gt(0),f[10].gt(0))
+   76   profile=pd.read_csv(p,sep=r&#x27;\s+&#x27;,header=None)
+   77   pc=((profile[0]*100+profile[1])*100+profile[2])*100+profile[3]
+   78   profile_ok=profile[7].ge(0)&amp;profile[7].lt(90)&amp;profile[8].gt(-90)&amp;profile[8].lt(90)
+   79   profile_ok=pd.Series(profile_ok.to_numpy(),index=pc).groupby(level=0).any()
+   80   valid &amp;= code.map(profile_ok).fillna(False)
+   81   cal=pd.DataFrame({&#x27;CODE&#x27;:code.astype(&#x27;int64&#x27;),&#x27;valid&#x27;:valid.astype(bool)})
+   82   assert not cal.CODE.duplicated().any()
+   83   cal[&#x27;day&#x27;]=cal.CODE//100;cal[&#x27;year&#x27;]=2000+cal.CODE//1_000_000
+   84   cal=cal[cal.year.between(2021,2023)]
+   85   assert len(cal)==3*8760
+   86   return cal,{&#x27;sfc&#x27;:identity(s),&#x27;pfl&#x27;:identity(p),&#x27;sfc_sha256&#x27;:hashlib.sha256(s.read_bytes()).hexdigest(),&#x27;pfl_sha256&#x27;:hashlib.sha256(p.read_bytes()).hexdigest()}
+   87  
+   88  # Cached daily
+   89  def cached_daily(path24):
+   90   &quot;&quot;&quot;Retorna somente cache verificado contra os arquivos ainda presentes.&quot;&quot;&quot;
+   91   path24=Path(path24);pol=&#x27;PM10&#x27; if path24.parent.name.upper()==&#x27;PM10&#x27; else &#x27;PM25&#x27;
+   92   meta=OUT/f&#x27;{pol}_medias_diarias_1h_manifesto.json&#x27;;data=OUT/f&#x27;{pol}_medias_diarias_1h.csv.gz&#x27;
+   93   if not meta.exists() or not data.exists():raise ValueError(&#x27;Execute auditar_medias_horarias.py antes de calcular os indicadores diários.&#x27;)
+   94   m=json.loads(meta.read_text(encoding=&#x27;utf8&#x27;))
+   95   for key in [&#x27;hourly_post&#x27;,&#x27;daily_post&#x27;]:
+   96    if identity(m[key][&#x27;path&#x27;])!=m[key]:raise ValueError(&#x27;POST alterado após a conferência horária; refazer auditar_medias_horarias.py.&#x27;)
+   97   if identity(path24)!=m[&#x27;daily_post&#x27;]:raise ValueError(&#x27;Cache não corresponde ao POST de 24 h solicitado.&#x27;)
+   98   for key in [&#x27;sfc&#x27;,&#x27;pfl&#x27;]:
+   99    if identity(m[&#x27;meteorology&#x27;][key][&#x27;path&#x27;])!=m[&#x27;meteorology&#x27;][key]:raise ValueError(&#x27;Meteorologia alterada após a conferência horária.&#x27;)
+  100   if not m[&#x27;comparison_passed&#x27;]:raise ValueError(&#x27;Comparação horária não aprovada.&#x27;)
+  101   d=pd.read_csv(data,usecols=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;,&#x27;daily_from_1h&#x27;])
+  102   d[&#x27;date&#x27;]=pd.to_datetime(d.day.astype(str),format=&#x27;%y%m%d&#x27;);d[&#x27;year&#x27;]=d.date.dt.year
+  103   return d.rename(columns={&#x27;daily_from_1h&#x27;:&#x27;CONC&#x27;})[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;date&#x27;,&#x27;year&#x27;,&#x27;CONC&#x27;]]
+  104  
+  105  # Run
+  106  def run():
+  107   from out_aermod_reader import discover,read_table,annual
+  108   OUT.mkdir(exist_ok=True,parents=True);cal,met=met_calendar();valid=cal.set_index(&#x27;CODE&#x27;).valid
+  109   days=cal.groupby(&#x27;day&#x27;).valid.sum().rename(&#x27;valid_hours&#x27;);report={}
+  110   for pol,folder in [(&#x27;PM10&#x27;,&#x27;PM10&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5&#x27;)]:
+  111    selected,_=discover(config.DIRS[&#x27;post&#x27;]/folder);path=selected[&#x27;ALL&#x27;,&#x27;1H&#x27;];parts=[];nrows=0;invalid_nonzero=0
+  112    print(pol,&#x27;lendo integralmente POST de 1 h&#x27;,flush=True)
+  113    raw24=read_table(selected[&#x27;ALL&#x27;,&#x27;24H&#x27;]);raw24[&#x27;day&#x27;]=raw24.CODE//100
+  114    raw24=raw24[raw24.day.between(210101,231231)][[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;,&#x27;CONC&#x27;]]
+  115    nr=raw24[[&#x27;X&#x27;,&#x27;Y&#x27;]].drop_duplicates().shape[0]
+  116    for chunk in pd.read_csv(path,sep=r&#x27;\s+&#x27;,comment=&#x27;*&#x27;,header=None,usecols=[0,1,2,6,7,8],names=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CONC&#x27;,&#x27;AVE&#x27;,&#x27;GRP&#x27;,&#x27;CODE&#x27;],chunksize=nr*24*14):
+  117     nrows+=len(chunk);assert set(chunk.AVE)=={&#x27;1-HR&#x27;} and set(chunk.GRP)=={&#x27;ALL&#x27;}
+  118     assert np.isfinite(chunk[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CONC&#x27;]]).all().all() and chunk.CONC.ge(0).all()
+  119     assert chunk.groupby(&#x27;CODE&#x27;).size().eq(nr).all() and not chunk.duplicated([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CODE&#x27;]).any()
+  120     chunk[&#x27;day&#x27;]=chunk.CODE//100;chunk=chunk[chunk.day.between(210101,231231)].copy()
+  121     if chunk.empty:continue
+  122     ok=chunk.CODE.map(valid);assert ok.notna().all()
+  123     invalid_nonzero+=int((~ok&amp;chunk.CONC.ne(0)).sum())
+  124     parts.append(chunk.groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;],as_index=False).CONC.agg([&#x27;sum&#x27;,&#x27;count&#x27;]).reset_index())
+  125    assert invalid_nonzero==0,&#x27;Concentração não nula em hora meteorológica inválida; revisar calendário.&#x27;
+  126    sums=pd.concat(parts).groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;],as_index=False)[[&#x27;sum&#x27;,&#x27;count&#x27;]].sum()
+  127    assert sums[&#x27;count&#x27;].eq(24).all() and len(sums)==nr*1095
+  128    sums[&#x27;valid_hours&#x27;]=sums.day.map(days);sums[&#x27;denominator&#x27;]=np.maximum(sums.valid_hours,18)
+  129    sums[&#x27;mean_div24&#x27;]=sums[&#x27;sum&#x27;]/24;sums[&#x27;daily_from_1h&#x27;]=model_daily_mean(sums[&#x27;sum&#x27;],sums.valid_hours)
+  130    check=sums.merge(raw24.rename(columns={&#x27;CONC&#x27;:&#x27;native_24h&#x27;}),on=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;day&#x27;],validate=&#x27;one_to_one&#x27;)
+  131    assert len(check)==len(raw24)==len(sums)
+  132    check[&#x27;difference&#x27;]=check.daily_from_1h-check.native_24h
+  133    passed=np.isclose(check.daily_from_1h,check.native_24h,rtol=2e-7,atol=1e-5)
+  134    assert passed.all(),f&#x27;{pol}: divergências além do arredondamento; não publicar o cache.&#x27;
+  135    data=OUT/f&#x27;{pol}_medias_diarias_1h.csv.gz&#x27;;check.to_csv(data,index=False,compression=&#x27;gzip&#x27;)
+  136    daytable=check.groupby(&#x27;day&#x27;).agg(valid_hours=(&#x27;valid_hours&#x27;,&#x27;first&#x27;),denominator=(&#x27;denominator&#x27;,&#x27;first&#x27;),max_abs_difference=(&#x27;difference&#x27;,lambda x:x.abs().max())).reset_index()
+  137    daytable.to_csv(OUT/f&#x27;{pol}_denominadores_diarios.csv&#x27;,index=False)
+  138    byyear=cal.groupby(&#x27;year&#x27;).valid.sum();a=annual(selected[&#x27;ALL&#x27;,&#x27;ANNUAL&#x27;])
+  139    annualsum=sums.assign(year=2000+sums.day//10000).groupby([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;year&#x27;],as_index=False)[&#x27;sum&#x27;].sum()
+  140    a=a.merge(annualsum,on=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;year&#x27;],validate=&#x27;one_to_one&#x27;);a[&#x27;denominator&#x27;]=a.year.map(byyear);a[&#x27;annual_reconstructed&#x27;]=a[&#x27;sum&#x27;]/a.denominator
+  141    assert np.isclose(a.annual_reconstructed,a.CONC,rtol=2e-7,atol=1e-5).all()
+  142    a.to_csv(OUT/f&#x27;{pol}_auditoria_media_anual_horaria.csv&#x27;,index=False)
+  143    m={&#x27;hourly_post&#x27;:identity(path),&#x27;daily_post&#x27;:identity(selected[&#x27;ALL&#x27;,&#x27;24H&#x27;]),&#x27;meteorology&#x27;:met,&#x27;comparison_passed&#x27;:bool(passed.all()),&#x27;denominators_inferred_from_24h&#x27;:False,&#x27;rows_checked&#x27;:len(check),&#x27;hourly_rows&#x27;:nrows,&#x27;cache&#x27;:str(data)}
+  144    (OUT/f&#x27;{pol}_medias_diarias_1h_manifesto.json&#x27;).write_text(json.dumps(m,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  145    report[pol]={&#x27;max_daily_difference&#x27;:float(check.difference.abs().max()),&#x27;max_annual_difference&#x27;:float((a.annual_reconstructed-a.CONC).abs().max()),&#x27;max_difference_mean_div24&#x27;:float((check.mean_div24-check.native_24h).abs().max()),&#x27;annual_hours&#x27;:{int(y):int(n) for y,n in byyear.items()},&#x27;daily_min_effective_hours&#x27;:int(days.min()),&#x27;daily_max_effective_hours&#x27;:int(days.max()),&#x27;days_with_minimum_denominator_18&#x27;:int(days.lt(18).sum()),&#x27;daily_comparisons&#x27;:len(check),&#x27;hourly_rows_checked&#x27;:nrows,&#x27;invalid_hours_with_nonzero_concentration&#x27;:invalid_nonzero,&#x27;denominators_inferred&#x27;:False,&#x27;interpretation&#x27;:&#x27;Médias reconstruídas dos POST horários; calendário independente SFC/PFL e mínimo de 18 h conforme política de calmarias; comparação com 24 h e anual nativos.&#x27;}
+  146    print(pol,json.dumps(report[pol],ensure_ascii=False),flush=True)
+  147   (OUT/&#x27;auditoria_medias_horarias.json&#x27;).write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  148   return report
+  149  
+  150  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

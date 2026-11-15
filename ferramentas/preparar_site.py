@@ -10,6 +10,9 @@ def run():
     for source,destination in [(ROOT/'_book/html',TARGET),(ROOT/'artigo/_book/html',TARGET/'artigo'),(ROOT/'_visualizador',TARGET/'visualizador')]:
         assert (source/'index.html').is_file(),source
         shutil.copytree(source,destination,dirs_exist_ok=True)
+    shutil.copytree(ROOT/'documentacao/codigos',TARGET/'codigos',dirs_exist_ok=True)
+    code_index=TARGET/'codigos/index.html'
+    code_index.write_text(code_index.read_text(encoding='utf8').replace('../../visualizador/','../visualizador/'),encoding='utf8')
     downloads=TARGET/'downloads';downloads.mkdir(exist_ok=True)
     for source in [ROOT/'_book/word/Dissertacao_Congonhas.docx',ROOT/'artigo/_book/word/Artigo_CMAS_Congonhas.docx']:
         assert source.is_file(),source

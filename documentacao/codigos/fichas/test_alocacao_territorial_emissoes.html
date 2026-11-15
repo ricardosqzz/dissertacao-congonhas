@@ -1,0 +1,99 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/test_alocacao_territorial_emissoes.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/test_alocacao_territorial_emissoes.py</h2>
+<p>Test alocacao territorial emissoes. Conferência/teste. A organização passa por zones, test_area_and_volume, test_line_with_external_fraction, test_overlap_not_duplicated, test_point_boundary_pending, test_line_on_shared_boundary, test_oblique_line_closure_large_coordinates, test_point_visual_polygon_is_not_footprint, test_volume_without_footprint_stays_pending, test_total_of_two_groups_is_high.</p>
+<p><strong>Papel.</strong> Conferência/teste. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\test_alocacao_territorial_emissoes.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>alocacao_territorial_emissoes</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unittest</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>RateioTests()</td><td>28-63</td><td>Chamadas efetivas: gpd.GeoDataFrame, self.zones, partition, self.assertEqual, self.assertAlmostEqual, pd.Series, geometry_for_allocation, self.assertIsNone Retorno: gpd.GeoDataFrame(geometry=geoms, crs=31983).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/test_alocacao_territorial_emissoes.py, linhas 40-46.</p>
+<pre><code>        p,o,a,t=partition(box(0,0,100,10),z,&#x27;área&#x27;)
+        self.assertAlmostEqual(sum(f for _,f,_ in p),.8);self.assertAlmostEqual(a,.2)
+    def test_point_boundary_pending(self):
+        z=self.zones([box(0,0,50,10),box(50,0,100,10)])
+        self.assertEqual(partition(Point(50,5),z,&#x27;ponto&#x27;)[:3],([],0.,1.))
+    def test_line_on_shared_boundary(self):
+        z=self.zones([box(0,0,50,10),box(50,0,100,10)])</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/test_alocacao_territorial_emissoes.py, linhas 51-57.</p>
+<pre><code>        p,o,a,t=partition(LineString([(600000.123,7730001.111),(600099.987,7730087.678)]),z,&#x27;comprimento&#x27;)
+        self.assertAlmostEqual(sum(f for _,f,_ in p)+o+a,1,places=12)
+    def test_point_visual_polygon_is_not_footprint(self):
+        s=pd.Series({&#x27;source_type&#x27;:&#x27;POINT&#x27;,&#x27;geometry&#x27;:box(0,0,10,10)})
+        geom,basis=geometry_for_allocation(s,{&#x27;Num_Coords&#x27;:1,&#x27;X1&#x27;:5,&#x27;Y1&#x27;:5})
+        self.assertEqual(geom,Point(5,5));self.assertEqual(basis,&#x27;ponto&#x27;)
+    def test_volume_without_footprint_stays_pending(self):</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    6  # Uso: teste; entradas sintéticas ou produtos de referência indicados abaixo.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  import unittest
+   22  import pandas as pd
+   23  import geopandas as gpd
+   24  from shapely.geometry import box,Point,LineString
+   25  from alocacao_territorial_emissoes import partition,geometry_for_allocation,emission_class
+   26  
+   27  # Rateiotests
+   28  class RateioTests(unittest.TestCase):
+   29      def zones(self,geoms):return gpd.GeoDataFrame(geometry=geoms,crs=31983)
+   30      def test_area_and_volume(self):
+   31          z=self.zones([box(0,0,25,10),box(25,0,100,10)])
+   32          p,o,a,total=partition(box(0,0,100,10),z,&#x27;área horizontal&#x27;)
+   33          self.assertEqual(sorted(f for _,f,_ in p),[.25,.75]);self.assertEqual(o+a,0)
+   34      def test_line_with_external_fraction(self):
+   35          z=self.zones([box(0,0,25,10),box(25,0,50,10)])
+   36          p,o,a,t=partition(LineString([(0,5),(100,5)]),z,&#x27;comprimento&#x27;)
+   37          self.assertEqual(sorted(f for _,f,_ in p),[.25,.25]);self.assertEqual(o,.5)
+   38      def test_overlap_not_duplicated(self):
+   39          z=self.zones([box(0,0,60,10),box(40,0,100,10)])
+   40          p,o,a,t=partition(box(0,0,100,10),z,&#x27;área&#x27;)
+   41          self.assertAlmostEqual(sum(f for _,f,_ in p),.8);self.assertAlmostEqual(a,.2)
+   42      def test_point_boundary_pending(self):
+   43          z=self.zones([box(0,0,50,10),box(50,0,100,10)])
+   44          self.assertEqual(partition(Point(50,5),z,&#x27;ponto&#x27;)[:3],([],0.,1.))
+   45      def test_line_on_shared_boundary(self):
+   46          z=self.zones([box(0,0,50,10),box(50,0,100,10)])
+   47          p,o,a,t=partition(LineString([(50,0),(50,10)]),z,&#x27;comprimento&#x27;)
+   48          self.assertEqual(p,[]);self.assertAlmostEqual(a,1);self.assertEqual(o,0)
+   49      def test_oblique_line_closure_large_coordinates(self):
+   50          z=self.zones([box(600000,7730000,600032.323,7730100),box(600032.323,7730000,600076.789,7730100)])
+   51          p,o,a,t=partition(LineString([(600000.123,7730001.111),(600099.987,7730087.678)]),z,&#x27;comprimento&#x27;)
+   52          self.assertAlmostEqual(sum(f for _,f,_ in p)+o+a,1,places=12)
+   53      def test_point_visual_polygon_is_not_footprint(self):
+   54          s=pd.Series({&#x27;source_type&#x27;:&#x27;POINT&#x27;,&#x27;geometry&#x27;:box(0,0,10,10)})
+   55          geom,basis=geometry_for_allocation(s,{&#x27;Num_Coords&#x27;:1,&#x27;X1&#x27;:5,&#x27;Y1&#x27;:5})
+   56          self.assertEqual(geom,Point(5,5));self.assertEqual(basis,&#x27;ponto&#x27;)
+   57      def test_volume_without_footprint_stays_pending(self):
+   58          s=pd.Series({&#x27;source_type&#x27;:&#x27;VOLUME&#x27;,&#x27;geometry&#x27;:Point(5,5)})
+   59          self.assertIsNone(geometry_for_allocation(s,{&#x27;Num_Coords&#x27;:1,&#x27;X1&#x27;:5,&#x27;Y1&#x27;:5})[0])
+   60      def test_total_of_two_groups_is_high(self):
+   61          self.assertEqual(emission_class(60+60,5),&#x27;Alta (&gt;100 t/ano)&#x27;)
+   62          self.assertEqual(emission_class(100,5),&#x27;Intermediária&#x27;)
+   63          self.assertEqual(emission_class(5,5),&#x27;Baixa / minoritária&#x27;)
+   64  
+   65  if __name__==&#x27;__main__&#x27;:unittest.main()</code></pre></article></html>

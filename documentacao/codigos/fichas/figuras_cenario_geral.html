@@ -1,0 +1,229 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/figuras_cenario_geral.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/figuras_cenario_geral.py</h2>
+<p>Mapas pareados do cenário sem condicionamento pelo vento.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\figuras_cenario_geral.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>figuras_analises_direcionais</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>html</td><td>Escape e construção de páginas HTML de documentação/visualização.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.pyplot</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>paleta_concentracoes</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>visualizar_abc_direcional</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gpd.read_file, linha 77.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gpd.read_file, linha 77.</li>
+<li>E:/projeto/output/11_integracao/apendices/resumo_figuras.json — chamada .read_text, linha 79.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/{pol}_{period}_receptores.csv — chamada pd.read_csv, linha 83.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada pd.read_csv, linha 88.</li>
+<li>E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv — chamada pd.read_csv, linha 89.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv — chamada pd.read_csv, linha 90.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/envelope_{pol}_{period}.csv — chamada pd.read_csv, linha 111.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/correlogramas.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/limiares_cinco_faixas.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/comparacao_agrupamentos.csv — chamada pd.read_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/resumo.json — chamada .read_text, linha 156.</li>
+<li>{p} — chamada p.read_text, linha 166.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/figuras/{stem}.{ext} — chamada fig.savefig, linha 126.</li>
+<li>{fig} — chamada save, linha 155.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/index.html — chamada .write_text, linha 163.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/figuras/legendas.json — chamada .write_text, linha 164.</li>
+<li>{p} — chamada p.write_text, linha 168.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>cells: geometry, receptor_id.</li>
+<li>v: name.</li>
+<li>eligible: n_design_years, pollutant.</li>
+<li>f: X, Y, concentration, emission_density, quintile.</li>
+<li>layers: 1h, PM10.</li>
+<li>corr: period, pollutant.</li>
+<li>comparison: method.</li>
+<li>limits: basis, period, pollutant.</li>
+<li>r: five_emission_bands_identifiable, global_moran, lisa_counts, management_counts, n_receptors, period, pollutant.</li>
+<li>summary: cases.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>g: Q, best_cluster_label, dominant_name, ward4_label.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>run(concentrations_only=False)</td><td>75-171</td><td>lê dados; grava produtos; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/figuras_cenario_geral.py, linhas 111-117.</p>
+<pre><code>            f=pd.read_csv(DATA/f&#x27;envelope_{pol}_{period}.csv&#x27;);v=table[pol,period].concentration;positive=v[v&gt;0]
+            low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit)
+            ticks=np.unique(np.r_[low,10.**np.arange(np.ceil(np.log10(low)),np.floor(np.log10(cap))+1),cap])
+            geo=gpd.GeoSeries(gpd.points_from_xy(f.X,f.Y),crs=z.crs).to_crs(4674)
+            surfaces.append(dict(x=geo.x.to_numpy(),y=geo.y.to_numpy(),values=f.concentration.to_numpy(),limits=[low,cap],norm=LogNorm(low,cap),cmap=concentration_cmap(),ticks=ticks,actual_max=float(v.max()),max_in_label=True))
+        stem=f&#x27;Geral_{period}_Concentracoes&#x27;
+        cart.render(z,muni,[&#x27;concentration&#x27;]*2,stem,[PN[p] for p in POLLS],&#x27;&#x27;,extent,surfaces=surfaces,zone_layer=z,filename=stem,figure_title=LABEL[period]+&#x27; · meteorologia completa&#x27;)</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gpd.read_file.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gpd.read_file.
+    6  # Entrada: E:/projeto/output/11_integracao/apendices/resumo_figuras.json | .read_text.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/{pol}_{period}_receptores.csv | pd.read_csv.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv | pd.read_csv.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/envelope_{pol}_{period}.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/correlogramas.csv | pd.read_csv.
+   13  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/limiares_cinco_faixas.csv | pd.read_csv.
+   14  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/comparacao_agrupamentos.csv | pd.read_csv.
+   15  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/resumo.json | .read_text.
+   16  # Entrada: {p} | p.read_text.
+   17  # Campos/chaves em cells: geometry, receptor_id.
+   18  # Campos/chaves em v: name.
+   19  # Campos/chaves em eligible: n_design_years, pollutant.
+   20  # Campos/chaves em f: X, Y, concentration, emission_density, quintile.
+   21  # Campos/chaves em layers: 1h, PM10.
+   22  # Campos/chaves em corr: period, pollutant.
+   23  # Campos/chaves em comparison: method.
+   24  # Campos/chaves em limits: basis, period, pollutant.
+   25  # Campos/chaves em r: five_emission_bands_identifiable, global_moran, lisa_counts, management_counts, n_receptors, period, pollutant.
+   26  # Campos/chaves em summary: cases.
+   27  # Saída: E:/projeto/output/16_revisao_pos_banca/cenario_geral/figuras/{stem}.{ext} | fig.savefig.
+   28  # Saída: {fig} | save.
+   29  # Saída: E:/projeto/output/16_revisao_pos_banca/cenario_geral/index.html | .write_text.
+   30  # Saída: E:/projeto/output/16_revisao_pos_banca/cenario_geral/figuras/legendas.json | .write_text.
+   31  # Saída: {p} | p.write_text.
+   32  # Campos/chaves gerados em g: Q, best_cluster_label, dominant_name, ward4_label.
+   33  # receptor_id: identificador do receptor.
+   34  # concentration: concentração do período em µg/m³.
+   35  # emission_density: densidade de emissão em t/ano/km².
+   36  # X: coordenada leste em metros.
+   37  # Y: coordenada norte em metros.
+   38  # Novas variáveis: config/analise_extensivel.json; definir origem, campo, agregação, transformação e peso.
+   39  # CÓDIGO DO PROCESSAMENTO
+   40  
+   41  &quot;&quot;&quot;Mapas pareados do cenário sem condicionamento pelo vento.&quot;&quot;&quot;
+   42  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   43  import sys as _cp_sys
+   44  from pathlib import Path as _cp_Path
+   45  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   46  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   47      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   48      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   49          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   50          break
+   51  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   52  # FIM DOS CAMINHOS PORTÁTEIS
+   53  
+   54  import json,html
+   55  import numpy as np
+   56  import pandas as pd
+   57  import geopandas as gpd
+   58  import matplotlib
+   59  matplotlib.use(&#x27;Agg&#x27;)
+   60  import matplotlib.pyplot as plt
+   61  from matplotlib.colors import LogNorm
+   62  from paleta_concentracoes import concentration_cmap
+   63  import config
+   64  import cartografia_apendices as cart
+   65  from groups import GROUPS
+   66  from figuras_analises_direcionais import QUINT,LISA,MATRIX,ROLES,NETWORK,CLUSTERS
+   67  
+   68  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   69  DATA=ROOT/&#x27;cenario_geral&#x27;;OUT=DATA/&#x27;figuras&#x27;
+   70  PERIODS=[&#x27;1h&#x27;,&#x27;24h&#x27;,&#x27;anual&#x27;]
+   71  LABEL={&#x27;1h&#x27;:&#x27;Máximos de 1 h&#x27;,&#x27;24h&#x27;:&#x27;Máximos de 24 h&#x27;,&#x27;anual&#x27;:&#x27;Média anual do triênio&#x27;}
+   72  POLLS=[&#x27;PM10&#x27;,&#x27;PM25&#x27;];PN={&#x27;PM10&#x27;:&#x27;MP₁₀&#x27;,&#x27;PM25&#x27;:&#x27;MP₂,₅&#x27;}
+   73  
+   74  # Run
+   75  def run(concentrations_only=False):
+   76      OUT.mkdir(parents=True,exist_ok=True);cart.OUT=OUT
+   77      z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);cells=gpd.read_file(ROOT/&#x27;celulas_analise.gpkg&#x27;)
+   78      muni=gpd.GeoDataFrame(geometry=[z.geometry.union_all()],crs=z.crs)
+   79      extent=json.loads((config.BASE/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+   80      catalog={};table={};layers={}
+   81      for period in PERIODS:
+   82          for pol in POLLS:
+   83              f=pd.read_csv(DATA/f&#x27;{pol}_{period}_receptores.csv&#x27;);table[pol,period]=f
+   84              g=cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(f,on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+   85              g[&#x27;Q&#x27;]=g.quintile.map(lambda v:&#x27;Q&#x27;+str(v));g[&#x27;dominant_name&#x27;]=g.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})
+   86              g[&#x27;best_cluster_label&#x27;]=g.best_cluster.map(lambda v:&#x27;Grupo &#x27;+str(v));g[&#x27;ward4_label&#x27;]=g.ward4.map(lambda v:&#x27;Grupo &#x27;+str(v))
+   87              layers[pol,period]=g
+   88      present=pd.read_csv(ROOT/&#x27;perfis_grupos/perfis_normalizados_grupos_estacoes.csv&#x27;)[[&#x27;pollutant&#x27;,&#x27;station_id&#x27;]].drop_duplicates()
+   89      st=pd.read_csv(config.BASE/&#x27;output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv&#x27;).merge(present,on=[&#x27;pollutant&#x27;,&#x27;station_id&#x27;],validate=&#x27;one_to_one&#x27;)
+   90      eligible=pd.read_csv(config.BASE/&#x27;output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv&#x27;)
+   91      stations=[]
+   92      for pol in POLLS:
+   93          ss=st[st.pollutant.eq(pol)&amp;st.station_id.isin(eligible[eligible.pollutant.eq(pol)&amp;eligible.n_design_years.eq(3)].station_id)]
+   94          stations.append(gpd.GeoDataFrame(ss,geometry=gpd.points_from_xy(ss.X,ss.Y),crs=cells.crs))
+   95      specs=[(&#x27;Quintis&#x27;,&#x27;Q&#x27;,QUINT,&#x27;Cinco classes relativas nos receptores municipais, delimitadas por P20, P40, P60 e P80 de cada poluente e duração. Não expressam atendimento aos padrões de qualidade do ar.&#x27;),
+   96             (&#x27;Moran_local&#x27;,&#x27;lisa&#x27;,LISA,&#x27;Moran local de log(1+C), oito vizinhos, 999 permutações condicionais bilaterais e BH nominal de 5% por campo.&#x27;),
+   97             (&#x27;Moran_bivariado&#x27;,&#x27;bivariate&#x27;,LISA,&#x27;Moran local bivariado entre concentração e densidade anual de emissão na vizinhança. Não representa trajetórias de transporte.&#x27;),
+   98             (&#x27;Emissao_concentracao&#x27;,&#x27;matrix&#x27;,MATRIX,&#x27;Alta C acima de P80. Alta E acima do corte associativo para esse alvo. O corte não constitui limite permissível de emissão.&#x27;),
+   99             (&#x27;Regioes_gestao&#x27;,&#x27;management&#x27;,ROLES,&#x27;Prioridade receptora acima de P80. Controle de fontes identifica alta emissão fora dessa faixa. Menor impacto relativo combina C até P40 e E até o corte associado a P40.&#x27;),
+  100             (&#x27;Cobertura_prioridades&#x27;,&#x27;network_priority&#x27;,NETWORK,&#x27;Área das regiões prioritárias dentro dos entornos de 4 km das estações com dados elegíveis no triênio. A aproximação geométrica não comprova representatividade uniforme.&#x27;),
+  101             (&#x27;Grupo_predominante&#x27;,&#x27;dominant_name&#x27;,cart.COLORS,&#x27;Maior contribuição entre os grupos exclusivos. Nos máximos, as parcelas são consultadas no evento de ALL; no anual, usam as médias nativas dos três anos. AEX e subgrupos urbanos não são somados novamente.&#x27;)]
+  102      for period in PERIODS:
+  103          pair=[layers[p,period] for p in POLLS]
+  104          for name,field,palette,caption in ([] if concentrations_only else specs):
+  105              stem=f&#x27;Geral_{period}_{name}&#x27;;categories=list(palette) if name!=&#x27;Grupo_predominante&#x27; else sorted(set(pd.concat(pair).dominant_name))
+  106              cart.render(z,muni,[field]*2,stem,[PN[p] for p in POLLS],&#x27;&#x27;,extent,panel_layers=pair,zone_layer=z,palette=palette,legend_categories=categories,filename=stem,figure_title=LABEL[period]+&#x27; · &#x27;+name.replace(&#x27;_&#x27;,&#x27; &#x27;),**({&#x27;station_overlay&#x27;:stations} if name==&#x27;Cobertura_prioridades&#x27; else {}))
+  107              catalog[stem]=caption
+  108              print(&#x27;Mapa geral&#x27;,stem,flush=True)
+  109          surfaces=[]
+  110          for pol in POLLS:
+  111              f=pd.read_csv(DATA/f&#x27;envelope_{pol}_{period}.csv&#x27;);v=table[pol,period].concentration;positive=v[v&gt;0]
+  112              low=max(10.**np.floor(np.log10(positive.quantile(.02))),.01);cap=float(positive.quantile(.99));unit=10.**np.floor(np.log10(cap));cap=max(10*low,np.floor(cap/unit)*unit)
+  113              ticks=np.unique(np.r_[low,10.**np.arange(np.ceil(np.log10(low)),np.floor(np.log10(cap))+1),cap])
+  114              geo=gpd.GeoSeries(gpd.points_from_xy(f.X,f.Y),crs=z.crs).to_crs(4674)
+  115              surfaces.append(dict(x=geo.x.to_numpy(),y=geo.y.to_numpy(),values=f.concentration.to_numpy(),limits=[low,cap],norm=LogNorm(low,cap),cmap=concentration_cmap(),ticks=ticks,actual_max=float(v.max()),max_in_label=True))
+  116          stem=f&#x27;Geral_{period}_Concentracoes&#x27;
+  117          cart.render(z,muni,[&#x27;concentration&#x27;]*2,stem,[PN[p] for p in POLLS],&#x27;&#x27;,extent,surfaces=surfaces,zone_layer=z,filename=stem,figure_title=LABEL[period]+&#x27; · meteorologia completa&#x27;)
+  118          catalog[stem]=&#x27;Superfície visual interpolada com apoio dos 1497 receptores regionais e recortada ao município. Cores e barra logarítmica independentes por poluente; ponta indica valores superiores ao último corte. Testes usam os 1008 receptores municipais, sem interpolação.&#x27;
+  119      if concentrations_only:return
+  120      for field in [&#x27;best_cluster_label&#x27;,&#x27;ward4_label&#x27;]:
+  121          g=layers[&#x27;PM10&#x27;,&#x27;1h&#x27;];stem=&#x27;Geral_Conjunto_&#x27;+field;categories=sorted(set(g[field]))
+  122          cart.render(z,muni,[field],stem,[&#x27;Agrupamento conjunto&#x27;],&#x27;&#x27;,extent,panel_layers=[g],zone_layer=z,palette=CLUSTERS,legend_categories=categories,filename=stem,figure_title=&#x27;Perfis conjuntos · meteorologia completa&#x27;)
+  123          catalog[stem]=&#x27;Agrupamento conjunto com seis variáveis log1p padronizadas: máximos de 1 h, máximos de 24 h e média anual trienal de MP10 e MP2,5. Melhor silhueta entre Ward/k-means, K=2 a 6, e solução Ward de quatro grupos como comparação.&#x27;
+  124      corr=pd.read_csv(DATA/&#x27;correlogramas.csv&#x27;);limits=pd.read_csv(DATA/&#x27;limiares_cinco_faixas.csv&#x27;);comparison=pd.read_csv(DATA/&#x27;comparacao_agrupamentos.csv&#x27;)
+  125      def save(fig,stem,caption):
+  126          for ext in [&#x27;svg&#x27;,&#x27;pdf&#x27;,&#x27;png&#x27;]:fig.savefig(OUT/f&#x27;{stem}.{ext}&#x27;,dpi=450,bbox_inches=&#x27;tight&#x27;,facecolor=&#x27;white&#x27;)
+  127          plt.close(fig);catalog[stem]=caption
+  128      fig,axes=plt.subplots(1,3,figsize=(12,3.6),layout=&#x27;constrained&#x27;)
+  129      for ax,period in zip(axes,PERIODS):
+  130          for pol,color in zip(POLLS,[&#x27;#176b88&#x27;,&#x27;#bd5b4b&#x27;]):
+  131              s=corr[corr.period.eq(period)&amp;corr.pollutant.eq(pol)];ax.plot((s.min_distance_m+s.max_distance_m)/2000,s.I,&#x27;o-&#x27;,color=color,label=PN[pol],ms=3)
+  132          ax.axhline(0,color=&#x27;#777&#x27;,lw=.6,ls=&#x27;:&#x27;);ax.set(title=LABEL[period],xlabel=&#x27;Distância média da banda (km)&#x27;,ylabel=&#x27;Moran I&#x27;)
+  133      axes[0].legend(frameon=False)
+  134      save(fig,&#x27;Geral_Correlogramas&#x27;,&#x27;Moran global por bandas de 750 m até 7,5 km, 199 permutações. Mostra a escala da associação espacial, sem definir sozinho o alcance de uma fonte.&#x27;)
+  135      fig,ax=plt.subplots(figsize=(6.5,3.6),layout=&#x27;constrained&#x27;)
+  136      for method,color in [(&#x27;ward&#x27;,&#x27;#176b88&#x27;),(&#x27;kmeans&#x27;,&#x27;#bd5b4b&#x27;)]:
+  137          s=comparison[comparison.method.eq(method)];ax.plot(s.k,s.silhouette,&#x27;o-&#x27;,label=method,color=color)
+  138      ax.set(xlabel=&#x27;Número de grupos&#x27;,ylabel=&#x27;Silhueta média&#x27;,xticks=range(2,7),title=&#x27;Perfis conjuntos dos dois poluentes&#x27;);ax.legend(frameon=False)
+  139      save(fig,&#x27;Geral_Comparacao_agrupamentos&#x27;,&#x27;Separação interna dos perfis com seis indicadores. A silhueta não mede concordância observado–modelado.&#x27;)
+  140      for period in PERIODS:
+  141          fig,axes=plt.subplots(1,2,figsize=(9,3.7),layout=&#x27;constrained&#x27;)
+  142          for ax,pol in zip(axes,POLLS):
+  143              s=limits[limits.period.eq(period)&amp;limits.pollutant.eq(pol)&amp;limits.basis.eq(&#x27;density_tpy_km2&#x27;)];f=table[pol,period]
+  144              ax.scatter(f.emission_density,f.concentration,s=6,c=f.quintile.map(lambda v:QUINT[&#x27;Q&#x27;+str(v)]),alpha=.65,linewidths=0)
+  145              for r in s.drop_duplicates(&#x27;percentile_target&#x27;).itertuples():
+  146                  if np.isfinite(r.cut_all_data):ax.axvline(r.cut_all_data,color=&#x27;#405b64&#x27;,ls=&#x27;--&#x27;,lw=.6)
+  147                  ax.axhline(r.concentration_cut,color=&#x27;#405b64&#x27;,ls=&#x27;:&#x27;,lw=.5)
+  148              ax.set_xscale(&#x27;symlog&#x27;,linthresh=.001);ax.set_yscale(&#x27;log&#x27;);ax.set(xlim=(0,None),xlabel=&#x27;Emissão anual (t/ano/km²)&#x27;,ylabel=&#x27;Concentração (µg/m³)&#x27;,title=PN[pol])
+  149          save(fig,f&#x27;Geral_{period}_Limiares&#x27;,&#x27;Associação entre densidade anual inventariada e o indicador de concentração. Quatro alvos de concentração e seus cortes de emissão, sujeitos à validação espacial. Se não forem ordenados e distintos, não se afirmam cinco faixas associativas de emissão.&#x27;)
+  150          fig,axes=plt.subplots(1,2,figsize=(8,3.6),layout=&#x27;constrained&#x27;)
+  151          for ax,pol in zip(axes,POLLS):
+  152              s=limits[limits.period.eq(period)&amp;limits.pollutant.eq(pol)&amp;limits.basis.eq(&#x27;density_tpy_km2&#x27;)]
+  153              ax.boxplot([s[s.percentile_target.eq(p)].cut_train.dropna() for p in [20,40,60,80]],tick_labels=[&#x27;P20&#x27;,&#x27;P40&#x27;,&#x27;P60&#x27;,&#x27;P80&#x27;],patch_artist=True,boxprops=dict(facecolor=&#x27;#94c7c5&#x27;),medianprops=dict(color=&#x27;#194f68&#x27;))
+  154              ax.set_yscale(&#x27;symlog&#x27;,linthresh=.01);ax.set(title=PN[pol],ylabel=&#x27;Corte (t/ano/km²)&#x27;)
+  155          save(fig,f&#x27;Geral_{period}_Estabilidade_limiares&#x27;,&#x27;Variação dos cortes nos dez ajustes em blocos espaciais de 2 e 4 km. Não são intervalos de confiança de emissões autorizáveis.&#x27;)
+  156      summary=json.loads((DATA/&#x27;resumo.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+  157      counts=pd.DataFrame([dict(Poluente=PN[r[&#x27;pollutant&#x27;]],Indicador=LABEL[r[&#x27;period&#x27;]],Receptores=r[&#x27;n_receptors&#x27;],Zonas=311,HH=r[&#x27;lisa_counts&#x27;].get(&#x27;Alto–alto&#x27;,0),Prioritarios=r[&#x27;management_counts&#x27;].get(&#x27;Prioridade receptora&#x27;,0),Moran_I=round(r[&#x27;global_moran&#x27;][&#x27;I&#x27;],3),Cinco_faixas_E=&#x27;Sim&#x27; if r[&#x27;five_emission_bands_identifiable&#x27;] else &#x27;Não&#x27;) for r in summary[&#x27;cases&#x27;]])
+  158      sections=[]
+  159      for name,caption in catalog.items():
+  160          sections.append(f&#x27;&lt;section id=&quot;{name}&quot;&gt;&lt;h2&gt;{html.escape(name.replace(&quot;_&quot;,&quot; &quot;))}&lt;/h2&gt;&lt;a href=&quot;figuras/{name}.svg&quot;&gt;&lt;img loading=&quot;lazy&quot; src=&quot;figuras/{name}.svg&quot;&gt;&lt;/a&gt;&lt;p&gt;{html.escape(caption)}&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;figuras/{name}.pdf&quot;&gt;PDF vetorial&lt;/a&gt; · &lt;a href=&quot;figuras/{name}.png&quot;&gt;PNG&lt;/a&gt;&lt;/p&gt;&lt;/section&gt;&#x27;)
+  161      intro=&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Cenário geral · meteorologia completa&lt;/title&gt;&lt;style&gt;body{font:16px/1.6 Arial;max-width:1120px;margin:30px auto;padding:0 22px;color:#183d4c}img{width:100%;height:auto}section{margin-top:40px;border-top:1px solid #dbe3e5}a{color:#176b88}table{border-collapse:collapse;font-size:13px}td,th{padding:7px;border-bottom:1px solid #ddd}&lt;/style&gt;&lt;h1&gt;Cenário geral · meteorologia completa&lt;/h1&gt;&lt;p&gt;MP10 e MP2,5 em 2021-2023, sem recorte por direção do vento, hora do dia ou estação do ano. Os máximos de 1 h e 24 h são envelopes por receptor e podem ocorrer em datas diferentes. A análise anual usa a média das três médias anuais nativas, preservando a avaliação de longa duração.&lt;/p&gt;&lt;p&gt;O cenário diário inclui todos os dias válidos, inclusive aqueles sem direção persistente. Mantêm-se os filtros meteorológicos, o mínimo de 18 horas por dia e a exclusão W732. O dia técnico de 2024 não participa. As médias de 24 h foram reconstruídas de 1 h e conferidas contra o POST nativo.&lt;/p&gt;&lt;p&gt;As classes relativas, clusters e limiares associativos são instrumentos exploratórios. Não substituem a avaliação normativa, não corrigem o viés do modelo e não definem emissões permissíveis. Foram preservados os dados de entrada e a simulação original.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;../vento/analises_espaciais/index.html&quot;&gt;Cenários por direção&lt;/a&gt; · &lt;a href=&quot;../figuras/index.html&quot;&gt;Índice geral&lt;/a&gt; · &lt;a href=&quot;abc_por_regiao.html&quot;&gt;ABC de cada região&lt;/a&gt; · &lt;a href=&quot;zoneamento_geral.csv&quot;&gt;311 zonas&lt;/a&gt; · &lt;a href=&quot;regioes_gerais.csv&quot;&gt;Regiões e cobertura&lt;/a&gt; · &lt;a href=&quot;limiares_cinco_faixas.csv&quot;&gt;Limiares e validação&lt;/a&gt; · &lt;a href=&quot;sensibilidade_espacial.csv&quot;&gt;Estabilidade&lt;/a&gt; · &lt;a href=&quot;LEIA_ME_metodologia.md&quot;&gt;Métodos&lt;/a&gt; · &lt;a href=&quot;auditoria_final.json&quot;&gt;Auditoria&lt;/a&gt;&lt;/p&gt;&#x27;&#x27;&#x27;
+  162      navigation=&#x27;&lt;details&gt;&lt;summary&gt;Localizar uma análise&lt;/summary&gt;&lt;ul&gt;&#x27;+&#x27;&#x27;.join(f&#x27;&lt;li&gt;&lt;a href=&quot;#{k}&quot;&gt;{html.escape(k.replace(&quot;_&quot;,&quot; &quot;))}&lt;/a&gt;&lt;/li&gt;&#x27; for k in catalog)+&#x27;&lt;/ul&gt;&lt;/details&gt;&#x27;
+  163      (DATA/&#x27;index.html&#x27;).write_text(intro+counts.to_html(index=False,border=0)+navigation+&#x27;&#x27;.join(sections)+&#x27;&lt;/html&gt;&#x27;,encoding=&#x27;utf8&#x27;)
+  164      (OUT/&#x27;legendas.json&#x27;).write_text(json.dumps(catalog,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  165      for p,link in [(ROOT/&#x27;figuras/index.html&#x27;,&#x27;../cenario_geral/index.html&#x27;),(ROOT/&#x27;vento/analises_espaciais/index.html&#x27;,&#x27;../../cenario_geral/index.html&#x27;)]:
+  166          text=p.read_text(encoding=&#x27;utf8&#x27;);entry=f&#x27;&lt;p&gt;&lt;a href=&quot;{link}&quot;&gt;Cenário geral com meteorologia completa · 1 h, 24 h e anual&lt;/a&gt;&lt;/p&gt;&#x27;
+  167          if entry not in text:text=text.replace(&#x27;&lt;/h1&gt;&#x27;,&#x27;&lt;/h1&gt;&#x27;+entry,1)
+  168          p.write_text(text,encoding=&#x27;utf8&#x27;)
+  169      from visualizar_abc_direcional import run as abc_view
+  170      abc_view(DATA)
+  171      print(&#x27;Galeria do cenário geral concluída:&#x27;,len(catalog),&#x27;figuras&#x27;,flush=True)
+  172  
+  173  if __name__==&#x27;__main__&#x27;:
+  174      import sys
+  175      run(concentrations_only=&#x27;--concentrations-only&#x27; in sys.argv)</code></pre></article></html>

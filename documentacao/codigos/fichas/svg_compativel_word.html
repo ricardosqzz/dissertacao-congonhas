@@ -1,0 +1,116 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/svg_compativel_word.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/svg_compativel_word.py</h2>
+<p>Mantém as espessuras finas ao converter SVG para PDF no Word.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\svg_compativel_word.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>copy</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>xml.etree</td><td>Leitura/edição de XML de projetos e documentos.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/temp/qa_seminarios/svg_word/manifesto.json — chamada manifest.read_text, linha 73.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/figuras_seminario_manifesto.json — chamada .read_text, linha 74.</li>
+<li>Path(item[&#x27;arquivo&#x27;]).with_suffix(&#x27;.svg&#x27;) — chamada source.read_bytes, linha 77.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/temp/qa_seminarios/svg_word/manifesto.json — chamada manifest.write_text, linha 81.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>style: stroke-opacity.</li>
+<li>item: arquivo.</li>
+<li>previous: output.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>style: stroke.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>polygon_path(poly)</td><td>35-37</td><td>Chamadas efetivas: .join, ring Retorno: &#x27; &#x27;.join((ring(v.coords) for v in [poly.exterior, *poly.interiors])), &#x27;M &#x27; + &#x27; L &#x27;.join((f&#x27;{x:.7f} {y:.7f}&#x27; for x, y in coords)) + &#x27; z&#x27;.</td></tr><tr><td>convert(source, target)</td><td>40-68</td><td>Chamadas efetivas: E.parse, d.getroot, list, root.iter, dict, style.get, float, p.get Retorno: count.</td></tr><tr><td>run()</td><td>71-82</td><td>lê dados; grava produtos Retorno: records.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/svg_compativel_word.py, linhas 35-43.</p>
+<pre><code>def polygon_path(poly):
+ def ring(coords):return &#x27;M &#x27;+&#x27; L &#x27;.join(f&#x27;{x:.7f} {y:.7f}&#x27; for x,y in coords)+&#x27; z&#x27;
+ return &#x27; &#x27;.join(ring(v.coords) for v in [poly.exterior,*poly.interiors])
+
+# Convert
+def convert(source,target):
+ d=E.parse(source);root=d.getroot();parents={x:p for p in root.iter() for x in p};count=0
+ for p in list(root.iter()):
+  if p.tag.rsplit(&#x27;}&#x27;,1)[-1]!=&#x27;path&#x27;:continue</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/temp/qa_seminarios/svg_word/manifesto.json | manifest.read_text.
+    5  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/figuras_seminario_manifesto.json | .read_text.
+    6  # Entrada: Path(item[&#x27;arquivo&#x27;]).with_suffix(&#x27;.svg&#x27;) | source.read_bytes.
+    7  # Campos/chaves em style: stroke-opacity.
+    8  # Campos/chaves em item: arquivo.
+    9  # Campos/chaves em previous: output.
+   10  # Saída: E:/projeto/temp/qa_seminarios/svg_word/manifesto.json | manifest.write_text.
+   11  # Campos/chaves gerados em style: stroke.
+   12  # CÓDIGO DO PROCESSAMENTO
+   13  
+   14  &quot;&quot;&quot;Mantém as espessuras finas ao converter SVG para PDF no Word.&quot;&quot;&quot;
+   15  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   16  import sys as _cp_sys
+   17  from pathlib import Path as _cp_Path
+   18  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   19  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   20      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   21      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   22          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   23          break
+   24  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   25  # FIM DOS CAMINHOS PORTÁTEIS
+   26  
+   27  from pathlib import Path
+   28  from xml.etree import ElementTree as E
+   29  from copy import deepcopy
+   30  from shapely.geometry import LineString
+   31  import json,re,hashlib
+   32  R=Path(_cp_texto(&#x27;&#x27;, &#x27;native&#x27;));OUT=R/&#x27;temp/qa_seminarios/svg_word&#x27;;VERSION=3
+   33  
+   34  # Polygon path
+   35  def polygon_path(poly):
+   36   def ring(coords):return &#x27;M &#x27;+&#x27; L &#x27;.join(f&#x27;{x:.7f} {y:.7f}&#x27; for x,y in coords)+&#x27; z&#x27;
+   37   return &#x27; &#x27;.join(ring(v.coords) for v in [poly.exterior,*poly.interiors])
+   38  
+   39  # Convert
+   40  def convert(source,target):
+   41   d=E.parse(source);root=d.getroot();parents={x:p for p in root.iter() for x in p};count=0
+   42   for p in list(root.iter()):
+   43    if p.tag.rsplit(&#x27;}&#x27;,1)[-1]!=&#x27;path&#x27;:continue
+   44    style=dict(v.strip().split(&#x27;:&#x27;,1) for v in (p.get(&#x27;style&#x27;) or &#x27;&#x27;).split(&#x27;;&#x27;) if &#x27;:&#x27; in v);style={k:v.strip() for k,v in style.items()}
+   45    color=style.get(&#x27;stroke&#x27;);width=float(style.get(&#x27;stroke-width&#x27;,&#x27;1&#x27;))
+   46    if not color or color==&#x27;none&#x27; or not (width&lt;=.30 or color in [&#x27;#717d84&#x27;,&#x27;#b28d4f&#x27;,&#x27;#a54d40&#x27;]):continue
+   47    path=p.get(&#x27;d&#x27;,&#x27;&#x27;);commands=re.findall(&#x27;[A-Za-z]&#x27;,re.sub(r&#x27;[eE][+-]?\d+&#x27;,&#x27;&#x27;,path))
+   48    if set(commands)-set(&#x27;MLZz&#x27;):continue
+   49    paths=[]
+   50    for part in re.split(&#x27;[M]&#x27;,path):
+   51     if not part.strip():continue
+   52     closed=&#x27;z&#x27; in part.lower();values=[float(x) for x in re.findall(r&#x27;[-+]?(?:\d*\.\d+|\d+\.?\d*)(?:[eE][-+]?\d+)?&#x27;,part)]
+   53     if len(values)%2:raise ValueError(&#x27;Coordenadas SVG inválidas&#x27;)
+   54     xy=list(zip(values[::2],values[1::2]))
+   55     if len(xy)&lt;2:continue
+   56     if closed and xy[0]!=xy[-1]:xy.append(xy[0])
+   57     poly=LineString(xy).buffer(width/2,cap_style=&#x27;flat&#x27;,join_style=&#x27;round&#x27;,quad_segs=3)
+   58     for q in getattr(poly,&#x27;geoms&#x27;,[poly]):
+   59      if not q.is_empty:paths.append(polygon_path(q))
+   60    if not paths:continue
+   61    outline=deepcopy(p);outline.attrib.pop(&#x27;id&#x27;,None);outline.set(&#x27;d&#x27;,&#x27; &#x27;.join(paths));outline.set(&#x27;style&#x27;,&#x27;fill: &#x27;+color+&#x27;; stroke: none&#x27;+(&#x27;; fill-opacity: &#x27;+style[&#x27;stroke-opacity&#x27;] if &#x27;stroke-opacity&#x27; in style else &#x27;&#x27;))
+   62    parent=parents[p];index=list(parent).index(p)
+   63    if style.get(&#x27;fill&#x27;,&#x27;black&#x27;)!=&#x27;none&#x27;:
+   64     style[&#x27;stroke&#x27;]=&#x27;none&#x27;;p.set(&#x27;style&#x27;,&#x27;; &#x27;.join(k+&#x27;: &#x27;+v for k,v in style.items()));parent.insert(index+1,outline)
+   65    else:parent.remove(p);parent.insert(index,outline)
+   66    count+=1
+   67   if count:d.write(target,xml_declaration=True,encoding=&#x27;utf-8&#x27;)
+   68   return count
+   69  
+   70  # Run
+   71  def run():
+   72   for prefix,uri in [(&#x27;&#x27;, &#x27;http://www.w3.org/2000/svg&#x27;),(&#x27;xlink&#x27;,&#x27;http://www.w3.org/1999/xlink&#x27;),(&#x27;dc&#x27;,&#x27;http://purl.org/dc/elements/1.1/&#x27;),(&#x27;cc&#x27;,&#x27;http://creativecommons.org/ns#&#x27;),(&#x27;rdf&#x27;,&#x27;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#x27;)]:E.register_namespace(prefix,uri)
+   73   OUT.mkdir(parents=True,exist_ok=True);manifest=OUT/&#x27;manifesto.json&#x27;;old=json.loads(manifest.read_text(encoding=&#x27;utf8&#x27;)) if manifest.exists() else {};records={}
+   74   source_manifest=json.loads((R/&#x27;output/11_integracao/nova_modelagem/figuras_seminario_manifesto.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+   75   for item in source_manifest:
+   76    if item[&#x27;arquivo&#x27;]==&#x27;ORIGINAL&#x27;:continue
+   77    source=Path(item[&#x27;arquivo&#x27;]).with_suffix(&#x27;.svg&#x27;);sha=hashlib.sha256(source.read_bytes()).hexdigest();target=OUT/(source.stem+&#x27;_Word.svg&#x27;);previous=old.get(str(source),{})
+   78    if previous.get(&#x27;version&#x27;)==VERSION and previous.get(&#x27;sha256&#x27;)==sha and (not previous.get(&#x27;converted&#x27;) or Path(previous[&#x27;output&#x27;]).exists()):records[str(source)]=previous;continue
+   79    count=convert(source,target);records[str(source)]={&#x27;source&#x27;:str(source),&#x27;sha256&#x27;:sha,&#x27;output&#x27;:str(target) if count else str(source),&#x27;converted&#x27;:count,&#x27;version&#x27;:VERSION}
+   80    print(source.name,count,&#x27;traços finos compatibilizados&#x27;,flush=True)
+   81   manifest.write_text(json.dumps(records,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+   82   return records
+   83  
+   84  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

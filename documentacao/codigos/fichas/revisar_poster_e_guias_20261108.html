@@ -1,0 +1,226 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/revisar_poster_e_guias_20261108.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/revisar_poster_e_guias_20261108.py</h2>
+<p>Insumos cartográficos do pôster, com rateio zonal auditável e escala física.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\revisar_poster_e_guias_20261108.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>copy</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.figure</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.font_manager</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.path</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.textpath</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shutil</td><td>Cópia e movimentação de arquivos, inclusive preservação de versões geradas.</td></tr><tr><td>svg_compativel_word</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>xml.etree.ElementTree</td><td>Leitura/edição de XML de projetos e documentos.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/descontinuado/2026_11_08_poster_detalhado/manifesto.json — chamada f.read_text, linha 55.</li>
+<li>{p} — chamada p.read_bytes, linha 56.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gp.read_file, linha 117.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gp.read_file, linha 118.</li>
+<li>E:/projeto/output/13_rateio_emissoes/fontes_rateio_PM25.gpkg — chamada gp.read_file, linha 119.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv — chamada pd.read_csv, linha 137.</li>
+<li>E:/projeto/output/11_integracao/apendices/resumo_figuras.json — chamada .read_text, linha 154.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/descontinuado/2026_11_08_poster_detalhado/manifesto.json — chamada f.write_text, linha 57.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Rateio_emissoes_MP25_por_fonte_zona.csv — chamada .to_csv, linha 147.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.csv — chamada .to_csv, linha 148.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.gpkg — chamada z.to_file, linha 151.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_mapas_emissao_poster.json — chamada .write_text, linha 153.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>z: density, high_area_pct, zone_index.</li>
+<li>f: balanced_accuracy_test, basis, cut_all_data, cut_train, percentile_target, pollutant.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>z: area_km2, density, high_area_pct, high_band, mass_tpy, unstable_area_pct.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>archive(p)</td><td>50-57</td><td>lê dados; grava produtos</td></tr><tr><td>svg_path(path)</td><td>60-68</td><td>Chamadas efetivas: path.iter_segments, .join, out.append Retorno: &#x27; &#x27;.join(out).</td></tr><tr><td>prepare_svg(source, target, scale=200000, method=False)</td><td>71-111</td><td>Chamadas efetivas: ET.parse, tree.getroot, set, list, ET.SubElement, next, root.findall, max</td></tr><tr><td>run()</td><td>114-183</td><td>lê dados; grava produtos Retorno: original_save(fig, *args, **kwargs).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/revisar_poster_e_guias_20261108.py, linhas 134-140.</p>
+<pre><code>            if mode!=&#x27;point&#x27;:remaining=remaining.difference(z.geometry.iloc[i])
+    assert abs(mass.sum()-expected)&lt;.001,(mass.sum(),expected)
+    z[&#x27;mass_tpy&#x27;]=mass;z[&#x27;area_km2&#x27;]=z.area/1e6;z[&#x27;density&#x27;]=np.divide(mass,z.area/1e6,out=np.full(len(z),np.nan),where=z.area&gt;0)
+    f=pd.read_csv(R/&#x27;output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv&#x27;);f=f[(f.pollutant==&#x27;PM25&#x27;)&amp;(f.basis==&#x27;density_tpy_km2&#x27;)&amp;(f.percentile_target==80)]
+    cut=float(f.cut_all_data.iloc[0]);lo=float(f.cut_train.min());hi=float(f.cut_train.max())
+    high=np.zeros(len(z));unstable=np.zeros(len(z));covered=np.zeros(len(z))
+    for r in c.itertuples():</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/descontinuado/2026_11_08_poster_detalhado/manifesto.json | f.read_text.
+    5  # Entrada: {p} | p.read_bytes.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gp.read_file.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gp.read_file.
+    8  # Entrada: E:/projeto/output/13_rateio_emissoes/fontes_rateio_PM25.gpkg | gp.read_file.
+    9  # Entrada: E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/11_integracao/apendices/resumo_figuras.json | .read_text.
+   11  # Campos/chaves em z: density, high_area_pct, zone_index.
+   12  # Campos/chaves em f: balanced_accuracy_test, basis, cut_all_data, cut_train, percentile_target, pollutant.
+   13  # Saída: E:/projeto/descontinuado/2026_11_08_poster_detalhado/manifesto.json | f.write_text.
+   14  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Rateio_emissoes_MP25_por_fonte_zona.csv | .to_csv.
+   15  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.csv | .to_csv.
+   16  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.gpkg | z.to_file.
+   17  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_mapas_emissao_poster.json | .write_text.
+   18  # Campos/chaves gerados em z: area_km2, density, high_area_pct, high_band, mass_tpy, unstable_area_pct.
+   19  # mass_tpy: massa anual em t/ano.
+   20  # CÓDIGO DO PROCESSAMENTO
+   21  
+   22  &quot;&quot;&quot;Insumos cartográficos do pôster, com rateio zonal auditável e escala física.&quot;&quot;&quot;
+   23  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   24  import sys as _cp_sys
+   25  from pathlib import Path as _cp_Path
+   26  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   27  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   28      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   29      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   30          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   31          break
+   32  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   33  # FIM DOS CAMINHOS PORTÁTEIS
+   34  
+   35  from pathlib import Path
+   36  import json,hashlib,shutil,copy,xml.etree.ElementTree as ET
+   37  import numpy as np,pandas as pd,geopandas as gp
+   38  from shapely import make_valid
+   39  from matplotlib import pyplot as plt
+   40  from matplotlib.colors import BoundaryNorm,ListedColormap
+   41  from matplotlib.textpath import TextPath
+   42  from matplotlib.font_manager import FontProperties
+   43  from matplotlib.path import Path as MPath
+   44  import cartografia_apendices as cart
+   45  
+   46  R=Path(_cp_texto(&#x27;&#x27;, &#x27;posix&#x27;));O=R/&#x27;output/13_cmas_posters/Congonhas&#x27;;A=R/&#x27;codigo/recursos_poster/assets&#x27;;T=R/&#x27;temp/revisao_poster_teco_20261108&#x27;
+   47  S=&#x27;{http://www.w3.org/2000/svg}&#x27;;B=R/&#x27;descontinuado/2026_11_08_poster_detalhado&#x27;
+   48  
+   49  # Archive
+   50  def archive(p):
+   51      if not p.exists():return
+   52      q=B/p.relative_to(R)
+   53      if q.exists():return
+   54      q.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,q)
+   55      f=B/&#x27;manifesto.json&#x27;;rows=json.loads(f.read_text(encoding=&#x27;utf8&#x27;)) if f.exists() else []
+   56      rows.append({&#x27;origem&#x27;:str(p),&#x27;arquivo_preservado&#x27;:str(q),&#x27;sha256&#x27;:hashlib.sha256(p.read_bytes()).hexdigest(),&#x27;motivo&#x27;:&#x27;Substituído pela revisão do pôster e guias de estudo em 08/11/2026.&#x27;})
+   57      f.write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+   58  
+   59  # Svg path
+   60  def svg_path(path):
+   61      out=[]
+   62      for v,c in path.iter_segments(curves=True,simplify=False):
+   63          if c==MPath.MOVETO:out.append(&#x27;M &#x27;+&#x27; &#x27;.join(f&#x27;{x:.5f}&#x27; for x in v))
+   64          elif c==MPath.LINETO:out.append(&#x27;L &#x27;+&#x27; &#x27;.join(f&#x27;{x:.5f}&#x27; for x in v))
+   65          elif c==MPath.CURVE3:out.append(&#x27;Q &#x27;+&#x27; &#x27;.join(f&#x27;{x:.5f}&#x27; for x in v))
+   66          elif c==MPath.CURVE4:out.append(&#x27;C &#x27;+&#x27; &#x27;.join(f&#x27;{x:.5f}&#x27; for x in v))
+   67          elif c==MPath.CLOSEPOLY:out.append(&#x27;Z&#x27;)
+   68      return &#x27; &#x27;.join(out)
+   69  
+   70  # Prepare svg
+   71  def prepare_svg(source,target,scale=200000,method=False):
+   72      tree=ET.parse(source);root=tree.getroot();definitions=[];seen=set()
+   73      for d in list(root.iter(S+&#x27;defs&#x27;)):
+   74          for item in d:
+   75              ident=item.get(&#x27;id&#x27;)
+   76              if ident and ident in seen:continue
+   77              definitions.append(copy.deepcopy(item));seen.add(ident)
+   78      for parent in list(root.iter()):
+   79          for child in list(parent):
+   80              if child.tag==S+&#x27;defs&#x27;:parent.remove(child)
+   81      defs=ET.SubElement(root,S+&#x27;defs&#x27;)
+   82      for item in definitions:defs.append(item)
+   83      axes=next(g for g in root.iter(S+&#x27;g&#x27;) if g.get(&#x27;id&#x27;)==&#x27;axes_1&#x27;)
+   84      rects=root.findall(&#x27;.//&#x27;+S+&#x27;clipPath/&#x27;+S+&#x27;rect&#x27;);rect=max(rects,key=lambda e:float(e.get(&#x27;width&#x27;))*float(e.get(&#x27;height&#x27;)))
+   85      x,y,w,h=[float(rect.get(k)) for k in (&#x27;x&#x27;,&#x27;y&#x27;,&#x27;width&#x27;,&#x27;height&#x27;)]
+   86  
+   87      for g in list(axes):
+   88          if g.get(&#x27;id&#x27;)==&#x27;datum_scale_poster&#x27;:axes.remove(g);continue
+   89          if g.get(&#x27;id&#x27;,&#x27;&#x27;).startswith(&#x27;text_&#x27;):
+   90              if g.find(S+&#x27;g/&#x27;+S+&#x27;path&#x27;) is None and any(z.get(&#x27;id&#x27;,&#x27;&#x27;).startswith(&#x27;patch_&#x27;) for z in g):axes.remove(g)
+   91              elif any(&#x27;5.7&#x27; in (z.get(&#x27;style&#x27;,&#x27;&#x27;)) or &#x27;0.057&#x27; in z.get(&#x27;transform&#x27;,&#x27;&#x27;) for z in g.iter()):axes.remove(g)
+   92          if method and g.get(&#x27;id&#x27;,&#x27;&#x27;).startswith(&#x27;matplotlib.axis_&#x27;):axes.remove(g)
+   93  
+   94      for g in list(axes):
+   95          if g.get(&#x27;id&#x27;)==&#x27;text_21&#x27;:axes.remove(g)
+   96      bw,bh=62,28;bx=x+w-bw-4;by=y+h-bh-4
+   97      box=ET.SubElement(axes,S+&#x27;g&#x27;,{&#x27;id&#x27;:&#x27;datum_scale_poster&#x27;,&#x27;data-scale&#x27;:str(scale)})
+   98      ET.SubElement(box,S+&#x27;rect&#x27;,{&#x27;x&#x27;:str(bx),&#x27;y&#x27;:str(by),&#x27;width&#x27;:str(bw),&#x27;height&#x27;:str(bh),&#x27;rx&#x27;:&#x27;1.3&#x27;,&#x27;fill&#x27;:&#x27;white&#x27;,&#x27;fill-opacity&#x27;:&#x27;.95&#x27;,&#x27;stroke&#x27;:&#x27;#b9bdb6&#x27;,&#x27;stroke-width&#x27;:&#x27;.45&#x27;})
+   99      for line,yy in zip([&#x27;SIRGAS 2000&#x27;,&#x27;EPSG:4674&#x27;,f&#x27;Escala 1:{scale:,}&#x27;.replace(&#x27;,&#x27;,&#x27;.&#x27;)],[by+7.3,by+15,by+22.7]):
+  100          path=TextPath((0,0),line,size=5.7,prop=FontProperties(family=&#x27;DejaVu Sans&#x27;));bb=path.get_extents()
+  101          tx=bx+bw/2-(bb.x0+bb.x1)/2
+  102          ET.SubElement(box,S+&#x27;path&#x27;,{&#x27;d&#x27;:svg_path(path),&#x27;transform&#x27;:f&#x27;translate({tx:.6f} {yy:.6f}) scale(1 -1)&#x27;,&#x27;fill&#x27;:&#x27;#646962&#x27;})
+  103  
+  104      root.set(&#x27;viewBox&#x27;,f&#x27;{x-14.99:.6f} {y-4.218359:.6f} {w+24.99:.6f} {h+18.218359:.6f}&#x27;)
+  105      root.set(&#x27;width&#x27;,f&#x27;{w+24.99:.6f}pt&#x27;);root.set(&#x27;height&#x27;,f&#x27;{h+18.218359:.6f}pt&#x27;)
+  106      for child in list(root):
+  107          if child.tag==S+&#x27;g&#x27;:
+  108  
+  109              for sub in list(child):
+  110                  if sub.tag==S+&#x27;g&#x27; and sub is not axes and sub.get(&#x27;id&#x27;,&#x27;&#x27;).startswith((&#x27;axes_&#x27;,&#x27;legend_&#x27;)):child.remove(sub)
+  111      archive(target);tree.write(target,encoding=&#x27;utf-8&#x27;,xml_declaration=True)
+  112  
+  113  # Run
+  114  def run():
+  115      O.mkdir(parents=True,exist_ok=True);T.mkdir(parents=True,exist_ok=True)
+  116      ET.register_namespace(&#x27;&#x27;,&#x27;http://www.w3.org/2000/svg&#x27;);ET.register_namespace(&#x27;xlink&#x27;,&#x27;http://www.w3.org/1999/xlink&#x27;)
+  117      z=gp.read_file(R/&#x27;output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg&#x27;);z.geometry=z.geometry.make_valid();union=z.geometry.union_all()
+  118      c=gp.read_file(R/&#x27;output/16_revisao_pos_banca/celulas_analise.gpkg&#x27;).to_crs(z.crs)
+  119      src=gp.read_file(R/&#x27;output/13_rateio_emissoes/fontes_rateio_PM25.gpkg&#x27;).to_crs(z.crs)
+  120      rows=[];mass=np.zeros(len(z));expected=0.
+  121      for r in src.itertuples():
+  122          geom=make_valid(r.geometry)
+  123          if geom.is_empty or not np.isfinite(r.massa):continue
+  124          mode=&#x27;area&#x27; if geom.area&gt;0 else &#x27;length&#x27; if geom.length&gt;0 else &#x27;point&#x27;;den=geom.area if mode==&#x27;area&#x27; else geom.length if mode==&#x27;length&#x27; else 1
+  125          inside=geom.intersection(union);expected+=r.massa*(inside.area/den if mode==&#x27;area&#x27; else inside.length/den if mode==&#x27;length&#x27; else float(union.covers(geom)))
+  126          ids=list(z.sindex.query(geom,predicate=&#x27;intersects&#x27;))
+  127          if mode==&#x27;point&#x27; and ids:ids=[min(ids,key=lambda i:(z.geometry.iloc[i].representative_point().distance(geom),i))]
+  128  
+  129          remaining=geom
+  130          for i in sorted(ids,key=lambda j:(z.geometry.iloc[j].area,j)):
+  131              it=remaining.intersection(z.geometry.iloc[i]);f=it.area/den if mode==&#x27;area&#x27; else it.length/den if mode==&#x27;length&#x27; else float(not it.is_empty)
+  132              if f&lt;=0:continue
+  133              m=float(r.massa*f);mass[i]+=m;rows.append({&#x27;zone_index&#x27;:int(z.zone_index.iloc[i]),&#x27;source_id&#x27;:r.source_id,&#x27;group_id&#x27;:r.group_id,&#x27;fraction&#x27;:f,&#x27;mass_tpy&#x27;:m})
+  134              if mode!=&#x27;point&#x27;:remaining=remaining.difference(z.geometry.iloc[i])
+  135      assert abs(mass.sum()-expected)&lt;.001,(mass.sum(),expected)
+  136      z[&#x27;mass_tpy&#x27;]=mass;z[&#x27;area_km2&#x27;]=z.area/1e6;z[&#x27;density&#x27;]=np.divide(mass,z.area/1e6,out=np.full(len(z),np.nan),where=z.area&gt;0)
+  137      f=pd.read_csv(R/&#x27;output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv&#x27;);f=f[(f.pollutant==&#x27;PM25&#x27;)&amp;(f.basis==&#x27;density_tpy_km2&#x27;)&amp;(f.percentile_target==80)]
+  138      cut=float(f.cut_all_data.iloc[0]);lo=float(f.cut_train.min());hi=float(f.cut_train.max())
+  139      high=np.zeros(len(z));unstable=np.zeros(len(z));covered=np.zeros(len(z))
+  140      for r in c.itertuples():
+  141          for i in z.sindex.query(r.geometry,predicate=&#x27;intersects&#x27;):
+  142              area=r.geometry.intersection(z.geometry.iloc[i]).area;covered[i]+=area
+  143              high[i]+=area*(r.PM25_density_tpy_km2&gt;cut);unstable[i]+=area*(lo&lt;r.PM25_density_tpy_km2&lt;=hi)
+  144      z[&#x27;high_area_pct&#x27;]=100*np.divide(high,z.area,out=np.zeros(len(z)),where=z.area&gt;0)
+  145      z[&#x27;unstable_area_pct&#x27;]=100*np.divide(unstable,z.area,out=np.zeros(len(z)),where=z.area&gt;0)
+  146      z[&#x27;high_band&#x27;]=pd.cut(z.high_area_pct,[-.001,.000001,25,50,75,100.001],labels=[&#x27;None&#x27;,&#x27;&gt;0–25%&#x27;,&#x27;&gt;25–50%&#x27;,&#x27;&gt;50–75%&#x27;,&#x27;&gt;75–100%&#x27;]).astype(str)
+  147      pd.DataFrame(rows).to_csv(O/&#x27;Rateio_emissoes_MP25_por_fonte_zona.csv&#x27;,index=False)
+  148      z.drop(columns=&#x27;geometry&#x27;).to_csv(O/&#x27;Emissoes_densidade_sensibilidade_por_zona.csv&#x27;,index=False)
+  149      target=O/&#x27;Emissoes_densidade_sensibilidade_por_zona.gpkg&#x27;;archive(target)
+  150      if target.exists():target.unlink()
+  151      z.to_file(target,driver=&#x27;GPKG&#x27;)
+  152      audit={&#x27;municipal_expected_mass_tpy&#x27;:expected,&#x27;zone_allocated_mass_tpy&#x27;:float(mass.sum()),&#x27;absolute_error_tpy&#x27;:abs(float(mass.sum())-expected),&#x27;zones&#x27;:len(z),&#x27;zone_area_sum_km2&#x27;:float(z.area.sum()/1e6),&#x27;union_area_km2&#x27;:union.area/1e6,&#x27;overlap_treatment&#x27;:&#x27;Ratear a interseção remanescente em ordem crescente de área zonal, sem duplicar massa; conservar todos os 311 registros.&#x27;,&#x27;high_emission_cell_cut_tpy_km2&#x27;:cut,&#x27;spatial_fold_cut_min&#x27;:lo,&#x27;spatial_fold_cut_max&#x27;:hi,&#x27;balanced_accuracy_test_mean&#x27;:float(f.balanced_accuracy_test.mean()),&#x27;high_zone_map&#x27;:&#x27;Porcentagem da área zonal que intercepta células acima do limiar ajustado no suporte original. Não reaplicar o limiar celular à média zonal.&#x27;,&#x27;stability_map&#x27;:&#x27;Área que altera classe dentro do intervalo dos cortes de validação; não é probabilidade ou intervalo de confiança.&#x27;,&#x27;zones_without_area&#x27;:int((z.area&lt;=0).sum()),&#x27;zones_under_1m2&#x27;:int((z.area&lt;1).sum()),&#x27;maximum_zonal_density&#x27;:float(z.density.max())}
+  153      (O/&#x27;Auditoria_mapas_emissao_poster.json&#x27;).write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  154      extent=json.loads((R/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+  155      old=cart.OUT;cart.OUT=O;muni=gp.GeoDataFrame(geometry=[union],crs=z.crs)
+  156  
+  157      bins=[0,1,5,10,25,50,100,250]
+  158      pal=[&#x27;#fff2b2&#x27;,&#x27;#ffdb84&#x27;,&#x27;#fcb65e&#x27;,&#x27;#f28b42&#x27;,&#x27;#e45c32&#x27;,&#x27;#c9372b&#x27;,&#x27;#922322&#x27;]
+  159      cmap=ListedColormap(pal);norm=BoundaryNorm(bins,cmap.N,clip=True)
+  160      surface={&#x27;values&#x27;:z.density.to_numpy(),&#x27;norm&#x27;:norm,&#x27;cmap&#x27;:cmap,&#x27;ticks&#x27;:bins,&#x27;actual_max&#x27;:float(z.density.max())}
+  161      cart.render(z,muni,[&#x27;density&#x27;],&#x27;PD&#x27;, [&#x27;&#x27;],&#x27;&#x27;,extent,numeric=True,numeric_options=[{&#x27;norm&#x27;:norm,&#x27;cmap&#x27;:cmap,&#x27;ticks&#x27;:bins,&#x27;label&#x27;:&#x27;Emission density (t/year/km²)&#x27;,&#x27;show_missing&#x27;:False}],filename=&#x27;Poster_Densidade_emissao_zonas&#x27;,png_dpi=350)
+  162      highpal=dict(zip([&#x27;None&#x27;,&#x27;&gt;0–25%&#x27;,&#x27;&gt;25–50%&#x27;,&#x27;&gt;50–75%&#x27;,&#x27;&gt;75–100%&#x27;],[&#x27;#edf1ef&#x27;,&#x27;#f8dc8f&#x27;,&#x27;#eeb05e&#x27;,&#x27;#dd7952&#x27;,&#x27;#a74650&#x27;]))
+  163  
+  164      from matplotlib.figure import Figure
+  165      original_save=Figure.savefig
+  166      sensitive=c[(c.PM25_density_tpy_km2&gt;lo)&amp;(c.PM25_density_tpy_km2&lt;=hi)].to_crs(4674)
+  167      def save_with_stability(fig,*args,**kwargs):
+  168          if not getattr(fig,&#x27;_stability_drawn&#x27;,False):
+  169              sensitive.plot(ax=fig.axes[0],facecolor=&#x27;none&#x27;,edgecolor=&#x27;#35413d&#x27;,hatch=&#x27;////&#x27;,linewidth=.08,alpha=.72,zorder=6.8)
+  170              fig._stability_drawn=True
+  171          return original_save(fig,*args,**kwargs)
+  172      Figure.savefig=save_with_stability
+  173      try:cart.render(z,muni,[&#x27;high_band&#x27;],&#x27;PH&#x27;,[&#x27;&#x27;],&#x27;&#x27;,extent,palette=highpal,filename=&#x27;Poster_Alta_emissao_fracao_zonal&#x27;,png_dpi=350)
+  174      finally:Figure.savefig=original_save
+  175      cart.OUT=old
+  176      from svg_compativel_word import convert
+  177      for key,stem in [(&#x27;E&#x27;,&#x27;Poster_Densidade_emissao_zonas&#x27;),(&#x27;H&#x27;,&#x27;Poster_Alta_emissao_fracao_zonal&#x27;)]:
+  178          compatible=T/f&#x27;{stem}_vetorial.svg&#x27;
+  179          n=convert(O/f&#x27;{stem}.svg&#x27;,compatible)
+  180          prepare_svg(compatible if n else O/f&#x27;{stem}.svg&#x27;,A/f&#x27;poster_{key}_MAIN.svg&#x27;)
+  181      for key in [&#x27;Q&#x27;,&#x27;K&#x27;,&#x27;B&#x27;,&#x27;Z&#x27;]:prepare_svg(A/f&#x27;poster_{key}_PDF.svg&#x27; if (A/f&#x27;poster_{key}_PDF.svg&#x27;).exists() else A/f&#x27;poster_{key}_MAIN.svg&#x27;,A/f&#x27;poster_{key}_MAIN.svg&#x27;)
+  182      for key in [&#x27;Q&#x27;,&#x27;K&#x27;,&#x27;D&#x27;,&#x27;Z&#x27;]:prepare_svg(A/f&#x27;poster_{key}_PDF.svg&#x27;,A/f&#x27;poster_{key}_METHOD.svg&#x27;,440000,True)
+  183      print(json.dumps(audit,ensure_ascii=False))
+  184  
+  185  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

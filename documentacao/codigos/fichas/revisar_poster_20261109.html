@@ -1,0 +1,234 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/revisar_poster_20261109.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/revisar_poster_20261109.py</h2>
+<p>Prepara os painéis e resumos atuais do pôster Congonhas, incluindo o perfil conjunto, a densidade de emissão e as contribuições das regiões prioritárias.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\revisar_poster_20261109.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>hashlib</td><td>Assinaturas SHA-256 para identificar alterações de arquivos; não é validação do conteúdo científico.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.figure</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>openpyxl</td><td>Leitura/escrita de planilhas XLSX; não é o mecanismo do Excel aberto.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>pyproj</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>revisar_poster_e_guias_20261108</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>shutil</td><td>Cópia e movimentação de arquivos, inclusive preservação de versões geradas.</td></tr><tr><td>svg_compativel_word</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>xml.etree.ElementTree</td><td>Leitura/edição de XML de projetos e documentos.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/descontinuado/2026_11_09_poster_rodovias_inventariadas/manifesto.json — chamada m.read_text, linha 73.</li>
+<li>{path} — chamada path.read_bytes, linha 74.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.gpkg — chamada gp.read_file, linha 88.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gp.read_file, linha 89.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/PM25_anual_receptores.csv — chamada pd.read_csv, linha 90.</li>
+<li>E:/projeto/output/13_rateio_emissoes/fontes_rateio_PM25.gpkg — chamada gp.read_file, linha 108.</li>
+<li>E:/projeto/output/11_integracao/apendices/resumo_figuras.json — chamada .read_text, linha 117.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv — chamada pd.read_csv, linha 146.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/PM25_1h_receptores.csv — chamada pd.read_csv, linha 154.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/cenario_geral/{pol}_{per}_receptores.csv — chamada pd.read_csv, linha 157.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/contribuicoes_prioridades_pooled_PM25.csv — chamada pd.read_csv, linha 164.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/descontinuado/2026_11_09_poster_rodovias_inventariadas/manifesto.json — chamada m.write_text, linha 75.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_vias_inventariadas_densidade.csv — chamada .to_csv, linha 115.</li>
+<li>E:/projeto/codigo/recursos_poster/assets/dados_poster_20261109.json — chamada .write_text, linha 173.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Perfis_conjuntos_estatisticas.csv — chamada .to_csv, linha 174.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Cortes_emissao_boxplot_PM25.csv — chamada cuts.to_csv, linha 175.</li>
+<li>E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_revisao_poster_20261109.json — chamada .write_text, linha 176.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>c: PM25_annual, geometry, receptor_id.</li>
+<li>annual: concentration, dominant_group, receptor_id.</li>
+<li>d: ID.</li>
+<li>roads: corridor_m2, length_m, massa, source_id, source_type, width_m.</li>
+<li>v: name, value.</li>
+<li>cuts: basis, pollutant.</li>
+<li>pooled.loc: share_pct.</li>
+<li>pooled: group_id.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>roads: corridor_m2, density_corridor, length_m, width_m.</li>
+<li>g: dominant_name.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>archive(path)</td><td>67-75</td><td>lê dados; grava produtos</td></tr><tr><td>run()</td><td>78-177</td><td>lê dados; grava produtos; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial. Retorno: original_save(fig, *args, **kwargs).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/revisar_poster_20261109.py, linhas 151-157.</p>
+<pre><code>        vals=d.cut_train.to_numpy()
+        box.append(dict(percentile=int(q),concentration=float(d.concentration_cut.iloc[0]),full_cut=float(d.cut_all_data.iloc[0]),values=vals.tolist(),q25=float(np.quantile(vals,.25)),median=float(np.median(vals)),q75=float(np.quantile(vals,.75)),minimum=float(vals.min()),maximum=float(vals.max()),balanced_accuracy_mean=float(d.balanced_accuracy_test.mean())))
+    cluster=[]
+    labels=pd.read_csv(P/&#x27;cenario_geral/PM25_1h_receptores.csv&#x27;)[[&#x27;receptor_id&#x27;,&#x27;best_cluster&#x27;]]
+    for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+        for per in [&#x27;1h&#x27;,&#x27;24h&#x27;,&#x27;anual&#x27;]:
+            f=pd.read_csv(P/f&#x27;cenario_geral/{pol}_{per}_receptores.csv&#x27;)</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/descontinuado/2026_11_09_poster_rodovias_inventariadas/manifesto.json | m.read_text.
+    5  # Entrada: {path} | path.read_bytes.
+    6  # Entrada: E:/projeto/output/13_cmas_posters/Congonhas/Emissoes_densidade_sensibilidade_por_zona.gpkg | gp.read_file.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gp.read_file.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/PM25_anual_receptores.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/output/13_rateio_emissoes/fontes_rateio_PM25.gpkg | gp.read_file.
+   10  # Entrada: E:/projeto/output/11_integracao/apendices/resumo_figuras.json | .read_text.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/PM25_1h_receptores.csv | pd.read_csv.
+   13  # Entrada: E:/projeto/output/16_revisao_pos_banca/cenario_geral/{pol}_{per}_receptores.csv | pd.read_csv.
+   14  # Entrada: E:/projeto/output/16_revisao_pos_banca/contribuicoes_prioridades_pooled_PM25.csv | pd.read_csv.
+   15  # Campos/chaves em c: PM25_annual, geometry, receptor_id.
+   16  # Campos/chaves em annual: concentration, dominant_group, receptor_id.
+   17  # Campos/chaves em d: ID.
+   18  # Campos/chaves em roads: corridor_m2, length_m, massa, source_id, source_type, width_m.
+   19  # Campos/chaves em v: name, value.
+   20  # Campos/chaves em cuts: basis, pollutant.
+   21  # Campos/chaves em pooled.loc: share_pct.
+   22  # Campos/chaves em pooled: group_id.
+   23  # Saída: E:/projeto/descontinuado/2026_11_09_poster_rodovias_inventariadas/manifesto.json | m.write_text.
+   24  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_vias_inventariadas_densidade.csv | .to_csv.
+   25  # Saída: E:/projeto/codigo/recursos_poster/assets/dados_poster_20261109.json | .write_text.
+   26  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Perfis_conjuntos_estatisticas.csv | .to_csv.
+   27  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Cortes_emissao_boxplot_PM25.csv | cuts.to_csv.
+   28  # Saída: E:/projeto/output/13_cmas_posters/Congonhas/Auditoria_revisao_poster_20261109.json | .write_text.
+   29  # Campos/chaves gerados em roads: corridor_m2, density_corridor, length_m, width_m.
+   30  # Campos/chaves gerados em g: dominant_name.
+   31  # receptor_id: identificador do receptor.
+   32  # concentration: concentração do período em µg/m³.
+   33  # CÓDIGO DO PROCESSAMENTO
+   34  
+   35  &quot;&quot;&quot;Revisão do pôster: vias, suporte físico e dados rastreáveis dos gráficos.&quot;&quot;&quot;
+   36  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   37  import sys as _cp_sys
+   38  from pathlib import Path as _cp_Path
+   39  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   40  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   41      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   42      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   43          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   44          break
+   45  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   46  # FIM DOS CAMINHOS PORTÁTEIS
+   47  
+   48  from pathlib import Path
+   49  import json, hashlib, shutil, xml.etree.ElementTree as ET
+   50  import numpy as np
+   51  import pandas as pd
+   52  import geopandas as gp
+   53  import matplotlib
+   54  matplotlib.use(&#x27;Agg&#x27;)
+   55  from matplotlib.figure import Figure
+   56  from matplotlib.colors import BoundaryNorm, ListedColormap
+   57  import cartografia_apendices as cart
+   58  import revisar_poster_e_guias_20261108 as previous
+   59  from svg_compativel_word import convert
+   60  from groups import GROUPS
+   61  
+   62  R=Path(_cp_texto(&#x27;&#x27;, &#x27;posix&#x27;)); O=R/&#x27;output/13_cmas_posters/Congonhas&#x27;
+   63  A=R/&#x27;codigo/recursos_poster/assets&#x27;; P=R/&#x27;output/16_revisao_pos_banca&#x27;
+   64  T=R/&#x27;temp/poster_20261109&#x27;; B=R/&#x27;descontinuado/2026_11_09_poster_rodovias_inventariadas&#x27;
+   65  
+   66  # Archive
+   67  def archive(path):
+   68      path=Path(path)
+   69      if not path.exists(): return
+   70      dest=B/path.relative_to(R)
+   71      if dest.exists(): return
+   72      dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,dest)
+   73      m=B/&#x27;manifesto.json&#x27;; rows=json.loads(m.read_text(encoding=&#x27;utf8&#x27;)) if m.exists() else []
+   74      rows.append(dict(origem=str(path),preservado=str(dest),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),motivo=&#x27;Substituído pela revisão do pôster de 09/11/2026; arquivos-base preservados.&#x27;))
+   75      m.write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+   76  
+   77  # Run
+   78  def run():
+   79      ET.register_namespace(&#x27;&#x27;, &#x27;http://www.w3.org/2000/svg&#x27;)
+   80      ET.register_namespace(&#x27;xlink&#x27;, &#x27;http://www.w3.org/1999/xlink&#x27;)
+   81      T.mkdir(parents=True,exist_ok=True);previous.archive=archive
+   82      for name in [&#x27;gerar_poster_cmas.mjs&#x27;,&#x27;auditar_escalas_poster.py&#x27;]:
+   83          archive(R/&#x27;codigo&#x27;/name)
+   84      for name in [&#x27;Poster_CMAS_Session12_Congonhas.pptx&#x27;,&#x27;Poster_CMAS_Session12_Congonhas.pdf&#x27;,&#x27;Poster_CMAS_Session12_Congonhas_previa.png&#x27;,&#x27;auditoria_escalas.json&#x27;,&#x27;manifesto_entrega_poster_guias.json&#x27;,&#x27;Guia_estudo_poster_Congonhas.docx&#x27;,&#x27;Guia_estudo_poster_Congonhas.pdf&#x27;,&#x27;Roteiro_detalhado_poster_EN.docx&#x27;,&#x27;Roteiro_detalhado_poster_EN.pdf&#x27;]:
+   85          archive(O/name)
+   86      for name in [&#x27;guia-detalhado.md&#x27;,&#x27;roteiro-detalhado-em-ingles.md&#x27;,&#x27;README.md&#x27;]:
+   87          archive(R/&#x27;dissertacao/poster&#x27;/name)
+   88      z=gp.read_file(O/&#x27;Emissoes_densidade_sensibilidade_por_zona.gpkg&#x27;)
+   89      c=gp.read_file(P/&#x27;celulas_analise.gpkg&#x27;)
+   90      annual=pd.read_csv(P/&#x27;cenario_geral/PM25_anual_receptores.csv&#x27;)
+   91      comp=c[[&#x27;receptor_id&#x27;,&#x27;PM25_annual&#x27;]].merge(annual[[&#x27;receptor_id&#x27;,&#x27;concentration&#x27;]],on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+   92      assert np.allclose(comp.PM25_annual,comp.concentration,rtol=0,atol=1e-6)
+   93  
+   94      import openpyxl
+   95      wb=openpyxl.load_workbook(R/&#x27;entrada_aermod/PM2-5_Sources.xlsx&#x27;,read_only=True,data_only=True)
+   96      rows=wb.active.iter_rows(values_only=True)
+   97      for row in rows:
+   98          if &#x27;Type&#x27; in row and &#x27;ID&#x27; in row:
+   99              headers=list(row);break
+  100      widths={}
+  101      for row in rows:
+  102          d=dict(zip(headers,row))
+  103          if not isinstance(d.get(&#x27;Num_Coords&#x27;),(int,float)):continue
+  104          field=&#x27;Length_X&#x27; if d.get(&#x27;Type&#x27;)==&#x27;LINE_AREA&#x27; else &#x27;PlumeWidth&#x27;
+  105          if d.get(&#x27;Type&#x27;) in (&#x27;LINE_AREA&#x27;,&#x27;LINE_VOLUME&#x27;):
+  106              widths[str(d[&#x27;ID&#x27;])]=float(d[field])
+  107      wb.close()
+  108      roads=gp.read_file(R/&#x27;output/13_rateio_emissoes/fontes_rateio_PM25.gpkg&#x27;)
+  109      roads=roads[roads.source_type.isin([&#x27;LINE_AREA&#x27;,&#x27;LINE_VOLUME&#x27;]) &amp; ~roads.source_id.str.startswith(&#x27;FER&#x27;)].copy()
+  110      roads[&#x27;width_m&#x27;]=roads.source_id.map(widths)
+  111      assert roads.width_m.notna().all() and (roads.width_m&gt;0).all()
+  112      roads[&#x27;length_m&#x27;]=roads.length
+  113      roads[&#x27;corridor_m2&#x27;]=roads.length_m*roads.width_m
+  114      roads[&#x27;density_corridor&#x27;]=roads.massa/roads.corridor_m2*1e6
+  115      roads.drop(columns=&#x27;geometry&#x27;).to_csv(O/&#x27;Auditoria_vias_inventariadas_densidade.csv&#x27;,index=False)
+  116      roads=roads.to_crs(4674)
+  117      extent=json.loads((R/&#x27;output/11_integracao/apendices/resumo_figuras.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))[&#x27;bounds_degrees&#x27;]
+  118      muni=gp.GeoDataFrame(geometry=[z.geometry.union_all()],crs=z.crs)
+  119      roads=roads[roads.intersects(muni.to_crs(4674).geometry.union_all())]
+  120      original_save=Figure.savefig
+  121      def save_with_roads(fig,*args,**kwargs):
+  122          if not getattr(fig,&#x27;_roads_drawn&#x27;,False):
+  123              roads.plot(ax=fig.axes[0],column=&#x27;density_corridor&#x27;,cmap=cmap,norm=norm,linewidth=.65,alpha=1,zorder=7.2,aspect=None)
+  124              fig._roads_drawn=True
+  125          return original_save(fig,*args,**kwargs)
+  126      cart.OUT=O;bins=[0,1,5,10,25,50,100,250]
+  127      pal=[&#x27;#fff2b2&#x27;,&#x27;#ffdb84&#x27;,&#x27;#fcb65e&#x27;,&#x27;#f28b42&#x27;,&#x27;#e45c32&#x27;,&#x27;#c9372b&#x27;,&#x27;#922322&#x27;]
+  128      for ext in [&#x27;svg&#x27;,&#x27;pdf&#x27;,&#x27;png&#x27;]:archive(O/f&#x27;Poster_Densidade_emissao_zonas.{ext}&#x27;)
+  129      Figure.savefig=save_with_roads
+  130      try:
+  131          cmap=ListedColormap(pal);norm=BoundaryNorm(bins,cmap.N,clip=True)
+  132          cart.render(z,muni,[&#x27;density&#x27;],&#x27;PD&#x27;,[&#x27;&#x27;],&#x27;&#x27;,extent,numeric=True,numeric_options=[dict(norm=norm,cmap=cmap,ticks=bins,label=&#x27;PM₂,₅ emission density (t/year/km²)&#x27;,show_missing=False)],filename=&#x27;Poster_Densidade_emissao_zonas&#x27;,png_dpi=350)
+  133      finally: Figure.savefig=original_save
+  134      g=c[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(annual[[&#x27;receptor_id&#x27;,&#x27;dominant_group&#x27;]],on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+  135      g[&#x27;dominant_name&#x27;]=g.dominant_group.map({k:v[&#x27;name&#x27;] for k,v in GROUPS.items()})
+  136      categories=sorted(g.dominant_name.unique())
+  137      for ext in [&#x27;svg&#x27;,&#x27;pdf&#x27;,&#x27;png&#x27;]:archive(O/f&#x27;Poster_Grupo_predominante.{ext}&#x27;)
+  138      cart.render(z,muni,[&#x27;dominant_name&#x27;],&#x27;PS&#x27;,[&#x27;&#x27;],&#x27;&#x27;,extent,panel_layers=[g],zone_layer=z,palette=cart.COLORS,legend_categories=categories,filename=&#x27;Poster_Grupo_predominante&#x27;,png_dpi=350)
+  139      for key,stem in [(&#x27;E&#x27;,&#x27;Poster_Densidade_emissao_zonas&#x27;),(&#x27;D&#x27;,&#x27;Poster_Grupo_predominante&#x27;)]:
+  140          compatible=T/f&#x27;{stem}_compatible.svg&#x27;;convert(O/f&#x27;{stem}.svg&#x27;,compatible)
+  141          previous.prepare_svg(compatible,A/f&#x27;poster_{key}_MAIN.svg&#x27;,220000)
+  142      for key in [&#x27;Q&#x27;,&#x27;K&#x27;,&#x27;B&#x27;,&#x27;Z&#x27;]:
+  143          source=A/f&#x27;poster_{key}_PDF.svg&#x27;
+  144          previous.prepare_svg(source if source.exists() else A/f&#x27;poster_{key}_MAIN.svg&#x27;,A/f&#x27;poster_{key}_MAIN.svg&#x27;,220000)
+  145      previous.prepare_svg(T/&#x27;Poster_Grupo_predominante_compatible.svg&#x27;,A/&#x27;poster_D_METHOD.svg&#x27;,440000,True)
+  146      cuts=pd.read_csv(P/&#x27;limiares_cinco_faixas_validacao.csv&#x27;)
+  147      cuts=cuts[(cuts.pollutant==&#x27;PM25&#x27;)&amp;(cuts.basis==&#x27;density_tpy_km2&#x27;)]
+  148      box=[]
+  149      for q,d in cuts.groupby(&#x27;percentile_target&#x27;,sort=True):
+  150          assert len(d)==10
+  151          vals=d.cut_train.to_numpy()
+  152          box.append(dict(percentile=int(q),concentration=float(d.concentration_cut.iloc[0]),full_cut=float(d.cut_all_data.iloc[0]),values=vals.tolist(),q25=float(np.quantile(vals,.25)),median=float(np.median(vals)),q75=float(np.quantile(vals,.75)),minimum=float(vals.min()),maximum=float(vals.max()),balanced_accuracy_mean=float(d.balanced_accuracy_test.mean())))
+  153      cluster=[]
+  154      labels=pd.read_csv(P/&#x27;cenario_geral/PM25_1h_receptores.csv&#x27;)[[&#x27;receptor_id&#x27;,&#x27;best_cluster&#x27;]]
+  155      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  156          for per in [&#x27;1h&#x27;,&#x27;24h&#x27;,&#x27;anual&#x27;]:
+  157              f=pd.read_csv(P/f&#x27;cenario_geral/{pol}_{per}_receptores.csv&#x27;)
+  158              for k,d in f.groupby(&#x27;best_cluster&#x27;):
+  159                  cluster.append(dict(pollutant=pol,period=per,cluster=int(k),n=len(d),median=float(d.concentration.median()),mean=float(d.concentration.mean())))
+  160      dom=[]
+  161      display={&#x27;GERDAU&#x27;:&#x27;Gerdau&#x27;,&#x27;URB&#x27;:&#x27;Urban total&#x27;,&#x27;CSN-CDP&#x27;:&#x27;CSN Casa de Pedra&#x27;,&#x27;VALE_FAB&#x27;:&#x27;Vale Fábrica&#x27;,&#x27;VALE_VIG&#x27;:&#x27;Vale Viga&#x27;,&#x27;FERRO&#x27;:&#x27;Ferro+&#x27;,&#x27;SCOF&#x27;:&#x27;SCOF&#x27;,&#x27;LGA&#x27;:&#x27;LGA&#x27;,&#x27;NOGD&#x27;:&#x27;Nogueira Duarte&#x27;}
+  162      for k in sorted(annual.dominant_group.unique()):
+  163          name=GROUPS[k][&#x27;name&#x27;];dom.append(dict(id=k,label=display[k],color=cart.COLORS[name],n=int(annual.dominant_group.eq(k).sum())))
+  164      pooled=pd.read_csv(P/&#x27;contribuicoes_prioridades_pooled_PM25.csv&#x27;)
+  165      vals=[]
+  166      for k in [&#x27;GERDAU&#x27;,&#x27;URB&#x27;,&#x27;VALE_FAB&#x27;,&#x27;LGA&#x27;]:
+  167          vals.append(dict(id=k,label=display[k],value=float(pooled.loc[pooled.group_id.eq(k),&#x27;share_pct&#x27;].iloc[0])))
+  168      vals.append(dict(id=&#x27;OTHER&#x27;,label=&#x27;Other groups&#x27;,value=100-sum(v[&#x27;value&#x27;] for v in vals)))
+  169      from pyproj import Geod
+  170      ex=[extent[0]-.018,extent[1]-.025,extent[2]+.015,extent[3]+.026]
+  171      ground=Geod(ellps=&#x27;GRS80&#x27;).inv(ex[0],(ex[1]+ex[3])/2,ex[2],(ex[1]+ex[3])/2)[2]
+  172      out=dict(date=&#x27;2026-11-09&#x27;,ground_width_m=ground,boxplots=box,cluster_profiles=cluster,dominant_groups=dom,contributions=vals,road_features=len(roads),period_note=&#x27;Annual panels: mean of three native annual AERMOD concentrations, 2021–2023. Joint profiles: 1 h and 24 h maxima plus annual means for both pollutants.&#x27;,methods_scale=440000,results_scale=220000)
+  173      (A/&#x27;dados_poster_20261109.json&#x27;).write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  174      pd.DataFrame(cluster).to_csv(O/&#x27;Perfis_conjuntos_estatisticas.csv&#x27;,index=False)
+  175      cuts.to_csv(O/&#x27;Cortes_emissao_boxplot_PM25.csv&#x27;,index=False)
+  176      (O/&#x27;Auditoria_revisao_poster_20261109.json&#x27;).write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  177      print(json.dumps(dict(roads=len(roads),dominant=dom,boxplots=box),ensure_ascii=False))
+  178  
+  179  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

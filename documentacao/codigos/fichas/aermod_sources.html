@@ -1,0 +1,695 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/aermod_sources.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/aermod_sources.py</h2>
+<p>Reconstrói geometrias das fontes das planilhas/KML, interpreta o tipo de taxa, associa empreendimentos, aloca massa às zonas e confere conservação. Fluxos superficiais precisam da área emissora para resultar em g/s; fontes com taxa já integrada não recebem uma multiplicação adicional. O código distingue fontes de diferentes tipologias antes da distribuição territorial.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\aermod_sources.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>__future__</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>io_utils</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>math</td><td>Funções matemáticas escalares.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>shapely</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.ops</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.validation</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada pd.read_excel, linha 169.</li>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>df: Emission_Rate, Type.</li>
+<li>row: Emission_Rate, Type.</li>
+<li>config.DIRS: emission.</li>
+<li>cand.loc: _empname.</li>
+<li>emp.loc: _empname.</li>
+<li>out.at: urban_subgroup.</li>
+<li>src: emission_rate_native, source_id.</li>
+<li>z: AREA_KM2, EMIS_ALTA_INDUSTRIAL, EMIS_ALTA_URBANA, EMIS_DENS_GS_KM2, EMIS_FORA_MUN_GS, EMIS_HOTSPOT_P95, EMIS_INDUSTRIAL_GS, EMIS_PRESSAO_TIPO, EMIS_TOTAL_GS, EMIS_URBANA_GS, GRUPO_EMISSOR_LOCAL_ID.</li>
+<li>a: emission_gs, group_id.</li>
+<li>local: rank.</li>
+<li>dominant: group_id.</li>
+<li>sources: AEX, group_id.</li>
+<li>aa: emission_gs, group_id.</li>
+<li>z.loc: EMIS_URBANA_GS.</li>
+<li>s: allocated_gs, emission_total_gs.</li>
+<li>meta: expected, name.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>df: Emission_Rate, Type.</li>
+<li>out: enterprise.</li>
+<li>emp: _empname, geometry.</li>
+<li>z: AREA_KM2, CONTR_EXTERNA_PCT, EMIS_ALTA_FOCAL, EMIS_ALTA_INDUSTRIAL, EMIS_ALTA_TOTAL, EMIS_ALTA_URBANA, EMIS_CRITERIO, EMIS_DENS_CLASS, EMIS_DENS_GS_KM2, EMIS_DENS_Q33, EMIS_DENS_Q67, EMIS_DENTRO_MUN_GS, EMIS_FORA_MUN_GS, EMIS_HOTSPOT_P95, EMIS_INDUSTRIAL_GS, EMIS_PRESSAO_ALTA, EMIS_PRESSAO_SCORE, EMIS_PRESSAO_TIPO, EMIS_THR_HOTSPOT_P95, EMIS_THR_INDUSTRIAL_GS, EMIS_THR_TOTAL_GS, EMIS_THR_URBANA_GS, EMIS_TOTAL_GS, EMIS_URBANA_GS, GRUPO_EMISSOR_LOCAL, GRUPO_EMISSOR_LOCAL_ID.</li>
+<li>local: rank.</li>
+<li>aa: _urban_road, emission_gs.</li>
+<li>s: allocated_gs, allocated_pct, unallocated_gs.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>_kml_name_column(gdf)</td><td>66-76</td><td>Chamadas efetivas: .lower, columns.get, .str.strip, .any, str, .astype, values.ne, .dropna Retorno: None, c.</td></tr><tr><td>_clean_geometry(geom)</td><td>79-110</td><td>Chamadas efetivas: force_2d, collect, make_valid, geom.buffer, unary_union, parts.append Retorno: geom, geom.</td></tr><tr><td>_geometry_lookup_keys(value)</td><td>113-121</td><td>Chamadas efetivas: normalize_name, list, key.endswith, dict.fromkeys, keys.append, len Retorno: list(dict.fromkeys((k for k in keys if k))), [].</td></tr><tr><td>load_source_geometries_from_files(base_dir: Path)</td><td>124-154</td><td>Chamadas efetivas: getattr, set, files.extend, sorted, f.exists, dedup.append, seen.add, read_vector Retorno: lookup.</td></tr><tr><td>detect_lakes_header(path: Path)</td><td>157-164</td><td>lê dados Retorno: int(idx).</td></tr><tr><td>read_lakes_sources(path: Path)</td><td>167-179</td><td>lê dados Retorno: df.</td></tr><tr><td>_coord_pairs(row)</td><td>182-194</td><td>Chamadas efetivas: range, int, float, math.isfinite, coords.append, row.get Retorno: coords.</td></tr><tr><td>source_geometry(row)</td><td>197-263</td><td>Chamadas efetivas: _coord_pairs, Point, .buffer, box, LineString, len, pd.notna, float Retorno: Point(coords[0]), None.</td></tr><tr><td>_row_width_m(row)</td><td>266-271</td><td>Chamadas efetivas: pd.notna, float, pd.to_numeric, pd.Series, row.get Retorno: np.nan, float(v).</td></tr><tr><td>_source_measure(row, geom)</td><td>274-285</td><td>Chamadas efetivas: .upper, float, _row_width_m, str, np.isfinite, row.get Retorno: (area, length), (np.nan, np.nan).</td></tr><tr><td>total_emission_gs(row, geom)</td><td>288-308</td><td>Chamadas efetivas: float, .upper, _source_measure, str, np.isfinite Retorno: (rate, &#x27;taxa nativa - revisar&#x27;, &#x27;desconhecida&#x27;, area_m2, length_m), (np.nan, &#x27;área geométrica ausente - total não calculado&#x27;, &#x27;g/s/m2&#x27;, area_m2, length_m).</td></tr><tr><td>build_source_gdf(path: Path, pollutant: str)</td><td>311-357</td><td>Chamadas efetivas: read_lakes_sources, load_source_geometries_from_files, df.iterrows, gpd.GeoDataFrame, str, normalize_name, geom_lookup.get, _clean_geometry Retorno: gpd.GeoDataFrame(records, geometry=&#x27;geometry&#x27;, crs=config.CRS_PROJECT).</td></tr><tr><td>_enterprise_name_col(emp)</td><td>360-366</td><td>Chamadas efetivas: .lower, str Retorno: None, lower[c].</td></tr><tr><td>associate_enterprises(sources, enterprises, nearest_tolerance_m=250.0)</td><td>369-410</td><td>Chamadas efetivas: sources.copy, .copy, emp.geometry.map, _enterprise_name_col, out.iterrows, .astype, _clean_geometry, enterprises.to_crs Retorno: out, out.</td></tr><tr><td>allocate_emissions_to_zones(sources, zones)</td><td>413-609</td><td>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial. Retorno: (z, a), &#x27;alta&#x27;.</td></tr><tr><td>emission_mass_balance_audit(sources, allocations)</td><td>612-623</td><td>Chamadas efetivas: .copy, .rename, s.merge, .fillna, pd.to_numeric, .replace, .sum, allocations.groupby Retorno: s.</td></tr><tr><td>group_count_audit(sources)</td><td>626-644</td><td>Chamadas efetivas: GROUPS.items, pd.DataFrame, int, rows.append, meta.get, .sum, .fillna, sources.get Retorno: pd.DataFrame(rows).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/aermod_sources.py, linhas 511-517.</p>
+<pre><code>    pos = dens[dens &gt; 0]
+    q33 = float(pos.quantile(1/3)) if not pos.empty else np.nan
+    q67 = float(pos.quantile(2/3)) if not pos.empty else np.nan
+    def _dens_class(v):
+        if pd.isna(v) or v &lt;= 0:
+            return &quot;sem_emissao&quot;
+        if pd.notna(q33) and v &lt;= q33:</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | pd.read_excel.
+    5  # Campos/chaves em df: Emission_Rate, Type.
+    6  # Campos/chaves em row: Emission_Rate, Type.
+    7  # Campos/chaves em config.DIRS: emission.
+    8  # Campos/chaves em cand.loc: _empname.
+    9  # Campos/chaves em emp.loc: _empname.
+   10  # Campos/chaves em out.at: urban_subgroup.
+   11  # Campos/chaves em src: emission_rate_native, source_id.
+   12  # Campos/chaves em z: AREA_KM2, EMIS_ALTA_INDUSTRIAL, EMIS_ALTA_URBANA, EMIS_DENS_GS_KM2, EMIS_FORA_MUN_GS, EMIS_HOTSPOT_P95, EMIS_INDUSTRIAL_GS, EMIS_PRESSAO_TIPO, EMIS_TOTAL_GS, EMIS_URBANA_GS, GRUPO_EMISSOR_LOCAL_ID.
+   13  # Campos/chaves em a: emission_gs, group_id.
+   14  # Campos/chaves em local: rank.
+   15  # Campos/chaves em dominant: group_id.
+   16  # Campos/chaves em sources: AEX, group_id.
+   17  # Campos/chaves em aa: emission_gs, group_id.
+   18  # Campos/chaves em z.loc: EMIS_URBANA_GS.
+   19  # Campos/chaves em s: allocated_gs, emission_total_gs.
+   20  # Campos/chaves em meta: expected, name.
+   21  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+   22  # Campos/chaves gerados em df: Emission_Rate, Type.
+   23  # Campos/chaves gerados em out: enterprise.
+   24  # Campos/chaves gerados em emp: _empname, geometry.
+   25  # Campos/chaves gerados em z: AREA_KM2, CONTR_EXTERNA_PCT, EMIS_ALTA_FOCAL, EMIS_ALTA_INDUSTRIAL, EMIS_ALTA_TOTAL, EMIS_ALTA_URBANA, EMIS_CRITERIO, EMIS_DENS_CLASS, EMIS_DENS_GS_KM2, EMIS_DENS_Q33, EMIS_DENS_Q67, EMIS_DENTRO_MUN_GS, EMIS_FORA_MUN_GS, EMIS_HOTSPOT_P95, EMIS_INDUSTRIAL_GS, EMIS_PRESSAO_ALTA, EMIS_PRESSAO_SCORE, EMIS_PRESSAO_TIPO, EMIS_THR_HOTSPOT_P95, EMIS_THR_INDUSTRIAL_GS, EMIS_THR_TOTAL_GS, EMIS_THR_URBANA_GS, EMIS_TOTAL_GS, EMIS_URBANA_GS, GRUPO_EMISSOR_LOCAL, GRUPO_EMISSOR_LOCAL_ID.
+   26  # Campos/chaves gerados em local: rank.
+   27  # Campos/chaves gerados em aa: _urban_road, emission_gs.
+   28  # Campos/chaves gerados em s: allocated_gs, allocated_pct, unallocated_gs.
+   29  # CÓDIGO DO PROCESSAMENTO
+   30  
+   31  from __future__ import annotations
+   32  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   33  import sys as _cp_sys
+   34  from pathlib import Path as _cp_Path
+   35  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   36  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   37      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   38      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   39          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   40          break
+   41  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   42  # FIM DOS CAMINHOS PORTÁTEIS
+   43  
+   44  
+   45  from pathlib import Path
+   46  import math
+   47  import re
+   48  
+   49  import numpy as np
+   50  import pandas as pd
+   51  import geopandas as gpd
+   52  from shapely.geometry import Point, Polygon, LineString, box
+   53  from shapely import affinity
+   54  from shapely.validation import make_valid
+   55  
+   56  import config
+   57  from io_utils import read_vector, normalize_name
+   58  from groups import infer_primary_group_from_source, urban_subgroup_from_source, is_exposed_area, canonical_group, GROUPS
+   59  
+   60  VALID_TYPES = {&quot;POINT&quot;, &quot;AREA&quot;, &quot;AREA_CIRC&quot;, &quot;AREA_POLY&quot;, &quot;VOLUME&quot;, &quot;OPEN_PIT&quot;, &quot;LINE&quot;, &quot;LINE_VOLUME&quot;, &quot;LINE_AREA&quot;, &quot;RLINE&quot;, &quot;RLINEXT&quot;}
+   61  AREA_RATE_TYPES = {&quot;AREA&quot;, &quot;AREA_CIRC&quot;, &quot;AREA_POLY&quot;, &quot;OPEN_PIT&quot;, &quot;LINE_AREA&quot;, &quot;LINE&quot;, &quot;RLINE&quot;}
+   62  TOTAL_RATE_TYPES = {&quot;POINT&quot;, &quot;VOLUME&quot;, &quot;LINE_VOLUME&quot;}
+   63  LENGTH_RATE_TYPES = {&quot;RLINEXT&quot;}
+   64  
+   65  # Kml name column
+   66  def _kml_name_column(gdf):
+   67      preferred = [&quot;name&quot;, &quot;nome&quot;, &quot;source_id&quot;, &quot;id&quot;, &quot;description&quot;]
+   68      columns = {str(c).lower(): c for c in gdf.columns}
+   69      for key in preferred:
+   70          c = columns.get(key)
+   71          if c is None:
+   72              continue
+   73          values = gdf[c].dropna().astype(str).str.strip()
+   74          if not values.empty and values.ne(&quot;&quot;).any():
+   75              return c
+   76      return None
+   77  
+   78  # Clean geometry
+   79  def _clean_geometry(geom):
+   80      if geom is None or geom.is_empty:
+   81          return geom
+   82      try:
+   83          from shapely import force_2d
+   84  
+   85          geom = force_2d(geom)
+   86      except Exception:
+   87          pass
+   88      try:
+   89          if not geom.is_valid:
+   90              geom = make_valid(geom)
+   91      except Exception:
+   92          try:
+   93              geom = geom.buffer(0)
+   94          except Exception:
+   95              pass
+   96  
+   97      if geom.geom_type == &#x27;GeometryCollection&#x27;:
+   98          from shapely.ops import unary_union
+   99          parts=[]
+  100          def collect(g):
+  101              if g.geom_type in (&#x27;GeometryCollection&#x27;,&#x27;MultiPolygon&#x27;,&#x27;MultiLineString&#x27;,&#x27;MultiPoint&#x27;):
+  102                  for p in g.geoms:collect(p)
+  103              elif not g.is_empty:parts.append(g)
+  104          collect(geom)
+  105          for types in ({&#x27;Polygon&#x27;},{&#x27;LineString&#x27;,&#x27;LinearRing&#x27;},{&#x27;Point&#x27;}):
+  106              selected=[p for p in parts if p.geom_type in types]
+  107              if selected:
+  108                  geom=unary_union(selected)
+  109                  break
+  110      return geom
+  111  
+  112  # Geometry lookup keys
+  113  def _geometry_lookup_keys(value):
+  114      key = normalize_name(value)
+  115      if not key:
+  116          return []
+  117      keys = [key]
+  118      for suffix in (&quot;-base&quot;, &quot;-poly&quot;, &quot;-polygon&quot;, &quot;-line&quot;, &quot;-point&quot;):
+  119          if key.endswith(suffix):
+  120              keys.append(key[: -len(suffix)])
+  121      return list(dict.fromkeys(k for k in keys if k))
+  122  
+  123  # Load source geometries from files
+  124  def load_source_geometries_from_files(base_dir: Path):
+  125      lookup = {}
+  126      patterns = getattr(config, &quot;SOURCE_GEOMETRY_SEARCH_PATTERNS&quot;, [])
+  127      files = []
+  128      for pattern in patterns:
+  129          files.extend(sorted(base_dir.glob(pattern)))
+  130          files.extend(sorted(base_dir.rglob(pattern)))
+  131      seen = set()
+  132      dedup = []
+  133      for f in files:
+  134          if f not in seen and f.exists():
+  135              dedup.append(f); seen.add(f)
+  136      for f in dedup:
+  137          try:
+  138              gdf = read_vector(f)
+  139              if gdf.empty:
+  140                  continue
+  141              name_col = _kml_name_column(gdf)
+  142              if name_col is None:
+  143                  continue
+  144              for r in gdf.itertuples():
+  145                  geom = getattr(r, &#x27;geometry&#x27;)
+  146                  if geom is None or geom.is_empty:
+  147                      continue
+  148                  geom = _clean_geometry(geom)
+  149                  for key in _geometry_lookup_keys(getattr(r, name_col)):
+  150                      if key not in lookup:
+  151                          lookup[key] = geom
+  152          except Exception:
+  153              continue
+  154      return lookup
+  155  
+  156  # Detect lakes header
+  157  def detect_lakes_header(path: Path):
+  158      head = pd.read_excel(path, header=None, nrows=80)
+  159      for idx, row in head.iterrows():
+  160          a = str(row.iloc[0]).strip() if len(row) &gt; 0 else &quot;&quot;
+  161          b = str(row.iloc[1]).strip() if len(row) &gt; 1 else &quot;&quot;
+  162          if a == &quot;Type&quot; and b == &quot;ID&quot;:
+  163              return int(idx)
+  164      raise ValueError(f&quot;Cabeçalho Type/ID não encontrado em {path}&quot;)
+  165  
+  166  # Read lakes sources
+  167  def read_lakes_sources(path: Path):
+  168      header_idx = detect_lakes_header(path)
+  169      df = pd.read_excel(path, header=header_idx)
+  170      df.columns = [str(c).strip() for c in df.columns]
+  171      if &quot;Type&quot; not in df or &quot;ID&quot; not in df or &quot;Emission_Rate&quot; not in df:
+  172          raise ValueError(&quot;Arquivo Lakes sem Type/ID/Emission_Rate&quot;)
+  173  
+  174      df[&quot;Type&quot;] = df[&quot;Type&quot;].astype(str).str.strip().str.upper()
+  175      df[&quot;Emission_Rate&quot;] = pd.to_numeric(df[&quot;Emission_Rate&quot;], errors=&quot;coerce&quot;)
+  176  
+  177      df = df[df[&quot;Type&quot;].isin(VALID_TYPES) &amp; df[&quot;Emission_Rate&quot;].notna()].copy()
+  178      df = df.drop_duplicates(subset=[&quot;ID&quot;], keep=&quot;first&quot;)
+  179      return df
+  180  
+  181  # Coord pairs
+  182  def _coord_pairs(row):
+  183      try:
+  184          n = int(float(row.get(&quot;Num_Coords&quot;, 1)))
+  185      except Exception:
+  186          n = 1
+  187      coords = []
+  188      for i in range(1, n + 1):
+  189          try:
+  190              x=float(row.get(f&quot;X{i}&quot;));y=float(row.get(f&quot;Y{i}&quot;))
+  191          except (TypeError,ValueError):
+  192              continue
+  193          if math.isfinite(x) and math.isfinite(y):coords.append((x,y))
+  194      return coords
+  195  
+  196  # Source geometry
+  197  def source_geometry(row):
+  198      typ = row[&quot;Type&quot;]
+  199      coords = _coord_pairs(row)
+  200      if not coords:
+  201          return None
+  202  
+  203      if typ in {&quot;POINT&quot;, &quot;VOLUME&quot;}:
+  204          return Point(coords[0])
+  205  
+  206      if typ == &quot;AREA_CIRC&quot;:
+  207          radius = pd.to_numeric(pd.Series([row.get(&quot;Radius&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  208          diam = pd.to_numeric(pd.Series([row.get(&quot;Diam&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  209          if pd.notna(radius) and radius &gt; 0:
+  210              r = float(radius)
+  211          elif pd.notna(diam) and diam &gt; 0:
+  212  
+  213              r = float(diam) / 2.0
+  214          else:
+  215              return Point(coords[0])
+  216          return Point(coords[0]).buffer(r, resolution=32)
+  217  
+  218      if typ == &quot;AREA&quot;:
+  219          lx = pd.to_numeric(pd.Series([row.get(&quot;Length_X&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  220          ly = pd.to_numeric(pd.Series([row.get(&quot;Length_Y&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  221          ang = pd.to_numeric(pd.Series([row.get(&quot;Rotation_Angle&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  222          if pd.isna(lx) or pd.isna(ly):
+  223              return Point(coords[0])
+  224          x, y = coords[0]
+  225          geom = box(x, y, x + float(lx), y + float(ly))
+  226          if pd.notna(ang) and float(ang) != 0:
+  227              geom = affinity.rotate(geom, float(ang), origin=(x, y), use_radians=False)
+  228          return geom
+  229  
+  230      if typ == &quot;AREA_POLY&quot; and len(coords) &gt;= 3:
+  231          try:
+  232              return make_valid(Polygon(coords))
+  233          except Exception:
+  234              return LineString(coords)
+  235  
+  236      if typ in {&quot;LINE_AREA&quot;, &quot;LINE&quot;, &quot;RLINE&quot;, &quot;RLINEXT&quot;} and len(coords) &gt;= 2:
+  237          line = LineString(coords)
+  238          width = np.nan
+  239          for key in (&quot;Width&quot;, &quot;Width_m&quot;, &quot;Source_Width&quot;, &quot;Road_Width&quot;, &quot;Length_X&quot;):
+  240              v = pd.to_numeric(pd.Series([row.get(key)]), errors=&quot;coerce&quot;).iloc[0]
+  241              if pd.notna(v) and float(v) &gt; 0:
+  242                  width = float(v); break
+  243  
+  244          if pd.notna(width) and typ != &quot;RLINEXT&quot;:
+  245              return make_valid(line.buffer(width / 2.0, cap_style=2, join_style=2))
+  246          if len(coords) &gt;= 3 and typ != &quot;RLINEXT&quot;:
+  247              try:
+  248                  return make_valid(Polygon(coords))
+  249              except Exception:
+  250                  pass
+  251          return line
+  252  
+  253      if typ == &quot;LINE_VOLUME&quot; and len(coords) &gt;= 2:
+  254          return LineString(coords)
+  255  
+  256      if len(coords) &gt;= 3:
+  257          try:
+  258              return make_valid(Polygon(coords))
+  259          except Exception:
+  260              pass
+  261      if len(coords) &gt;= 2:
+  262          return LineString(coords)
+  263      return Point(coords[0])
+  264  
+  265  # Row width m
+  266  def _row_width_m(row):
+  267      for key in (&quot;Width&quot;, &quot;Width_m&quot;, &quot;Source_Width&quot;, &quot;Road_Width&quot;, &quot;Length_X&quot;):
+  268          v = pd.to_numeric(pd.Series([row.get(key)]), errors=&quot;coerce&quot;).iloc[0]
+  269          if pd.notna(v) and float(v) &gt; 0:
+  270              return float(v)
+  271      return np.nan
+  272  
+  273  # Source measure
+  274  def _source_measure(row, geom):
+  275      &quot;&quot;&quot;Retorna área [m²] e comprimento [m] coerentes com o tipo da fonte.&quot;&quot;&quot;
+  276      if geom is None or geom.is_empty:
+  277          return np.nan, np.nan
+  278      area = float(geom.area) if geom.geom_type in {&quot;Polygon&quot;, &quot;MultiPolygon&quot;} else np.nan
+  279      length = float(geom.length) if geom.geom_type in {&quot;LineString&quot;, &quot;MultiLineString&quot;} else np.nan
+  280      typ = str(row.get(&quot;Type&quot;, &quot;&quot;)).upper()
+  281      if typ in AREA_RATE_TYPES and not np.isfinite(area):
+  282          width = _row_width_m(row)
+  283          if np.isfinite(length) and np.isfinite(width):
+  284              area = length * width
+  285      return area, length
+  286  
+  287  # Total emission gs
+  288  def total_emission_gs(row, geom):
+  289      &quot;&quot;&quot;Converte a taxa nativa do AERMOD para emissão total em g/s sem misturar unidades.
+  290  
+  291      AREA/AREACIRC/AREAPOLY/OPEN_PIT/LINE/LINE_AREA/RLINE: g/s/m² × área efetiva.
+  292      POINT/VOLUME/LINE_VOLUME: taxa já é total em g/s.
+  293      RLINEXT: g/s/m × comprimento, quando usado no formato nativo do AERMOD.
+  294      &quot;&quot;&quot;
+  295      rate = float(row[&quot;Emission_Rate&quot;])
+  296      typ = str(row[&quot;Type&quot;]).upper()
+  297      area_m2, length_m = _source_measure(row, geom)
+  298      if typ in AREA_RATE_TYPES:
+  299          if np.isfinite(area_m2) and area_m2 &gt; 0:
+  300              return rate * area_m2, &quot;g/s/m2 × área da fonte&quot;, &quot;g/s/m2&quot;, area_m2, length_m
+  301          return np.nan, &quot;área geométrica ausente - total não calculado&quot;, &quot;g/s/m2&quot;, area_m2, length_m
+  302      if typ in TOTAL_RATE_TYPES:
+  303          return rate, &quot;g/s total&quot;, &quot;g/s&quot;, area_m2, length_m
+  304      if typ in LENGTH_RATE_TYPES:
+  305          if np.isfinite(length_m) and length_m &gt; 0:
+  306              return rate * length_m, &quot;g/s/m × comprimento&quot;, &quot;g/s/m&quot;, area_m2, length_m
+  307          return np.nan, &quot;comprimento ausente - total não calculado&quot;, &quot;g/s/m&quot;, area_m2, length_m
+  308      return rate, &quot;taxa nativa - revisar&quot;, &quot;desconhecida&quot;, area_m2, length_m
+  309  
+  310  # Build source gdf
+  311  def build_source_gdf(path: Path, pollutant: str):
+  312      df = read_lakes_sources(path)
+  313      geom_lookup = load_source_geometries_from_files(config.DIRS[&quot;emission&quot;])
+  314      records = []
+  315      for _, row in df.iterrows():
+  316          sid = str(row.get(&quot;ID&quot;))
+  317          key = normalize_name(sid)
+  318          geom = geom_lookup.get(key)
+  319          if geom is None:
+  320              geom = source_geometry(row)
+  321          if geom is None or geom.is_empty:
+  322              continue
+  323          geom = _clean_geometry(geom)
+  324          typ = str(row[&quot;Type&quot;]).upper()
+  325  
+  326          if typ in AREA_RATE_TYPES and geom.geom_type in {&quot;LineString&quot;, &quot;MultiLineString&quot;}:
+  327              width = _row_width_m(row)
+  328              if np.isfinite(width) and width &gt; 0:
+  329                  geom = _clean_geometry(geom.buffer(width / 2.0, cap_style=2, join_style=2))
+  330          total, assumption, native_unit, area_m2, length_m = total_emission_gs(row, geom)
+  331          rate = float(row[&quot;Emission_Rate&quot;])
+  332          surface_rate = rate if typ in AREA_RATE_TYPES else np.nan
+  333          line_rate = rate if typ in LENGTH_RATE_TYPES else np.nan
+  334          if typ == &quot;LINE_VOLUME&quot; and np.isfinite(length_m) and length_m &gt; 0:
+  335              line_rate_equiv = float(total) / length_m if np.isfinite(total) else np.nan
+  336          else:
+  337              line_rate_equiv = line_rate
+  338          records.append({
+  339              &quot;pollutant&quot;: pollutant,
+  340              &quot;source_id&quot;: sid,
+  341              &quot;desc&quot;: str(row.get(&quot;Desc&quot;)) if pd.notna(row.get(&quot;Desc&quot;)) else &quot;&quot;,
+  342              &quot;source_type&quot;: typ,
+  343              &quot;emission_rate_native&quot;: rate,
+  344              &quot;native_unit&quot;: native_unit,
+  345              &quot;source_area_m2&quot;: area_m2,
+  346              &quot;source_length_m&quot;: length_m,
+  347              &quot;surface_rate_gs_m2&quot;: surface_rate,
+  348              &quot;line_rate_gs_m&quot;: line_rate_equiv,
+  349              &quot;emission_total_gs&quot;: float(total) if np.isfinite(total) else np.nan,
+  350              &quot;unit_assumption&quot;: assumption,
+  351              &quot;geometry_source&quot;: &quot;kml/kmz&quot; if key in geom_lookup else &quot;planilha&quot;,
+  352              &quot;group_id&quot;: infer_primary_group_from_source(row.get(&quot;ID&quot;), row.get(&quot;Desc&quot;)),
+  353              &quot;urban_subgroup&quot;: urban_subgroup_from_source(row.get(&quot;ID&quot;)),
+  354              &quot;AEX&quot;: bool(is_exposed_area(row.get(&quot;ID&quot;))),
+  355              &quot;geometry&quot;: geom,
+  356          })
+  357      return gpd.GeoDataFrame(records, geometry=&quot;geometry&quot;, crs=config.CRS_PROJECT)
+  358  
+  359  # Enterprise name col
+  360  def _enterprise_name_col(emp):
+  361      candidates = [&quot;nome&quot;, &quot;name&quot;, &quot;empresa&quot;, &quot;empreendimento&quot;, &quot;razao&quot;, &quot;razão&quot;, &quot;descricao&quot;, &quot;descrição&quot;]
+  362      lower = {str(c).lower(): c for c in emp.columns}
+  363      for c in candidates:
+  364          if c in lower:
+  365              return lower[c]
+  366      return None
+  367  
+  368  # Associate enterprises
+  369  def associate_enterprises(sources, enterprises, nearest_tolerance_m=250.0):
+  370      out = sources.copy()
+  371      out[&quot;enterprise&quot;] = None
+  372      if enterprises is None or enterprises.empty:
+  373          return out
+  374      emp = enterprises.to_crs(out.crs).copy()
+  375      emp[&quot;geometry&quot;] = emp.geometry.map(_clean_geometry)
+  376      name_col = _enterprise_name_col(emp)
+  377      if name_col is None:
+  378          emp[&quot;_empname&quot;] = [f&quot;EMP_{i}&quot; for i in emp.index]
+  379      else:
+  380          emp[&quot;_empname&quot;] = emp[name_col].astype(str)
+  381  
+  382      for idx, src in out.iterrows():
+  383          geom = src.geometry
+  384          geom = _clean_geometry(geom)
+  385          cand = emp[emp.intersects(geom)]
+  386          chosen = None
+  387          if not cand.empty:
+  388              if geom.geom_type in {&quot;Polygon&quot;, &quot;MultiPolygon&quot;}:
+  389                  scores = cand.geometry.intersection(geom).area
+  390                  chosen = cand.loc[scores.idxmax(), &quot;_empname&quot;]
+  391              elif geom.geom_type in {&quot;LineString&quot;, &quot;MultiLineString&quot;}:
+  392                  scores = cand.geometry.intersection(geom).length
+  393                  chosen = cand.loc[scores.idxmax(), &quot;_empname&quot;]
+  394              else:
+  395                  chosen = cand.iloc[0][&quot;_empname&quot;]
+  396          else:
+  397              d = emp.geometry.distance(geom)
+  398              if len(d) and float(d.min()) &lt;= nearest_tolerance_m:
+  399                  chosen = emp.loc[d.idxmin(), &quot;_empname&quot;]
+  400          out.at[idx, &quot;enterprise&quot;] = chosen
+  401  
+  402          subgroup = out.at[idx, &quot;urban_subgroup&quot;]
+  403          has_urban_subgroup = pd.notna(subgroup) and str(subgroup).strip() != &quot;&quot;
+  404          if has_urban_subgroup:
+  405              out.at[idx, &quot;group_id&quot;] = &quot;URB&quot;
+  406          elif chosen:
+  407              g = canonical_group(chosen)
+  408              if g and g not in {&quot;AEX&quot;, &quot;URB-FER&quot;, &quot;URB-NUC&quot;, &quot;URB-VIA&quot;}:
+  409                  out.at[idx, &quot;group_id&quot;] = g
+  410      return out
+  411  
+  412  # Allocate emissions to zones
+  413  def allocate_emissions_to_zones(sources, zones):
+  414      &quot;&quot;&quot;Aloca emissões às zonas preservando massa e as unidades nativas da fonte.
+  415  
+  416      Diferentemente da normalização pela soma das interseções, fontes parcialmente fora do
+  417      zoneamento não têm sua emissão externa redistribuída artificialmente para as zonas internas.
+  418      &quot;&quot;&quot;
+  419      z = zones.copy()
+  420      z[&quot;EMIS_TOTAL_GS&quot;] = 0.0
+  421      z[&quot;AREA_KM2&quot;] = z.geometry.area / 1e6
+  422  
+  423      allocations = []
+  424      point_radius = float(getattr(config, &quot;EMISSION_POINT_SUPPORT_RADIUS_M&quot;, 250.0))
+  425      line_half_width = float(getattr(config, &quot;EMISSION_LINE_SUPPORT_HALF_WIDTH_M&quot;, 50.0))
+  426      for _, src in sources.iterrows():
+  427          geom = src.geometry
+  428          if geom is None or geom.is_empty:
+  429              continue
+  430          typ = str(src.get(&quot;source_type&quot;, &quot;&quot;)).upper()
+  431          total = pd.to_numeric(pd.Series([src.get(&quot;emission_total_gs&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  432          rate_area = pd.to_numeric(pd.Series([src.get(&quot;surface_rate_gs_m2&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  433          rate_line = pd.to_numeric(pd.Series([src.get(&quot;line_rate_gs_m&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  434          area_total = pd.to_numeric(pd.Series([src.get(&quot;source_area_m2&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  435          length_total = pd.to_numeric(pd.Series([src.get(&quot;source_length_m&quot;)]), errors=&quot;coerce&quot;).iloc[0]
+  436  
+  437          cand = z[z.intersects(geom)].copy()
+  438          if cand.empty:
+  439              continue
+  440  
+  441          if geom.geom_type in {&quot;Point&quot;, &quot;MultiPoint&quot;}:
+  442  
+  443              n = len(cand)
+  444              for zid in cand.index:
+  445                  value = float(total) / n if np.isfinite(total) and n else 0.0
+  446                  z.at[zid, &quot;EMIS_TOTAL_GS&quot;] += value
+  447                  allocations.append({
+  448                      &quot;zone_index&quot;: zid, &quot;source_id&quot;: src[&quot;source_id&quot;], &quot;source_type&quot;: typ,
+  449                      &quot;group_id&quot;: src.get(&quot;group_id&quot;), &quot;enterprise&quot;: src.get(&quot;enterprise&quot;),
+  450                      &quot;emission_gs&quot;: value, &quot;source_total_gs&quot;: total, &quot;allocated_fraction&quot;: 1.0 / n if n else np.nan,
+  451                      &quot;intersection_measure&quot;: np.nan, &quot;source_measure&quot;: np.nan, &quot;allocation_basis&quot;: &quot;emissão total g/s&quot;,
+  452                      &quot;source_intensity_gs_km2&quot;: value / (np.pi * point_radius**2 / 1e6) if point_radius &gt; 0 else np.nan,
+  453                  })
+  454              continue
+  455  
+  456          if geom.geom_type in {&quot;Polygon&quot;, &quot;MultiPolygon&quot;}:
+  457              inter = cand.geometry.intersection(geom).area
+  458              for zid, inter_area in inter.items():
+  459                  if inter_area &lt;= 0:
+  460                      continue
+  461                  if np.isfinite(rate_area):
+  462                      value = float(rate_area) * float(inter_area)
+  463                      frac = float(inter_area) / float(area_total) if np.isfinite(area_total) and area_total &gt; 0 else np.nan
+  464                      basis = &quot;g/s/m2 × área de interseção&quot;
+  465                  elif np.isfinite(total) and np.isfinite(area_total) and area_total &gt; 0:
+  466                      frac = float(inter_area) / float(area_total)
+  467                      value = float(total) * frac
+  468                      basis = &quot;g/s total × fração de área&quot;
+  469                  else:
+  470                      continue
+  471                  z.at[zid, &quot;EMIS_TOTAL_GS&quot;] += value
+  472                  allocations.append({
+  473                      &quot;zone_index&quot;: zid, &quot;source_id&quot;: src[&quot;source_id&quot;], &quot;source_type&quot;: typ,
+  474                      &quot;group_id&quot;: src.get(&quot;group_id&quot;), &quot;enterprise&quot;: src.get(&quot;enterprise&quot;),
+  475                      &quot;emission_gs&quot;: value, &quot;source_total_gs&quot;: total, &quot;allocated_fraction&quot;: frac,
+  476                      &quot;intersection_measure&quot;: float(inter_area), &quot;source_measure&quot;: area_total, &quot;allocation_basis&quot;: basis,
+  477                      &quot;source_intensity_gs_km2&quot;: value / (float(inter_area) / 1e6) if inter_area &gt; 0 else np.nan,
+  478                  })
+  479              continue
+  480  
+  481          if geom.geom_type in {&quot;LineString&quot;, &quot;MultiLineString&quot;}:
+  482              inter = cand.geometry.intersection(geom).length
+  483              for zid, inter_len in inter.items():
+  484                  if inter_len &lt;= 0:
+  485                      continue
+  486                  if typ == &quot;RLINEXT&quot; and np.isfinite(src.get(&quot;emission_rate_native&quot;, np.nan)):
+  487                      value = float(src[&quot;emission_rate_native&quot;]) * float(inter_len)
+  488                      frac = float(inter_len) / float(length_total) if np.isfinite(length_total) and length_total &gt; 0 else np.nan
+  489                      basis = &quot;g/s/m × comprimento de interseção&quot;
+  490                  elif typ == &quot;LINE_VOLUME&quot; and np.isfinite(total) and np.isfinite(length_total) and length_total &gt; 0:
+  491                      frac = float(inter_len) / float(length_total)
+  492                      value = float(total) * frac
+  493                      basis = &quot;g/s total × fração de comprimento&quot;
+  494                  elif np.isfinite(rate_line):
+  495                      value = float(rate_line) * float(inter_len)
+  496                      frac = float(inter_len) / float(length_total) if np.isfinite(length_total) and length_total &gt; 0 else np.nan
+  497                      basis = &quot;g/s/m × comprimento de interseção&quot;
+  498                  else:
+  499                      continue
+  500                  z.at[zid, &quot;EMIS_TOTAL_GS&quot;] += value
+  501                  allocations.append({
+  502                      &quot;zone_index&quot;: zid, &quot;source_id&quot;: src[&quot;source_id&quot;], &quot;source_type&quot;: typ,
+  503                      &quot;group_id&quot;: src.get(&quot;group_id&quot;), &quot;enterprise&quot;: src.get(&quot;enterprise&quot;),
+  504                      &quot;emission_gs&quot;: value, &quot;source_total_gs&quot;: total, &quot;allocated_fraction&quot;: frac,
+  505                      &quot;intersection_measure&quot;: float(inter_len), &quot;source_measure&quot;: length_total, &quot;allocation_basis&quot;: basis,
+  506                      &quot;source_intensity_gs_km2&quot;: value / (float(inter_len) * 2 * line_half_width / 1e6) if inter_len &gt; 0 and line_half_width &gt; 0 else np.nan,
+  507                  })
+  508  
+  509      z[&quot;EMIS_DENS_GS_KM2&quot;] = z[&quot;EMIS_TOTAL_GS&quot;] / z[&quot;AREA_KM2&quot;].replace(0, np.nan)
+  510      dens = pd.to_numeric(z[&quot;EMIS_DENS_GS_KM2&quot;], errors=&quot;coerce&quot;)
+  511      pos = dens[dens &gt; 0]
+  512      q33 = float(pos.quantile(1/3)) if not pos.empty else np.nan
+  513      q67 = float(pos.quantile(2/3)) if not pos.empty else np.nan
+  514      def _dens_class(v):
+  515          if pd.isna(v) or v &lt;= 0:
+  516              return &quot;sem_emissao&quot;
+  517          if pd.notna(q33) and v &lt;= q33:
+  518              return &quot;baixa&quot;
+  519          if pd.notna(q67) and v &lt;= q67:
+  520              return &quot;moderada&quot;
+  521          return &quot;alta&quot;
+  522      z[&quot;EMIS_DENS_CLASS&quot;] = dens.map(_dens_class)
+  523      z[&quot;EMIS_DENS_Q33&quot;] = q33
+  524      z[&quot;EMIS_DENS_Q67&quot;] = q67
+  525  
+  526      a = pd.DataFrame(allocations)
+  527      if not a.empty:
+  528          focal = a.groupby(&quot;zone_index&quot;)[&quot;source_intensity_gs_km2&quot;].quantile(0.95)
+  529          z[&quot;EMIS_HOTSPOT_P95&quot;] = focal.reindex(z.index).fillna(0.0)
+  530  
+  531          local = a[pd.to_numeric(a[&quot;emission_gs&quot;], errors=&quot;coerce&quot;) &gt; 0].groupby(
+  532              [&quot;zone_index&quot;, &quot;group_id&quot;], dropna=False
+  533          )[&quot;emission_gs&quot;].sum().reset_index()
+  534          local[&quot;rank&quot;] = local.groupby(&quot;zone_index&quot;)[&quot;emission_gs&quot;].rank(method=&quot;first&quot;, ascending=False)
+  535          dominant = local[local[&quot;rank&quot;] == 1].set_index(&quot;zone_index&quot;)
+  536          z[&quot;GRUPO_EMISSOR_LOCAL_ID&quot;] = dominant[&quot;group_id&quot;].reindex(z.index)
+  537          z[&quot;GRUPO_EMISSOR_LOCAL&quot;] = z[&quot;GRUPO_EMISSOR_LOCAL_ID&quot;].map(
+  538              lambda g: GROUPS.get(g, {}).get(&quot;name&quot;, g) if pd.notna(g) else None
+  539          )
+  540  
+  541          src_totals = sources.assign(
+  542              group_id=sources[&quot;group_id&quot;].fillna(&quot;NAO_IDENTIFICADO&quot;)
+  543          ).groupby(&quot;group_id&quot;)[&quot;emission_total_gs&quot;].sum()
+  544          alloc_totals = a.assign(
+  545              group_id=a[&quot;group_id&quot;].fillna(&quot;NAO_IDENTIFICADO&quot;)
+  546          ).groupby(&quot;group_id&quot;)[&quot;emission_gs&quot;].sum()
+  547          group_outside = (src_totals - alloc_totals.reindex(src_totals.index).fillna(0.0)).clip(lower=0.0)
+  548          z[&quot;EMIS_DENTRO_MUN_GS&quot;] = z[&quot;EMIS_TOTAL_GS&quot;]
+  549          z[&quot;EMIS_FORA_MUN_GS&quot;] = z[&quot;GRUPO_EMISSOR_LOCAL_ID&quot;].map(group_outside).fillna(0.0)
+  550          group_total = z[&quot;GRUPO_EMISSOR_LOCAL_ID&quot;].map(src_totals)
+  551          z[&quot;CONTR_EXTERNA_PCT&quot;] = 100 * z[&quot;EMIS_FORA_MUN_GS&quot;] / group_total.replace(0, np.nan)
+  552      else:
+  553          z[&quot;EMIS_HOTSPOT_P95&quot;] = 0.0
+  554          z[&quot;GRUPO_EMISSOR_LOCAL_ID&quot;] = None
+  555          z[&quot;GRUPO_EMISSOR_LOCAL&quot;] = None
+  556          z[&quot;EMIS_DENTRO_MUN_GS&quot;] = z[&quot;EMIS_TOTAL_GS&quot;]
+  557          z[&quot;EMIS_FORA_MUN_GS&quot;] = 0.0
+  558          z[&quot;CONTR_EXTERNA_PCT&quot;] = np.nan
+  559  
+  560      q = float(getattr(config, &quot;EMISSION_PRESSURE_QUANTILE&quot;, 0.75))
+  561      total_pos = pd.to_numeric(z[&quot;EMIS_TOTAL_GS&quot;], errors=&quot;coerce&quot;)
+  562      total_pos = total_pos[total_pos &gt; 0]
+  563      focal_pos = pd.to_numeric(z[&quot;EMIS_HOTSPOT_P95&quot;], errors=&quot;coerce&quot;)
+  564      focal_pos = focal_pos[focal_pos &gt; 0]
+  565      thr_total = float(total_pos.quantile(q)) if not total_pos.empty else np.nan
+  566      thr_focal = float(focal_pos.quantile(q)) if not focal_pos.empty else np.nan
+  567      z[&quot;EMIS_THR_TOTAL_GS&quot;] = thr_total
+  568      focal_tolerance = float(getattr(config, &quot;EMISSION_FOCAL_THRESHOLD_RELATIVE_TOLERANCE&quot;, 0.01))
+  569      effective_thr_focal = thr_focal * (1.0 + focal_tolerance) if pd.notna(thr_focal) else np.nan
+  570      z[&quot;EMIS_THR_HOTSPOT_P95&quot;] = effective_thr_focal
+  571  
+  572      z[&quot;EMIS_ALTA_TOTAL&quot;] = pd.to_numeric(z[&quot;EMIS_TOTAL_GS&quot;], errors=&quot;coerce&quot;).gt(thr_total) if pd.notna(thr_total) else False
+  573      z[&quot;EMIS_ALTA_FOCAL&quot;] = pd.to_numeric(z[&quot;EMIS_HOTSPOT_P95&quot;], errors=&quot;coerce&quot;).gt(effective_thr_focal) if pd.notna(effective_thr_focal) else False
+  574  
+  575      if not a.empty:
+  576          aa = a.copy()
+  577          aa[&quot;emission_gs&quot;] = pd.to_numeric(aa[&quot;emission_gs&quot;], errors=&quot;coerce&quot;).fillna(0.0)
+  578          aa[&quot;_urban_road&quot;] = aa[&quot;group_id&quot;].eq(&quot;URB&quot;)
+  579          split = aa.groupby([&quot;zone_index&quot;, &quot;_urban_road&quot;])[&quot;emission_gs&quot;].sum().unstack(fill_value=0.0)
+  580          z[&quot;EMIS_URBANA_GS&quot;] = split.get(True, pd.Series(dtype=float)).reindex(z.index).fillna(0.0)
+  581          z[&quot;EMIS_INDUSTRIAL_GS&quot;] = split.get(False, pd.Series(dtype=float)).reindex(z.index).fillna(0.0)
+  582      else:
+  583          z[&quot;EMIS_URBANA_GS&quot;] = 0.0
+  584          z[&quot;EMIS_INDUSTRIAL_GS&quot;] = 0.0
+  585  
+  586      q_ind = float(getattr(config, &quot;EMISSION_INDUSTRIAL_HIGH_QUANTILE&quot;, 0.67))
+  587      q_urb = float(getattr(config, &quot;EMISSION_URBAN_HIGH_QUANTILE&quot;, 0.90))
+  588      ind_pos = pd.to_numeric(z[&quot;EMIS_INDUSTRIAL_GS&quot;], errors=&quot;coerce&quot;)
+  589      ind_pos = ind_pos[ind_pos &gt; 0]
+  590      urban_zone = z.get(&quot;macrozona&quot;, pd.Series(&quot;&quot;, index=z.index)).astype(str).str.contains(&quot;Urbana&quot;, case=False, na=False)
+  591      urb_pos = pd.to_numeric(z.loc[urban_zone, &quot;EMIS_URBANA_GS&quot;], errors=&quot;coerce&quot;)
+  592      urb_pos = urb_pos[urb_pos &gt; 0]
+  593      thr_ind = float(ind_pos.quantile(q_ind)) if not ind_pos.empty else np.nan
+  594      thr_urb = float(urb_pos.quantile(q_urb)) if not urb_pos.empty else np.nan
+  595      z[&quot;EMIS_THR_INDUSTRIAL_GS&quot;] = thr_ind
+  596      z[&quot;EMIS_THR_URBANA_GS&quot;] = thr_urb
+  597      z[&quot;EMIS_ALTA_INDUSTRIAL&quot;] = pd.to_numeric(z[&quot;EMIS_INDUSTRIAL_GS&quot;], errors=&quot;coerce&quot;).gt(thr_ind) if pd.notna(thr_ind) else False
+  598      z[&quot;EMIS_ALTA_URBANA&quot;] = urban_zone &amp; (pd.to_numeric(z[&quot;EMIS_URBANA_GS&quot;], errors=&quot;coerce&quot;).gt(thr_urb) if pd.notna(thr_urb) else False)
+  599      z[&quot;EMIS_PRESSAO_ALTA&quot;] = z[&quot;EMIS_ALTA_INDUSTRIAL&quot;] | z[&quot;EMIS_ALTA_URBANA&quot;]
+  600      z[&quot;EMIS_PRESSAO_TIPO&quot;] = np.select(
+  601          [z[&quot;EMIS_ALTA_INDUSTRIAL&quot;] &amp; z[&quot;EMIS_ALTA_URBANA&quot;], z[&quot;EMIS_ALTA_INDUSTRIAL&quot;], z[&quot;EMIS_ALTA_URBANA&quot;]],
+  602          [&quot;industrial_e_urbana&quot;, &quot;industrial_mineral&quot;, &quot;ressuspensao_viaria_urbana&quot;],
+  603          default=&quot;baixa_em_ambas&quot;,
+  604      )
+  605      z[&quot;EMIS_CRITERIO&quot;] = z[&quot;EMIS_PRESSAO_TIPO&quot;]
+  606      ind_rank = pd.to_numeric(z[&quot;EMIS_INDUSTRIAL_GS&quot;], errors=&quot;coerce&quot;).rank(pct=True).fillna(0.0)
+  607      urb_rank = pd.to_numeric(z[&quot;EMIS_URBANA_GS&quot;], errors=&quot;coerce&quot;).where(urban_zone, 0.0).rank(pct=True).fillna(0.0)
+  608      z[&quot;EMIS_PRESSAO_SCORE&quot;] = pd.concat([ind_rank, urb_rank], axis=1).max(axis=1)
+  609      return z, a
+  610  
+  611  # Emission mass balance audit
+  612  def emission_mass_balance_audit(sources, allocations):
+  613      &quot;&quot;&quot;Auditoria de conservação de massa entre fontes e zoneamento.&quot;&quot;&quot;
+  614      s = sources[[c for c in [&quot;source_id&quot;,&quot;source_type&quot;,&quot;group_id&quot;,&quot;enterprise&quot;,&quot;native_unit&quot;,&quot;emission_rate_native&quot;,&quot;source_area_m2&quot;,&quot;source_length_m&quot;,&quot;emission_total_gs&quot;,&quot;geometry_source&quot;] if c in sources.columns]].copy()
+  615      if allocations is None or allocations.empty:
+  616          s[&quot;allocated_gs&quot;] = 0.0
+  617      else:
+  618          a = allocations.groupby(&quot;source_id&quot;, as_index=False)[&quot;emission_gs&quot;].sum().rename(columns={&quot;emission_gs&quot;:&quot;allocated_gs&quot;})
+  619          s = s.merge(a, on=&quot;source_id&quot;, how=&quot;left&quot;)
+  620          s[&quot;allocated_gs&quot;] = s[&quot;allocated_gs&quot;].fillna(0.0)
+  621      s[&quot;unallocated_gs&quot;] = pd.to_numeric(s[&quot;emission_total_gs&quot;], errors=&quot;coerce&quot;) - pd.to_numeric(s[&quot;allocated_gs&quot;], errors=&quot;coerce&quot;)
+  622      s[&quot;allocated_pct&quot;] = 100 * pd.to_numeric(s[&quot;allocated_gs&quot;], errors=&quot;coerce&quot;) / pd.to_numeric(s[&quot;emission_total_gs&quot;], errors=&quot;coerce&quot;).replace(0, np.nan)
+  623      return s
+  624  
+  625  # Group count audit
+  626  def group_count_audit(sources):
+  627      rows = []
+  628      for group, meta in GROUPS.items():
+  629          if group == &quot;AEX&quot;:
+  630              detected = int(sources[&quot;AEX&quot;].fillna(False).sum()) if &quot;AEX&quot; in sources else 0
+  631          elif group in {&quot;URB-FER&quot;, &quot;URB-NUC&quot;, &quot;URB-VIA&quot;}:
+  632              detected = int((sources.get(&quot;urban_subgroup&quot;) == group).sum())
+  633          else:
+  634              detected = int((sources.get(&quot;group_id&quot;) == group).sum())
+  635          expected = int(meta[&quot;expected&quot;])
+  636          rows.append({
+  637              &quot;group_id&quot;: group,
+  638              &quot;name&quot;: meta[&quot;name&quot;],
+  639              &quot;kind&quot;: meta.get(&quot;kind&quot;),
+  640              &quot;expected&quot;: expected,
+  641              &quot;detected&quot;: detected,
+  642              &quot;difference&quot;: detected - expected,
+  643          })
+  644      return pd.DataFrame(rows)</code></pre></article></html>

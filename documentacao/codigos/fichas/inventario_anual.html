@@ -1,0 +1,194 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/inventario_anual.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/inventario_anual.py</h2>
+<p>Concilia a massa anual estática e horária, a geometria das fontes e as unidades de emissão antes da agregação territorial.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\inventario_anual.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>aermod_sources</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>methodology_rules</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.ops</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/0_ref/seminarios_02/Resumo_Inventario_Congonhas_2023-R1.xlsx — chamada pd.read_excel, linha 45.</li>
+<p><strong>Saídas.</strong></p>
+<li>{output}/{pol}_{name}.csv — chamada table.to_csv, linha 147.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>inv: key, matched_geometry, row, tpy.</li>
+<li>ids.loc: group.</li>
+<li>inv.loc: tpy.</li>
+<li>out.loc: emission_total_gs, inventory_match, inventory_row, line_rate_gs_m, source_area_m2, source_length_m.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>inv: description, group, key, matched_geometry, row, tpy.</li>
+<li>out: emission_annual_tpy, emission_basis, emission_total_gs, inventory_coordinate_distance_m, inventory_match, inventory_row, inventory_source_id, model_emission_total_gs.</li>
+<li>audit: inventory_file, inventory_year.</li>
+<li>alloc: emission_tpy.</li>
+<li>mass: emission_audit_status, emission_fallback_tpy, emission_inventory_pending_sources, emission_inventory_tpy.</li>
+<li>balance: allocated_tpy, overlap_warning, rate_basis, source_total_tpy, unallocated_tpy.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>apply_inventory(sources, pol)</td><td>44-120</td><td>lê dados Retorno: (out, audit, missing).</td></tr><tr><td>calculate_zone_emissions(sources, zones, pol, output)</td><td>123-148</td><td>grava produtos Retorno: (mass, groups, alloc, audit, missing).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/inventario_anual.py, linhas 77-83.</p>
+<pre><code>        weights=sub.model_emission_total_gs.clip(lower=0)
+        if len(sub)&gt;1 and (not np.isfinite(weights).all() or weights.sum()&lt;=0):
+
+            if sub.geometry.geom_type.isin([&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;]).all():
+                weights=sub.geometry.area
+            elif sub.geometry.geom_type.isin([&#x27;LineString&#x27;,&#x27;MultiLineString&#x27;]).all():
+                weights=sub.geometry.length</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/inventario_anual.py, linhas 86-92.</p>
+<pre><code>                continue
+            if not np.isfinite(weights).all() or weights.sum()&lt;=0:
+                out.loc[sub.index,&#x27;inventory_match&#x27;]=&#x27;partição sem medida geométrica válida&#x27;
+                continue
+            out.loc[sub.index,&#x27;inventory_match&#x27;]=out.loc[sub.index,&#x27;inventory_match&#x27;]+&#x27;; partição por medida geométrica&#x27;
+        weights=weights/weights.sum() if len(sub)&gt;1 else pd.Series(1.,index=sub.index)
+</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/0_ref/seminarios_02/Resumo_Inventario_Congonhas_2023-R1.xlsx | pd.read_excel.
+    5  # Campos/chaves em inv: key, matched_geometry, row, tpy.
+    6  # Campos/chaves em ids.loc: group.
+    7  # Campos/chaves em inv.loc: tpy.
+    8  # Campos/chaves em out.loc: emission_total_gs, inventory_match, inventory_row, line_rate_gs_m, source_area_m2, source_length_m.
+    9  # Saída: {output}/{pol}_{name}.csv | table.to_csv.
+   10  # Campos/chaves gerados em inv: description, group, key, matched_geometry, row, tpy.
+   11  # Campos/chaves gerados em out: emission_annual_tpy, emission_basis, emission_total_gs, inventory_coordinate_distance_m, inventory_match, inventory_row, inventory_source_id, model_emission_total_gs.
+   12  # Campos/chaves gerados em audit: inventory_file, inventory_year.
+   13  # Campos/chaves gerados em alloc: emission_tpy.
+   14  # Campos/chaves gerados em mass: emission_audit_status, emission_fallback_tpy, emission_inventory_pending_sources, emission_inventory_tpy.
+   15  # Campos/chaves gerados em balance: allocated_tpy, overlap_warning, rate_basis, source_total_tpy, unallocated_tpy.
+   16  # CÓDIGO DO PROCESSAMENTO
+   17  
+   18  &quot;&quot;&quot;Vínculo conservador do inventário anual com geometrias Lakes existentes.
+   19  
+   20  Não associa por proximidade nem transfere o total de empresas para cada zona.
+   21  Somente ID exato ou descrição única dentro do mesmo empreendimento.
+   22  &quot;&quot;&quot;
+   23  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   24  import sys as _cp_sys
+   25  from pathlib import Path as _cp_Path
+   26  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   27  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   28      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   29      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   30          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   31          break
+   32  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   33  # FIM DOS CAMINHOS PORTÁTEIS
+   34  
+   35  import numpy as np
+   36  import pandas as pd
+   37  import config
+   38  from groups import canonical_group,norm_token
+   39  
+   40  PATH=config.BASE/&#x27;inventario/Resumo_Inventario_Congonhas_2023-R1.xlsx&#x27;
+   41  if not PATH.exists():PATH=config.BASE/&#x27;0_ref/seminarios_02/Resumo_Inventario_Congonhas_2023-R1.xlsx&#x27;
+   42  
+   43  # Apply inventory
+   44  def apply_inventory(sources,pol):
+   45      inv=pd.read_excel(PATH,header=None)
+   46      assert inv.iloc[0,22]==&#x27;Taxa de Emissão [ton/ano]&#x27;
+   47      col={&#x27;PM10&#x27;:23,&#x27;PM25&#x27;:24}[pol]
+   48      expected={&#x27;PM10&#x27;:&#x27;MP10&#x27;,&#x27;PM25&#x27;:&#x27;MP2,5&#x27;}[pol]
+   49      assert inv.iloc[1,col]==expected
+   50      inv=inv.iloc[2:].copy();inv[&#x27;row&#x27;]=inv.index+1
+   51      inv[&#x27;key&#x27;]=inv[4].map(norm_token)
+   52      inv[&#x27;group&#x27;]=inv[3].map(canonical_group)
+   53      inv.loc[inv[1].eq(&#x27;Emissão Urbana&#x27;),&#x27;group&#x27;]=&#x27;URB&#x27;
+   54      inv[&#x27;description&#x27;]=inv[5].map(norm_token)
+   55      inv[&#x27;tpy&#x27;]=pd.to_numeric(inv[col],errors=&#x27;coerce&#x27;)
+   56      if inv.key.duplicated().any():raise ValueError(&#x27;IDs duplicados no inventário&#x27;)
+   57      ids=inv.set_index(&#x27;key&#x27;);desc={}
+   58      for key,sub in inv.groupby([&#x27;group&#x27;,&#x27;description&#x27;]):
+   59          if len(sub)==1:desc[key]=sub.iloc[0]
+   60      out=sources.copy();out[&#x27;inventory_row&#x27;]=np.nan;out[&#x27;inventory_source_id&#x27;]=&#x27;&#x27;
+   61      out[&#x27;inventory_match&#x27;]=&#x27;sem correspondência inequívoca&#x27;
+   62      out[&#x27;inventory_coordinate_distance_m&#x27;]=np.nan
+   63      out[&#x27;model_emission_total_gs&#x27;]=out.emission_total_gs
+   64      for idx,r in out.iterrows():
+   65          key=norm_token(r.source_id);match=None;basis=&#x27;&#x27;
+   66          if key in ids.index and ids.loc[key,&#x27;group&#x27;]==r.group_id:
+   67              match=ids.loc[key];basis=&#x27;ID exato e grupo&#x27;
+   68          elif (r.group_id,norm_token(r.desc)) in desc:
+   69              match=desc[(r.group_id,norm_token(r.desc))];basis=&#x27;descrição única no grupo&#x27;
+   70          if match is not None and pd.notna(match.tpy) and match.tpy&gt;=0:
+   71              out.loc[idx,[&#x27;inventory_row&#x27;,&#x27;inventory_source_id&#x27;,&#x27;inventory_match&#x27;]]=[match.row,match[4],basis]
+   72      out[&#x27;emission_annual_tpy&#x27;]=out.emission_total_gs*31.536
+   73      out[&#x27;emission_basis&#x27;]=&#x27;AERMOD anualizado 8760 h; conferir inventário&#x27;
+   74      for row,sub in out.dropna(subset=[&#x27;inventory_row&#x27;]).groupby(&#x27;inventory_row&#x27;):
+   75          total=float(inv.loc[inv.row.eq(row),&#x27;tpy&#x27;].iloc[0])
+   76  
+   77          weights=sub.model_emission_total_gs.clip(lower=0)
+   78          if len(sub)&gt;1 and (not np.isfinite(weights).all() or weights.sum()&lt;=0):
+   79  
+   80              if sub.geometry.geom_type.isin([&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;]).all():
+   81                  weights=sub.geometry.area
+   82              elif sub.geometry.geom_type.isin([&#x27;LineString&#x27;,&#x27;MultiLineString&#x27;]).all():
+   83                  weights=sub.geometry.length
+   84              else:
+   85                  out.loc[sub.index,&#x27;inventory_match&#x27;]=&#x27;partição sem pesos válidos; mantida taxa AERMOD&#x27;
+   86                  continue
+   87              if not np.isfinite(weights).all() or weights.sum()&lt;=0:
+   88                  out.loc[sub.index,&#x27;inventory_match&#x27;]=&#x27;partição sem medida geométrica válida&#x27;
+   89                  continue
+   90              out.loc[sub.index,&#x27;inventory_match&#x27;]=out.loc[sub.index,&#x27;inventory_match&#x27;]+&#x27;; partição por medida geométrica&#x27;
+   91          weights=weights/weights.sum() if len(sub)&gt;1 else pd.Series(1.,index=sub.index)
+   92  
+   93          from shapely.geometry import Point
+   94          from shapely.ops import unary_union
+   95          inventory_record=inv.loc[inv.row.eq(row)].iloc[0]
+   96          x=pd.to_numeric(inventory_record[6],errors=&#x27;coerce&#x27;)
+   97          y=pd.to_numeric(inventory_record[7],errors=&#x27;coerce&#x27;)
+   98          if np.isfinite(x) and np.isfinite(y):
+   99              distance=unary_union(sub.geometry.tolist()).distance(Point(x,y))
+  100              out.loc[sub.index,&#x27;inventory_coordinate_distance_m&#x27;]=distance
+  101              if distance&gt;5000:
+  102                  out.loc[sub.index,&#x27;inventory_match&#x27;]=&#x27;divergência espacial &gt;5 km; mantida taxa AERMOD&#x27;
+  103                  continue
+  104          out.loc[sub.index,&#x27;emission_annual_tpy&#x27;]=total*weights
+  105          out.loc[sub.index,&#x27;emission_basis&#x27;]=&#x27;Inventário 2023 t/ano&#x27;
+  106  
+  107      out[&#x27;emission_total_gs&#x27;]=out.emission_annual_tpy/31.536
+  108      polygon=out.geometry.geom_type.isin([&#x27;Polygon&#x27;,&#x27;MultiPolygon&#x27;])
+  109      line=out.geometry.geom_type.isin([&#x27;LineString&#x27;,&#x27;MultiLineString&#x27;])
+  110      out.loc[polygon,&#x27;surface_rate_gs_m2&#x27;]=out.loc[polygon,&#x27;emission_total_gs&#x27;]/out.loc[polygon,&#x27;source_area_m2&#x27;]
+  111      out.loc[line,&#x27;line_rate_gs_m&#x27;]=out.loc[line,&#x27;emission_total_gs&#x27;]/out.loc[line,&#x27;source_length_m&#x27;]
+  112  
+  113      sel=line&amp;out.source_type.eq(&#x27;RLINEXT&#x27;)
+  114      out.loc[sel,&#x27;emission_rate_native&#x27;]=out.loc[sel,&#x27;line_rate_gs_m&#x27;]
+  115      audit=out.drop(columns=&#x27;geometry&#x27;).copy()
+  116      audit[&#x27;inventory_file&#x27;]=str(PATH);audit[&#x27;inventory_year&#x27;]=2023
+  117      inv[&#x27;matched_geometry&#x27;]=inv.row.isin(out.loc[out.emission_basis.eq(&#x27;Inventário 2023 t/ano&#x27;),&#x27;inventory_row&#x27;])
+  118      missing=inv.loc[inv.tpy.gt(0)&amp;~inv.matched_geometry,[0,3,4,5,&#x27;row&#x27;,&#x27;tpy&#x27;,&#x27;group&#x27;]].copy()
+  119      missing.columns=[&#x27;municipality&#x27;,&#x27;enterprise&#x27;,&#x27;inventory_id&#x27;,&#x27;description&#x27;,&#x27;inventory_row&#x27;,&#x27;tpy&#x27;,&#x27;group_id&#x27;]
+  120      return out,audit,missing
+  121  
+  122  # Calculate zone emissions
+  123  def calculate_zone_emissions(sources,zones,pol,output):
+  124      &quot;&quot;&quot;Inventário anual conciliado; resíduos ficam explícitos, sem alterar POSTFILES.&quot;&quot;&quot;
+  125      from aermod_sources import allocate_emissions_to_zones,emission_mass_balance_audit
+  126      from methodology_rules import group_mass_classes
+  127      from pathlib import Path
+  128      output=Path(output);output.mkdir(parents=True,exist_ok=True)
+  129      sources,audit,missing=apply_inventory(sources,pol)
+  130      _,alloc=allocate_emissions_to_zones(sources,zones)
+  131      meta=sources.set_index(&#x27;source_id&#x27;)
+  132      for col in (&#x27;inventory_source_id&#x27;,&#x27;inventory_row&#x27;,&#x27;inventory_match&#x27;,&#x27;emission_basis&#x27;):
+  133          alloc[col]=alloc.source_id.map(meta[col])
+  134      alloc[&#x27;emission_tpy&#x27;]=alloc.allocated_fraction*alloc.source_id.map(meta.emission_annual_tpy)
+  135      mass,groups=group_mass_classes(alloc,zones.index,pol,annualization_basis=&#x27;inventario_conciliado&#x27;)
+  136      mass[&#x27;emission_inventory_tpy&#x27;]=alloc.loc[alloc.emission_basis.eq(&#x27;Inventário 2023 t/ano&#x27;)].groupby(&#x27;zone_index&#x27;).emission_tpy.sum().reindex(zones.index,fill_value=0)
+  137      mass[&#x27;emission_fallback_tpy&#x27;]=mass.emission_total_tpy-mass.emission_inventory_tpy
+  138      mass[&#x27;emission_inventory_pending_sources&#x27;]=len(missing)
+  139      mass[&#x27;emission_audit_status&#x27;]=&#x27;Inventário conciliado parcialmente; consultar fontes pendentes&#x27;
+  140      balance=emission_mass_balance_audit(sources,alloc)
+  141      balance[&#x27;source_total_tpy&#x27;]=balance.emission_total_gs*31.536
+  142      balance[&#x27;allocated_tpy&#x27;]=balance.allocated_gs*31.536
+  143      balance[&#x27;unallocated_tpy&#x27;]=balance.unallocated_gs*31.536
+  144      balance[&#x27;overlap_warning&#x27;]=balance.allocated_pct.gt(100.000001)
+  145      balance[&#x27;rate_basis&#x27;]=&#x27;g/s equivalente da massa anual; não substitui entrada AERMOD&#x27;
+  146      for name,table in [(&#x27;alocacao_fontes&#x27;,alloc),(&#x27;massa_grupo_zona&#x27;,groups),(&#x27;balanco_massa&#x27;,balance),(&#x27;conciliacao_inventario&#x27;,audit),(&#x27;inventario_sem_geometria_conciliada&#x27;,missing)]:
+  147          table.to_csv(output/f&#x27;{pol}_{name}.csv&#x27;,index=False,encoding=&#x27;utf-8-sig&#x27;)
+  148      return mass,groups,alloc,audit,missing</code></pre></article></html>

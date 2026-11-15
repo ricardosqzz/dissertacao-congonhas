@@ -1,0 +1,207 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/out_aermod_reader.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/out_aermod_reader.py</h2>
+<p>Identifica arquivos e combinações de grupos/períodos, usa cabeçalhos quando disponíveis e a convenção dos nomes para arquivos sem cabeçalho.</p>
+<p><strong>Papel.</strong> Aquisição/leitura. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\out_aermod_reader.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada .open, linha 63.</li>
+<li>{path} — chamada pd.read_csv, linha 93.</li>
+<li>{path} — chamada read_table, linha 117.</li>
+<li>{log} — chamada .read_text, linha 125.</li>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>h: group, has_data, n_receptors, period.</li>
+<li>df: CONC, GRP, X, Y.</li>
+<li>d: AVE, CODE, CONC, X, Y, date, year.</li>
+<li>config.DIRS: post.</li>
+<li>coords: X, Y.</li>
+<li>zones: geometry, zone_index.</li>
+<li>original: X, Y, geometry.</li>
+<li>merged.loc: geometry.</li>
+<li>p.loc: geometry.</li>
+<li>strict: X, Y, zone_index.</li>
+<li>links: X, Y, zone_index.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>PLT_GROUPS: GALL.</li>
+<li>d: date, year.</li>
+<li>original: X, Y.</li>
+<li>links: spatial_support.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>filename_identity(path)</td><td>52-58</td><td>Chamadas efetivas: .stem.upper, re.search, re.match, PLT_GROUPS.get, canonical_post_group, Path, .startswith Retorno: (None, None), (PLT_GROUPS.get(match[2]), &#x27;ANNUAL&#x27; if match[1] == &#x27;AN00&#x27; else &#x27;24H&#x27; if match[1].startswith(&#x27;24&#x27;) else &#x27;1H&#x27;).</td></tr><tr><td>header(path)</td><td>61-75</td><td>Chamadas efetivas: .join, re.search, filename_identity, dict, .open, canonical_post_group, ValueError, lines.append Retorno: dict(group=hg or fg, period=period or fp, n_receptors=int(count[1]) if count else None, has_data=bool(line.strip()) and (not line.startswith(&#x27;*&#x27;))).</td></tr><tr><td>discover(folder)</td><td>78-88</td><td>Chamadas efetivas: sorted, .glob, header, ignored.append, ValueError, Path, str Retorno: (selected, ignored).</td></tr><tr><td>read_table(path)</td><td>91-100</td><td>lê dados Retorno: df.</td></tr><tr><td>annual(path, years=(2021, 2022, 2023))</td><td>103-107</td><td>lê dados Retorno: d[[&#x27;X&#x27;, &#x27;Y&#x27;, &#x27;year&#x27;, &#x27;CONC&#x27;]].</td></tr><tr><td>daily(path, log=None, years=(2021, 2022, 2023))</td><td>110-130</td><td>lê dados Retorno: (d[[&#x27;X&#x27;, &#x27;Y&#x27;, &#x27;date&#x27;, &#x27;year&#x27;, &#x27;CONC&#x27;]], sorted((str(x.date()) for x in excluded))).</td></tr><tr><td>saturation_class(value)</td><td>133-135</td><td>Chamadas efetivas: np.isfinite Retorno: &#x27;Abaixo da faixa preventiva&#x27; if value &lt;= 90 else &#x27;Próxima do padrão&#x27; if value &lt;= 100 else &#x27;Acima do padrão&#x27;, &#x27;Informação insuficiente&#x27;.</td></tr><tr><td>exploratory_four_class(value)</td><td>138-141</td><td>Chamadas efetivas: np.isfinite Retorno: &#x27;Baixa&#x27; if value &lt;= 50 else &#x27;Média&#x27; if value &lt;= 90 else &#x27;Alta&#x27; if value &lt;= 100 else &#x27;Muito alta&#x27;, &#x27;Informação insuficiente&#x27;.</td></tr><tr><td>link_receptors(coords, zones, grid)</td><td>144-167</td><td>Chamadas efetivas: .copy, original.geometry.x.round, original.geometry.y.round, .any, gpd.GeoDataFrame, gpd.sjoin, xy.merge, merged.geometry.notna Retorno: (links, dict(zones_strict_export=int(initial.zone_index.nunique()), zones_original_precision=int(strict.zone_index.nunique()), zones_with_boundary=int(links.zone_index.nunique()), boundary_tolerance_m.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/out_aermod_reader.py, linhas 166-167.</p>
+<pre><code>    links[&#x27;spatial_support&#x27;]=[&#x27;interior&#x27; if tuple(r) in keys else &#x27;fronteira_numerica&#x27; for r in links[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;zone_index&#x27;]].to_numpy()]
+    return links,dict(zones_strict_export=int(initial.zone_index.nunique()),zones_original_precision=int(strict.zone_index.nunique()),zones_with_boundary=int(links.zone_index.nunique()),boundary_tolerance_m=1e-7,matched_original_points=int(resolved.sum()),max_rounding_shift_m=float(distance.max()))</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | .open.
+    5  # Entrada: {path} | pd.read_csv.
+    6  # Entrada: {path} | read_table.
+    7  # Entrada: {log} | .read_text.
+    8  # Campos/chaves em h: group, has_data, n_receptors, period.
+    9  # Campos/chaves em df: CONC, GRP, X, Y.
+   10  # Campos/chaves em d: AVE, CODE, CONC, X, Y, date, year.
+   11  # Campos/chaves em config.DIRS: post.
+   12  # Campos/chaves em coords: X, Y.
+   13  # Campos/chaves em zones: geometry, zone_index.
+   14  # Campos/chaves em original: X, Y, geometry.
+   15  # Campos/chaves em merged.loc: geometry.
+   16  # Campos/chaves em p.loc: geometry.
+   17  # Campos/chaves em strict: X, Y, zone_index.
+   18  # Campos/chaves em links: X, Y, zone_index.
+   19  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+   20  # Campos/chaves gerados em PLT_GROUPS: GALL.
+   21  # Campos/chaves gerados em d: date, year.
+   22  # Campos/chaves gerados em original: X, Y.
+   23  # Campos/chaves gerados em links: spatial_support.
+   24  # X: coordenada leste em metros.
+   25  # Y: coordenada norte em metros.
+   26  # CÓDIGO DO PROCESSAMENTO
+   27  
+   28  &quot;&quot;&quot;Saídas nativas por período, sem misturar POST anual, diário e horário.&quot;&quot;&quot;
+   29  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   30  import sys as _cp_sys
+   31  from pathlib import Path as _cp_Path
+   32  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   33  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   34      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   35      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   36          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   37          break
+   38  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   39  # FIM DOS CAMINHOS PORTÁTEIS
+   40  
+   41  from pathlib import Path
+   42  import re
+   43  import numpy as np
+   44  import pandas as pd
+   45  from groups import canonical_post_group
+   46  
+   47  PLT_GROUPS=dict(zip([f&#x27;G{i:03d}&#x27; for i in range(1,29)],
+   48      [&#x27;AEX&#x27;,&#x27;BVC&#x27;,&#x27;CDA&#x27;,&#x27;COC&#x27;,&#x27;COOPERA&#x27;,&#x27;CSN-CDP&#x27;,&#x27;CSN-PIR&#x27;,&#x27;ECOMIN&#x27;,&#x27;FERRO&#x27;,&#x27;GERDAU&#x27;,&#x27;LGA&#x27;,&#x27;LL-TRANS&#x27;,&#x27;LM-MIN&#x27;,&#x27;MONT-MIN&#x27;,&#x27;NOGD&#x27;,&#x27;RODEIRO&#x27;,&#x27;SAPPORO&#x27;,&#x27;SILVANO&#x27;,&#x27;TERRA-MI&#x27;,&#x27;TERRAMAR&#x27;,&#x27;URB&#x27;,&#x27;URB-FER&#x27;,&#x27;URB-NUC&#x27;,&#x27;URB-VIA&#x27;,&#x27;VALE_FAB&#x27;,&#x27;VALE_VIG&#x27;,&#x27;WGM&#x27;,&#x27;SCOF&#x27;]))
+   49  PLT_GROUPS[&#x27;GALL&#x27;]=&#x27;ALL&#x27;
+   50  
+   51  # Filename identity
+   52  def filename_identity(path):
+   53      name=Path(path).stem.upper()
+   54      match=re.search(r&#x27;(01H(?:1)?|24H(?:1)?|AN00)(G(?:\d{3}|ALL))$&#x27;,name)
+   55      if match:return PLT_GROUPS.get(match[2]), &#x27;ANNUAL&#x27; if match[1]==&#x27;AN00&#x27; else &#x27;24H&#x27; if match[1].startswith(&#x27;24&#x27;) else &#x27;1H&#x27;
+   56      match=re.match(r&#x27;(01|24|AN)_(.+)$&#x27;,name)
+   57      if match:return canonical_post_group(match[2]), {&#x27;01&#x27;:&#x27;1H&#x27;,&#x27;24&#x27;:&#x27;24H&#x27;,&#x27;AN&#x27;:&#x27;ANNUAL&#x27;}[match[1]]
+   58      return None,None
+   59  
+   60  # Header
+   61  def header(path):
+   62      lines=[];line=&#x27;&#x27;
+   63      with Path(path).open(encoding=&#x27;latin1&#x27;) as f:
+   64          for line in f:
+   65              if not line.startswith(&#x27;*&#x27;):break
+   66              lines.append(line)
+   67      text=&#x27;&#x27;.join(lines)
+   68      group=re.search(r&#x27;SOURCE GROUP:\s*(\S+)&#x27;,text)
+   69      count=re.search(r&#x27;TOTAL OF\s+(\d+)\s+RECEPTORS&#x27;,text)
+   70      period=&#x27;ANNUAL&#x27; if &#x27;ANNUAL&#x27; in text else &#x27;24H&#x27; if &#x27;24-HR&#x27; in text else &#x27;1H&#x27; if &#x27;1-HR&#x27; in text else None
+   71      fg,fp=filename_identity(path)
+   72      hg=canonical_post_group(group[1]) if group else None
+   73      if hg and fg and hg!=fg:raise ValueError(f&#x27;Grupo do nome diverge do cabeçalho: {path}&#x27;)
+   74      if period and fp and period!=fp:raise ValueError(f&#x27;Período do nome diverge do cabeçalho: {path}&#x27;)
+   75      return dict(group=hg or fg,period=period or fp,n_receptors=int(count[1]) if count else None,has_data=bool(line.strip()) and not line.startswith(&#x27;*&#x27;))
+   76  
+   77  # Discover
+   78  def discover(folder):
+   79      selected={};ignored=[]
+   80      for p in sorted(Path(folder).glob(&#x27;*.POS&#x27;)):
+   81          h=header(p)
+   82          if not h[&#x27;has_data&#x27;]:
+   83              ignored.append(str(p));continue
+   84          key=(h[&#x27;group&#x27;],h[&#x27;period&#x27;])
+   85          if None in key:raise ValueError(f&#x27;Cabeçalho desconhecido: {p}&#x27;)
+   86          if key in selected:raise ValueError(f&#x27;Saídas duplicadas para {key}: {p} e {selected[key]}&#x27;)
+   87          selected[key]=p
+   88      return selected,ignored
+   89  
+   90  # Read table
+   91  def read_table(path):
+   92      h=header(path)
+   93      df=pd.read_csv(path,sep=r&#x27;\s+&#x27;,comment=&#x27;*&#x27;,header=None,usecols=[0,1,2,6,7,8],names=[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CONC&#x27;,&#x27;AVE&#x27;,&#x27;GRP&#x27;,&#x27;CODE&#x27;],engine=&#x27;c&#x27;)
+   94      if df.empty:raise ValueError(f&#x27;Sem registros: {path}&#x27;)
+   95      if not np.isfinite(df[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CONC&#x27;]]).all().all() or df.CONC.lt(0).any():
+   96          raise ValueError(f&#x27;Concentração/coordenada inválida: {path}&#x27;)
+   97      if h[&#x27;n_receptors&#x27;] is not None and df[[&#x27;X&#x27;,&#x27;Y&#x27;]].drop_duplicates().shape[0]!=h[&#x27;n_receptors&#x27;]:raise ValueError(f&#x27;Número de receptores inconsistente: {path}&#x27;)
+   98      if df.duplicated([&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;CODE&#x27;]).any():raise ValueError(f&#x27;Receptor/período duplicado: {path}&#x27;)
+   99      if {canonical_post_group(g) for g in df.GRP.unique()}!={h[&#x27;group&#x27;]}:raise ValueError(f&#x27;Grupo divergente: {path}&#x27;)
+  100      return df
+  101  
+  102  # Annual
+  103  def annual(path,years=(2021,2022,2023)):
+  104      d=read_table(path)
+  105      if set(d.AVE)!={&#x27;ANNUAL&#x27;} or set(d.CODE)!={1,2,3}:raise ValueError(f&#x27;Anos anuais inesperados: {path}&#x27;)
+  106      d[&#x27;year&#x27;]=d.CODE.map(dict(enumerate(years,1)))
+  107      return d[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;year&#x27;,&#x27;CONC&#x27;]]
+  108  
+  109  # Daily
+  110  def daily(path,log=None,years=(2021,2022,2023)):
+  111      import config
+  112      project_post=Path(path).resolve().is_relative_to(config.DIRS[&#x27;post&#x27;].resolve())
+  113      if project_post and header(path)[&#x27;group&#x27;]==&#x27;ALL&#x27;:
+  114          from medias_horarias_verificadas import cached_daily
+  115          d=cached_daily(path)
+  116      else:
+  117          d=read_table(path)
+  118          if set(d.AVE)!={&#x27;24-HR&#x27;}:raise ValueError(&#x27;A série diária deve ser 24-HR&#x27;)
+  119          code=d.CODE.astype(str).str.zfill(8)
+  120          d[&#x27;date&#x27;]=pd.to_datetime(code.str[:6],format=&#x27;%y%m%d&#x27;,errors=&#x27;raise&#x27;);d[&#x27;year&#x27;]=d.date.dt.year
+  121      d=d[d.year.isin(years)].copy()
+  122  
+  123      excluded=set()
+  124      if log:
+  125          for line in Path(log).read_text(errors=&#x27;replace&#x27;).splitlines():
+  126              if &#x27;W732&#x27; in line:
+  127                  match=re.search(r&#x27;(20\d{8})\s*$&#x27;,line)
+  128                  if match:excluded.add(pd.to_datetime(match[1][:8],format=&#x27;%Y%m%d&#x27;))
+  129      d.loc[d.date.isin(excluded),&#x27;CONC&#x27;]=np.nan
+  130      return d[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;date&#x27;,&#x27;year&#x27;,&#x27;CONC&#x27;]],sorted(str(x.date()) for x in excluded)
+  131  
+  132  # Saturation class
+  133  def saturation_class(value):
+  134      if not np.isfinite(value):return &#x27;Informação insuficiente&#x27;
+  135      return &#x27;Abaixo da faixa preventiva&#x27; if value&lt;=90 else &#x27;Próxima do padrão&#x27; if value&lt;=100 else &#x27;Acima do padrão&#x27;
+  136  
+  137  # Exploratory four class
+  138  def exploratory_four_class(value):
+  139      &quot;&quot;&quot;Proposta para avaliação; corte 50% exploratório, sem alterar índice PD.&quot;&quot;&quot;
+  140      if not np.isfinite(value):return &#x27;Informação insuficiente&#x27;
+  141      return &#x27;Baixa&#x27; if value&lt;=50 else &#x27;Média&#x27; if value&lt;=90 else &#x27;Alta&#x27; if value&lt;=100 else &#x27;Muito alta&#x27;
+  142  
+  143  # Link receptors
+  144  def link_receptors(coords,zones,grid):
+  145      &quot;&quot;&quot;Recupera posição original somente quando a exportação arredondada coincide.
+  146  
+  147      A concentração permanece vinculada ao X/Y do POST. Não usa vizinho mais
+  148      próximo nem amplia zonas; guarda evidência da correção subcentimétrica.
+  149      &quot;&quot;&quot;
+  150      import geopandas as gpd
+  151      original=grid.to_crs(zones.crs).copy()
+  152      original[&#x27;X&#x27;]=original.geometry.x.round(2);original[&#x27;Y&#x27;]=original.geometry.y.round(2)
+  153      if original.duplicated([&#x27;X&#x27;,&#x27;Y&#x27;]).any():raise ValueError(&#x27;Grade ambígua após arredondamento&#x27;)
+  154      xy=coords[[&#x27;X&#x27;,&#x27;Y&#x27;]].drop_duplicates().copy()
+  155      p=gpd.GeoDataFrame(xy,geometry=gpd.points_from_xy(xy.X,xy.Y),crs=zones.crs)
+  156      initial=gpd.sjoin(p,zones[[&#x27;zone_index&#x27;,&#x27;geometry&#x27;]],how=&#x27;inner&#x27;,predicate=&#x27;within&#x27;)
+  157      merged=xy.merge(original[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;geometry&#x27;]],how=&#x27;left&#x27;,on=[&#x27;X&#x27;,&#x27;Y&#x27;])
+  158      resolved=merged.geometry.notna();distance=gpd.GeoSeries(merged.loc[resolved,&#x27;geometry&#x27;],crs=zones.crs).distance(p.loc[resolved,&#x27;geometry&#x27;])
+  159      if distance.max()&gt;.0072:raise ValueError(&#x27;Deslocamento incompatível com arredondamento centimétrico&#x27;)
+  160      p.loc[resolved,&#x27;geometry&#x27;]=merged.loc[resolved,&#x27;geometry&#x27;].to_numpy()
+  161      strict=gpd.sjoin(p,zones[[&#x27;zone_index&#x27;,&#x27;geometry&#x27;]],how=&#x27;inner&#x27;,predicate=&#x27;within&#x27;)[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;zone_index&#x27;]]
+  162  
+  163      boundary=zones[[&#x27;zone_index&#x27;,&#x27;geometry&#x27;]].copy();boundary.geometry=boundary.geometry.buffer(1e-7)
+  164      links=gpd.sjoin(p,boundary,how=&#x27;inner&#x27;,predicate=&#x27;intersects&#x27;)[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;zone_index&#x27;]]
+  165      keys=set(map(tuple,strict[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;zone_index&#x27;]].to_numpy()))
+  166      links[&#x27;spatial_support&#x27;]=[&#x27;interior&#x27; if tuple(r) in keys else &#x27;fronteira_numerica&#x27; for r in links[[&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;zone_index&#x27;]].to_numpy()]
+  167      return links,dict(zones_strict_export=int(initial.zone_index.nunique()),zones_original_precision=int(strict.zone_index.nunique()),zones_with_boundary=int(links.zone_index.nunique()),boundary_tolerance_m=1e-7,matched_original_points=int(resolved.sum()),max_rounding_shift_m=float(distance.max()))</code></pre></article></html>

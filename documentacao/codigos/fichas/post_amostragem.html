@@ -1,0 +1,130 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/post_amostragem.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/post_amostragem.py</h2>
+<p>Lê de forma eficiente os arquivos POST e amostra as concentrações pelo código temporal e coordenadas, preservando o vínculo entre receptor, hora/dia e grupo.</p>
+<p><strong>Papel.</strong> Aquisição/leitura. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\post_amostragem.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>self.path — chamada self.path.open, linha 90.</li>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>self.info: n_receptors, period.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>FixedPost()</td><td>28-104</td><td>Chamadas efetivas: Path, header, divmod, np.array, np.memmap, int, pd.date_range, .to_numpy Retorno: result, values.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/post_amostragem.py, linhas 29-37.</p>
+<pre><code>    def __init__(self,path):
+        self.path=Path(path)
+        self.info=header(self.path)
+        self.nr=self.info[&#x27;n_receptors&#x27;]
+        if not self.nr:
+            raise ValueError(&#x27;Cabeçalho sem número de receptores&#x27;)
+        with self.path.open(&#x27;rb&#x27;) as f:
+            self.offset=0
+            for line in f:</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: self.path | self.path.open.
+    5  # Campos/chaves em self.info: n_receptors, period.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  &quot;&quot;&quot;Acesso verificado a POST formatado, sem ler grupos inteiros para cada pico.&quot;&quot;&quot;
+   10  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   11  import sys as _cp_sys
+   12  from pathlib import Path as _cp_Path
+   13  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   14  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   15      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   16      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   17          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   18          break
+   19  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   20  # FIM DOS CAMINHOS PORTÁTEIS
+   21  
+   22  from pathlib import Path
+   23  import numpy as np
+   24  import pandas as pd
+   25  from out_aermod_reader import header
+   26  
+   27  # Fixedpost
+   28  class FixedPost:
+   29      def __init__(self,path):
+   30          self.path=Path(path)
+   31          self.info=header(self.path)
+   32          self.nr=self.info[&#x27;n_receptors&#x27;]
+   33          if not self.nr:
+   34              raise ValueError(&#x27;Cabeçalho sem número de receptores&#x27;)
+   35          with self.path.open(&#x27;rb&#x27;) as f:
+   36              self.offset=0
+   37              for line in f:
+   38                  if not line.startswith(b&#x27;*&#x27;):break
+   39                  self.offset+=len(line)
+   40              self.record_size=len(line)
+   41              f.seek(self.offset)
+   42              first=f.read(self.record_size*self.nr)
+   43          count,remainder=divmod(self.path.stat().st_size-self.offset,self.record_size)
+   44          if remainder or count%self.nr:
+   45              raise ValueError(&#x27;Estrutura de comprimento fixo inconsistente: &#x27;+str(path))
+   46          self.nt=count//self.nr
+   47          self.coords=np.array([[float(r[:14]),float(r[14:28])] for r in first.splitlines()])
+   48          self.mem=np.memmap(self.path,dtype=&#x27;S&#x27;+str(self.record_size),mode=&#x27;r&#x27;,offset=self.offset,shape=(self.nt,self.nr))
+   49          first_code=int(self.mem[0,0].item().split()[8]);last_code=int(self.mem[-1,0].item().split()[8])
+   50          dates=pd.date_range(pd.to_datetime(str(first_code//100),format=&#x27;%y%m%d&#x27;)+pd.Timedelta(hours=first_code%100-1),
+   51                              pd.to_datetime(str(last_code//100),format=&#x27;%y%m%d&#x27;)+pd.Timedelta(hours=last_code%100-1),
+   52                              freq=&#x27;h&#x27; if self.info[&#x27;period&#x27;]==&#x27;1H&#x27; else &#x27;D&#x27;)
+   53          proposed=(((dates.year%100*100+dates.month)*100+dates.day)*100+dates.hour+1).to_numpy(dtype=np.int64)
+   54  
+   55          self.codes=proposed if len(proposed)==self.nt else np.array([int(r.split()[8]) for r in self.mem[:,0].copy()],dtype=np.int64)
+   56          if len(np.unique(self.codes))!=self.nt:
+   57              raise ValueError(&#x27;Período duplicado no POST&#x27;)
+   58          self.lookup={int(v):i for i,v in enumerate(self.codes)}
+   59          for t,j in [(0,0),(self.nt-1,self.nr-1),(self.nt//2,self.nr//2)]:
+   60              row=self.mem[t,j].item().split()
+   61              if int(row[8])!=self.codes[t] or not np.allclose(list(map(float,row[:2])),self.coords[j],rtol=0,atol=.001):
+   62                  raise ValueError(&#x27;Ordenação de receptores ou períodos inesperada&#x27;)
+   63              if abs(float(self.mem[t,j].item()[28:42])-float(row[2]))&gt;1e-10:
+   64                  raise ValueError(&#x27;Campo de concentração incompatível&#x27;)
+   65  
+   66      def receptor_indices(self,xy):
+   67          mapping={tuple(v):j for j,v in enumerate(self.coords)}
+   68          try:return np.array([mapping[tuple(v)] for v in np.asarray(xy)],int)
+   69          except KeyError as e:raise ValueError(&#x27;Receptor solicitado ausente do POST&#x27;) from e
+   70  
+   71      def values(self,time_indices=None,receptor_indices=None):
+   72  
+   73          view=np.ndarray(shape=(self.nt,self.nr),dtype=&#x27;S14&#x27;,buffer=self.mem,offset=28,
+   74                          strides=(self.record_size*self.nr,self.record_size))
+   75          if time_indices is None and receptor_indices is None:
+   76              result=view.astype(float)
+   77          else:
+   78              ti=np.arange(self.nt) if time_indices is None else np.asarray(time_indices)
+   79              ri=np.arange(self.nr) if receptor_indices is None else np.asarray(receptor_indices)
+   80              result=view[np.ix_(ti,ri)].astype(float)
+   81          if not np.isfinite(result).all() or (result&lt;0).any():
+   82              raise ValueError(&#x27;Concentração inválida no POST&#x27;)
+   83          return result
+   84  
+   85      def sample(self,codes,xy):
+   86          codes=np.asarray(codes,dtype=np.int64)
+   87          rows=np.array([self.lookup[int(v)] for v in codes])
+   88          cols=self.receptor_indices(xy)
+   89          records=np.empty(len(rows),dtype=&#x27;S&#x27;+str(self.record_size))
+   90          with self.path.open(&#x27;rb&#x27;) as f:
+   91              for t in np.unique(rows):
+   92                  select=np.flatnonzero(rows==t)
+   93                  f.seek(self.offset+int(t)*self.nr*self.record_size)
+   94                  block=np.frombuffer(f.read(self.nr*self.record_size),dtype=&#x27;S&#x27;+str(self.record_size))
+   95                  records[select]=block[cols[select]]
+   96          values=np.array([float(v.item()[28:42]) for v in records])
+   97          actual=np.array([int(v.item().split()[8]) for v in records])
+   98          actual_xy=np.array([[float(v.item()[:14]),float(v.item()[14:28])] for v in records])
+   99          if not np.array_equal(actual,codes) or not np.allclose(actual_xy,xy,rtol=0,atol=.001) or not np.isfinite(values).all() or (values&lt;0).any():
+  100              raise ValueError(&#x27;Falha ao recuperar o evento selecionado&#x27;)
+  101          return values
+  102  
+  103      def close(self):
+  104          self.mem._mmap.close()</code></pre></article></html>

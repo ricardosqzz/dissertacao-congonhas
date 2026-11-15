@@ -1,0 +1,115 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/caminhos_congonhas.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/caminhos_congonhas.py</h2>
+<p>Caminhos congonhas. Configuração compartilhada. A organização passa por configuracao, raiz_projeto, caminho, texto_caminho, externo, adaptar_texto.</p>
+<p><strong>Papel.</strong> Configuração compartilhada. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\caminhos_congonhas.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>os</td><td>Integração com sistema operacional e variáveis de ambiente.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>Path(override).expanduser() if override else CONFIG_FILE — chamada path.read_text, linha 24.</li>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>entry: chave, original.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>configuracao()</td><td>21-24</td><td>lê dados Retorno: json.loads(path.read_text(&#x27;utf-8-sig&#x27;)) if path.exists() else {}.</td></tr><tr><td>raiz_projeto()</td><td>26-35</td><td>Chamadas efetivas: configuracao, cfg.get, .strip, .expanduser, p.is_absolute, .resolve, os.environ.get, Path Retorno: BASE_CODIGO.parent, p if p.is_absolute() else (BASE_CODIGO / p).resolve().</td></tr><tr><td>caminho(relativo=&#x27;&#x27;)</td><td>38-47</td><td>Chamadas efetivas: configuracao, raiz_projeto, .strip, sorted, cfg.get, .replace, rel.startswith, .expanduser Retorno: root / rel if rel else root, base / suffix if suffix else base.</td></tr><tr><td>texto_caminho(relativo=&#x27;&#x27;, estilo=&#x27;posix&#x27;)</td><td>49-51</td><td>Chamadas efetivas: caminho, p.as_posix, str Retorno: p.as_posix() if estilo == &#x27;posix&#x27; else str(p).</td></tr><tr><td>externo(chave)</td><td>54-68</td><td>Chamadas efetivas: configuracao, .get, .expanduser, KeyError, isinstance, entry.get, str, ValueError Retorno: p.as_posix() if &#x27;/&#x27; in text and &#x27;\\&#x27; not in text else str(p).</td></tr><tr><td>adaptar_texto(texto)</td><td>71-89</td><td>Chamadas efetivas: configuracao, cfg.get, .values, re.compile, pattern.sub, original.replace, texto_caminho, .join Retorno: pattern.sub(lambda m: pairs[m[0]], str(texto)), texto.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/caminhos_congonhas.py, linhas 26-34.</p>
+<pre><code>def raiz_projeto():
+    cfg=configuracao()
+    explicit=os.environ.get(ENV_RAIZ,&#x27;&#x27;).strip() or (os.environ.get(&#x27;EMI_PROJECT_ROOT&#x27;,&#x27;&#x27;).strip() if PROJETO==&#x27;congonhas&#x27; else &#x27;&#x27;) or cfg.get(&#x27;raiz_projeto&#x27;,&#x27;&#x27;)
+    if explicit:
+        p=Path(explicit).expanduser()
+        return p if p.is_absolute() else (BASE_CODIGO/p).resolve()
+    if cfg.get(&#x27;modo_entrega&#x27;):
+        for p in BASE_CODIGO.parents:
+            if (p/&#x27;01_entradas&#x27;).is_dir() and (p/&#x27;02_saidas&#x27;).is_dir():return p</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: Path(override).expanduser() if override else CONFIG_FILE | path.read_text.
+    5  # Campos/chaves em entry: chave, original.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  from pathlib import Path
+   10  import json
+   11  import os
+   12  import re
+   13  import sys
+   14  
+   15  PROJETO = &quot;congonhas&quot;
+   16  ENV_RAIZ = &quot;CONGONHAS_PROJECT_ROOT&quot;
+   17  BASE_CODIGO = Path(__file__).resolve().parent
+   18  CONFIG_FILE = BASE_CODIGO / &#x27;caminhos_projeto.json&#x27;
+   19  
+   20  # Configuração e raiz dos dados
+   21  def configuracao():
+   22      override=os.environ.get(ENV_RAIZ+&#x27;_CONFIG&#x27;,&#x27;&#x27;).strip()
+   23      path=Path(override).expanduser() if override else CONFIG_FILE
+   24      return json.loads(path.read_text(&#x27;utf-8-sig&#x27;)) if path.exists() else {}
+   25  
+   26  def raiz_projeto():
+   27      cfg=configuracao()
+   28      explicit=os.environ.get(ENV_RAIZ,&#x27;&#x27;).strip() or (os.environ.get(&#x27;EMI_PROJECT_ROOT&#x27;,&#x27;&#x27;).strip() if PROJETO==&#x27;congonhas&#x27; else &#x27;&#x27;) or cfg.get(&#x27;raiz_projeto&#x27;,&#x27;&#x27;)
+   29      if explicit:
+   30          p=Path(explicit).expanduser()
+   31          return p if p.is_absolute() else (BASE_CODIGO/p).resolve()
+   32      if cfg.get(&#x27;modo_entrega&#x27;):
+   33          for p in BASE_CODIGO.parents:
+   34              if (p/&#x27;01_entradas&#x27;).is_dir() and (p/&#x27;02_saidas&#x27;).is_dir():return p
+   35      return BASE_CODIGO.parent
+   36  
+   37  # Resolução de pastas e arquivos
+   38  def caminho(relativo=&#x27;&#x27;):
+   39      cfg=configuracao();root=raiz_projeto();rel=str(relativo).replace(&#x27;\\&#x27;,&#x27;/&#x27;).strip(&#x27;/&#x27;)
+   40      mappings={**cfg.get(&#x27;pastas&#x27;,{}),**cfg.get(&#x27;arquivos&#x27;,{})}
+   41      for key in sorted(mappings,key=len,reverse=True):
+   42          normalized=key.replace(&#x27;\\&#x27;,&#x27;/&#x27;).strip(&#x27;/&#x27;)
+   43          if rel==normalized or rel.startswith(normalized+&#x27;/&#x27;):
+   44              base=Path(mappings[key]).expanduser();base=base if base.is_absolute() else root/base
+   45              suffix=rel[len(normalized):].lstrip(&#x27;/&#x27;)
+   46              return base/suffix if suffix else base
+   47      return root/rel if rel else root
+   48  
+   49  def texto_caminho(relativo=&#x27;&#x27;,estilo=&#x27;posix&#x27;):
+   50      p=caminho(relativo)
+   51      return p.as_posix() if estilo==&#x27;posix&#x27; else str(p)
+   52  
+   53  # Arquivos externos e programas
+   54  def externo(chave):
+   55      cfg=configuracao();entry=cfg.get(&#x27;externos&#x27;,{}).get(chave)
+   56      if entry is None:raise KeyError(&#x27;Caminho externo não configurado: &#x27;+chave)
+   57      text=entry.get(&#x27;caminho&#x27;,&#x27;&#x27;) if isinstance(entry,dict) else str(entry)
+   58      if not text:raise ValueError(&#x27;Preencha extern os.&#x27;+chave+&#x27; em &#x27;+str(CONFIG_FILE))
+   59      p=Path(text).expanduser()
+   60      if not p.is_absolute():p=raiz_projeto()/p
+   61      if not p.exists() and &#x27;OpenAI.CodexPrimaryRuntime.&#x27; in str(p) and &#x27;dependencies&#x27; in p.parts:
+   62          suffix=Path(*p.parts[p.parts.index(&#x27;dependencies&#x27;)+1:])
+   63          apps=Path(os.environ.get(&#x27;ProgramFiles&#x27;,&#x27;C:/Program Files&#x27;))/&#x27;WindowsApps&#x27;
+   64          try:
+   65              candidates=[x/&#x27;dependencies&#x27;/suffix for x in apps.glob(&#x27;OpenAI.CodexPrimaryRuntime.*&#x27;) if (x/&#x27;dependencies&#x27;/suffix).exists()]
+   66              if candidates:p=sorted(candidates,key=lambda x:x.stat().st_mtime,reverse=True)[0]
+   67          except OSError:pass
+   68      return p.as_posix() if &#x27;/&#x27; in text and &#x27;\\&#x27; not in text else str(p)
+   69  
+   70  # Textos com caminhos incorporados
+   71  def adaptar_texto(texto):
+   72      cfg=configuracao();original=cfg.get(&#x27;raiz_original&#x27;,&#x27;&#x27;);roots=[original,original.replace(&#x27;/&#x27;,&#x27;\\&#x27;),original.replace(&#x27;/&#x27;,&#x27;\\\\&#x27;)]
+   73      pairs={}
+   74      for old in roots:
+   75          if not old:continue
+   76          style=&#x27;posix&#x27; if &#x27;/&#x27; in old else &#x27;native&#x27;;value=texto_caminho(&#x27;&#x27;,style)
+   77          if &#x27;\\\\&#x27; in old:value=value.replace(&#x27;\\&#x27;,&#x27;\\\\&#x27;)
+   78          pairs[old]=value
+   79          for key in {**cfg.get(&#x27;pastas&#x27;,{}),**cfg.get(&#x27;arquivos&#x27;,{})}:
+   80              separator=&#x27;/&#x27; if &#x27;/&#x27; in old else &#x27;\\\\&#x27; if &#x27;\\\\&#x27; in old else &#x27;\\&#x27;
+   81              target=texto_caminho(key,style)
+   82              if &#x27;\\\\&#x27; in old:target=target.replace(&#x27;\\&#x27;,&#x27;\\\\&#x27;)
+   83              pairs[old+separator+key.replace(&#x27;/&#x27;,separator)]=target
+   84      for entry in cfg.get(&#x27;externos&#x27;,{}).values():
+   85          if isinstance(entry,dict) and entry.get(&#x27;original&#x27;) and entry.get(&#x27;chave&#x27;):
+   86              pairs[entry[&#x27;original&#x27;]]=externo(entry[&#x27;chave&#x27;])
+   87      if not pairs:return texto
+   88      pattern=re.compile(&#x27;|&#x27;.join(re.escape(k) for k in sorted(pairs,key=len,reverse=True)))
+   89      return pattern.sub(lambda m:pairs[m[0]],str(texto))</code></pre></article></html>

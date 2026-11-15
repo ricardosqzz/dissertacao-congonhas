@@ -1,0 +1,157 @@
+{
+  "versao": 1,
+  "projeto": "congonhas",
+  "raiz_original": "E:/projeto",
+  "raiz_projeto": "",
+  "modo_entrega": false,
+  "pastas": {
+    "0_ref": "0_ref",
+    "adi_ado_sum": "adi_ado_sum",
+    "base_regional": "base_regional",
+    "cache": "cache",
+    "censo_ibge": "censo_ibge",
+    "cen_dispersao": "cen_dispersao",
+    "cmas_expand": "cmas_expand",
+    "codigo": "codigo",
+    "dissertacao": "dissertacao",
+    "emission": "emission",
+    "entrada_aermod": "entrada_aermod",
+    "grade": "grade",
+    "houremiss": "houremiss",
+    "inventario": "inventario",
+    "limite_cong": "limite_cong",
+    "limite_emp": "limite_emp",
+    "out-aermod": "out-aermod",
+    "output": "output",
+    "qar": "qar",
+    "qar_met": "qar_met",
+    "saude": "saude",
+    "uso_terra": "uso_terra",
+    "vias": "vias",
+    "wrf": "wrf",
+    "zoneamento": "zoneamento"
+  },
+  "arquivos": {},
+  "externos": {
+    "1h_adi_7e2357f": {
+      "chave": "1h_adi_7e2357f",
+      "original": "C:/Users/SEU_USUARIO/Downloads/1H.ADI",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/auditar_ids_bpip_final.py"
+    },
+    "1h_ado_b8fbad1": {
+      "chave": "1h_ado_b8fbad1",
+      "original": "C:/Users/SEU_USUARIO/Downloads/1H.ADO",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/auditar_ids_bpip_final.py"
+    },
+    "downloads_f68ae09": {
+      "chave": "downloads_f68ae09",
+      "original": "C:/Users/SEU_USUARIO/Downloads",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/comparar_bpip_gerdau.py"
+    },
+    "pm10_adi_e342565": {
+      "chave": "pm10_adi_e342565",
+      "original": "C:/Users/SEU_USUARIO/Downloads/PM10.ADI",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/corrigir_entrada_bpip_funit.py"
+    },
+    "teco_ac088ec": {
+      "chave": "teco_ac088ec",
+      "original": "E:/teco",
+      "caminho": "E:/teco",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/documentar_portabilidade.py"
+    },
+    "copasa_map_debad0e": {
+      "chave": "copasa_map_debad0e",
+      "original": "E:/copasa_map",
+      "caminho": "E:/copasa_map",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/documentar_portabilidade.py"
+    },
+    "node_exe_37c9f3d": {
+      "chave": "node_exe_37c9f3d",
+      "original": "C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-737-0_26.1112.737.0_x64__3k8sg7r9htsxt/dependencies/node/bin/node.exe",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/documentar_portabilidade.py"
+    },
+    "projeto_fa81bd8": {
+      "chave": "projeto_fa81bd8",
+      "original": "D:\\Modelagem\\projeto",
+      "caminho": "D:\\Modelagem\\projeto",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/exportar_grade_aermod_atual.py"
+    },
+    "fonts_2a6cc8f": {
+      "chave": "fonts_2a6cc8f",
+      "original": "C:/Windows/Fonts",
+      "caminho": "C:/Windows/Fonts",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_documentos_preparacao.py"
+    },
+    "trebucbd_ttf_1349d98": {
+      "chave": "trebucbd_ttf_1349d98",
+      "original": "C:\\Windows\\Fonts\\trebucbd.ttf",
+      "caminho": "C:\\Windows\\Fonts\\trebucbd.ttf",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_figuras_documentos.py"
+    },
+    "trebuc_ttf_1f0498f": {
+      "chave": "trebuc_ttf_1f0498f",
+      "original": "C:\\Windows\\Fonts\\trebuc.ttf",
+      "caminho": "C:\\Windows\\Fonts\\trebuc.ttf",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_figuras_documentos.py"
+    },
+    "arialbd_ttf_7140766": {
+      "chave": "arialbd_ttf_7140766",
+      "original": "C:\\Windows\\Fonts\\arialbd.ttf",
+      "caminho": "C:\\Windows\\Fonts\\arialbd.ttf",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_figuras_documentos.py"
+    },
+    "arial_ttf_cd1b8ba": {
+      "chave": "arial_ttf_cd1b8ba",
+      "original": "C:\\Windows\\Fonts\\arial.ttf",
+      "caminho": "C:\\Windows\\Fonts\\arial.ttf",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_figuras_documentos.py"
+    },
+    "_9e9e6e2": {
+      "chave": "_9e9e6e2",
+      "original": "E:/",
+      "caminho": "E:/",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_material_estudo_poster_teco.py"
+    },
+    "presentations_c7ee323": {
+      "chave": "presentations_c7ee323",
+      "original": "C:/Users/SEU_USUARIO/.codex/plugins/cache/openai-primary-runtime/presentations/26.1105.12137/skills/presentations",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_poster_cmas.mjs"
+    },
+    "python_exe_14908b8": {
+      "chave": "python_exe_14908b8",
+      "original": "C:/Users/SEU_USUARIO/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_poster_cmas.mjs"
+    },
+    "node_modules_6d57ee6": {
+      "chave": "node_modules_6d57ee6",
+      "original": "C:/Users/SEU_USUARIO/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/gerar_poster_cmas.mjs"
+    },
+    "pm10_bpi_6bd03da": {
+      "chave": "pm10_bpi_6bd03da",
+      "original": "C:/Users/SEU_USUARIO/Downloads/PM10.bpi",
+      "caminho": "",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/preparar_bpip_importacao.py"
+    },
+    "fonts_4d9cd6a": {
+      "chave": "fonts_4d9cd6a",
+      "original": "C:/Windows/Fonts/",
+      "caminho": "C:/Windows/Fonts/",
+      "descricao": "Arquivo ou programa externo utilizado em codigo/relatorio_recortes_vento_pdf.py"
+    }
+  },
+  "ambiente": {
+    "python": "python",
+    "node": "node",
+    "python_documentos": "",
+    "node_modules": ""
+  }
+}

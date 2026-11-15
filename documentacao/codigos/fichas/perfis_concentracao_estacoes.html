@@ -1,0 +1,332 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/perfis_concentracao_estacoes.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/perfis_concentracao_estacoes.py</h2>
+<p>Séries absolutas e sazonalidade meteorológica, com os dados já auditados.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\perfis_concentracao_estacoes.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.dates</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.pyplot</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>perfis_concentracao_viewer</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/wrf/AERMET-3Y.SFC — chamada pd.read_csv, linha 103.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/periodos_secos_meteorologicos.csv — chamada pd.read_csv, linha 153.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/{pol}_basilica.js — chamada .read_text, linha 156.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada p.read_text, linha 170.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/distancias_grupos_estacoes.csv — chamada pd.read_csv, linha 182.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/grupos_fontes_horarias_e_estaticas.csv — chamada pd.read_csv, linha 183.</li>
+<li>E:/projeto/output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv — chamada pd.read_csv, linha 190.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada pd.read_csv, linha 195.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json — chamada .read_text, linha 200.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{g}_estacoes.csv.gz — chamada pd.read_csv, linha 203.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_diaria_estacoes.csv — chamada wide.to_csv, linha 120.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/periodos_secos_meteorologicos.csv — chamada periods.to_csv, linha 127.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_referencia_diaria.csv — chamada ref.to_csv, linha 130.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_mensal_conferencia.csv — chamada bymonth.to_csv, linha 132.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/PB17_perfis_grupos.{ext} — chamada fig.savefig, linha 166.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/figuras/index.html — chamada p.write_text, linha 173.</li>
+<li>Argumento fornecido pelo chamador — chamada .to_json, linha 183.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/{key}.js — chamada .write_text, linha 225.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/Concentracoes_{pol}_{sid}.{ext} — chamada fig.savefig, linha 236.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_concentracao_por_estacao_grupo.csv — chamada .to_csv, linha 239.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/comparacao_periodo_seco_grupos_estacoes.csv — chamada season_table.to_csv, linha 240.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/sintese_seco_demais_dias_ALL.csv — chamada selected.to_csv, linha 242.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/metodologia_periodo_seco.json — chamada .write_text, linha 243.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/metadados.js — chamada .write_text, linha 244.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>wd: count, sum.</li>
+<li>config.DIRS: cache.</li>
+<li>daily: count, sum.</li>
+<li>payload: daily, groups, observed, profiles, stats.</li>
+<li>p: mean, p10, p90.</li>
+<li>periods: source.</li>
+<li>v: name.</li>
+<li>observed: station_id.</li>
+<li>metadata: stations.</li>
+<li>full_observed: CODE, station_id.</li>
+<li>check: observed.</li>
+<li>profiles.loc: group_id.</li>
+<li>profiles: pollutant.</li>
+<li>selected: 1H.</li>
+<li>obs_daily: count, mean.</li>
+<li>md: count, mean.</li>
+<li>paired: dry, modelled, observed.</li>
+<li>pr: mean, p10, p90.</li>
+<li>season_table: group_id.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>s: day, rain.</li>
+<li>raw: PP, day.</li>
+<li>ref: dry_WRF, dry_regional.</li>
+<li>caps: PB17_perfis_grupos.</li>
+<li>cal: dry.</li>
+<li>metadata: distances, flags.</li>
+<li>full_observed: CODE.</li>
+<li>: observed.</li>
+<li>data: modelled.</li>
+<li>p: group_id, pollutant, season, station_id.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>dry_interval(series, reference)</td><td>91-99</td><td>Chamadas efetivas: series.to_numpy, int, .all, ValueError, np.argmax, float, np.cumsum, np.isfinite Retorno: (start, end, float(anomaly[start] - anomaly[end])).</td></tr><tr><td>meteorology()</td><td>102-137</td><td>lê dados; grava produtos Retorno: (ref, periods, dict(regional_source=identity(path), SFC=identity(sfc), rain_stations=wide.columns.tolist(), method=&#x27;Maior queda da anomalia acumulada diária em cada ano, relativa à média diária 2021-2.</td></tr><tr><td>numeric(values)</td><td>140-141</td><td>Chamadas efetivas: round, np.isfinite, float Retorno: [None if not np.isfinite(v) else round(float(v), 4) for v in values].</td></tr><tr><td>clean_json(value)</td><td>144-148</td><td>Chamadas efetivas: isinstance, clean_json, np.isfinite, value.items Retorno: value, {k: clean_json(v) for k, v in value.items()}.</td></tr><tr><td>summary_figure()</td><td>151-173</td><td>lê dados; grava produtos</td></tr><tr><td>run()</td><td>176-249</td><td>lê dados; grava produtos; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/perfis_concentracao_estacoes.py, linhas 215-221.</p>
+<pre><code>                for season,sub in [(&#x27;Total&#x27;,paired),(&#x27;Período seco&#x27;,paired[paired.dry]),(&#x27;Demais dias&#x27;,paired[~paired.dry])]:
+                    prof=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].mean().reindex(range(24));low=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].quantile(.1).reindex(range(24));high=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].quantile(.9).reindex(range(24));maximum=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].max().reindex(range(24))
+                    payload[&#x27;profiles&#x27;][group][season]={}
+                    for variable in [&#x27;observed&#x27;,&#x27;modelled&#x27;]:
+                        payload[&#x27;profiles&#x27;][group][season][variable]={&#x27;mean&#x27;:numeric(prof[variable]),&#x27;p10&#x27;:numeric(low[variable]),&#x27;p90&#x27;:numeric(high[variable]),&#x27;max&#x27;:numeric(maximum[variable])}
+                    p=prof.reset_index();p[&#x27;pollutant&#x27;]=pol;p[&#x27;station_id&#x27;]=sid;p[&#x27;group_id&#x27;]=group;p[&#x27;season&#x27;]=season;allprofiles.append(p)
+                    seasons.append(dict(pollutant=pol,station_id=sid,group_id=group,season=season,n_pairs=len(sub),observed_mean=sub.observed.mean(),modelled_mean=sub.modelled.mean(),observed_max=sub.observed.max(),modelled_max=sub.modelled.max(),hourly_r=sub.observed.corr(sub.modelled)))</code></pre>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/wrf/AERMET-3Y.SFC | pd.read_csv.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/periodos_secos_meteorologicos.csv | pd.read_csv.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/{pol}_basilica.js | .read_text.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | p.read_text.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/distancias_grupos_estacoes.csv | pd.read_csv.
+    9  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/grupos_fontes_horarias_e_estaticas.csv | pd.read_csv.
+   10  # Entrada: E:/projeto/output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv | pd.read_csv.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{group}_cache.json | .read_text.
+   13  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/{pol}_{g}_estacoes.csv.gz | pd.read_csv.
+   14  # Campos/chaves em wd: count, sum.
+   15  # Campos/chaves em config.DIRS: cache.
+   16  # Campos/chaves em daily: count, sum.
+   17  # Campos/chaves em payload: daily, groups, observed, profiles, stats.
+   18  # Campos/chaves em p: mean, p10, p90.
+   19  # Campos/chaves em periods: source.
+   20  # Campos/chaves em v: name.
+   21  # Campos/chaves em observed: station_id.
+   22  # Campos/chaves em metadata: stations.
+   23  # Campos/chaves em full_observed: CODE, station_id.
+   24  # Campos/chaves em check: observed.
+   25  # Campos/chaves em profiles.loc: group_id.
+   26  # Campos/chaves em profiles: pollutant.
+   27  # Campos/chaves em selected: 1H.
+   28  # Campos/chaves em obs_daily: count, mean.
+   29  # Campos/chaves em md: count, mean.
+   30  # Campos/chaves em paired: dry, modelled, observed.
+   31  # Campos/chaves em pr: mean, p10, p90.
+   32  # Campos/chaves em season_table: group_id.
+   33  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_diaria_estacoes.csv | wide.to_csv.
+   34  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/periodos_secos_meteorologicos.csv | periods.to_csv.
+   35  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_referencia_diaria.csv | ref.to_csv.
+   36  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/precipitacao_mensal_conferencia.csv | bymonth.to_csv.
+   37  # Saída: E:/projeto/output/16_revisao_pos_banca/figuras/PB17_perfis_grupos.{ext} | fig.savefig.
+   38  # Saída: E:/projeto/output/16_revisao_pos_banca/figuras/index.html | p.write_text.
+   39  # Saída: Argumento fornecido pelo chamador | .to_json.
+   40  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/{key}.js | .write_text.
+   41  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/Concentracoes_{pol}_{sid}.{ext} | fig.savefig.
+   42  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_concentracao_por_estacao_grupo.csv | .to_csv.
+   43  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/comparacao_periodo_seco_grupos_estacoes.csv | season_table.to_csv.
+   44  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/sintese_seco_demais_dias_ALL.csv | selected.to_csv.
+   45  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/metodologia_periodo_seco.json | .write_text.
+   46  # Saída: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/dados_series/metadados.js | .write_text.
+   47  # Campos/chaves gerados em s: day, rain.
+   48  # Campos/chaves gerados em raw: PP, day.
+   49  # Campos/chaves gerados em ref: dry_WRF, dry_regional.
+   50  # Campos/chaves gerados em caps: PB17_perfis_grupos.
+   51  # Campos/chaves gerados em cal: dry.
+   52  # Campos/chaves gerados em metadata: distances, flags.
+   53  # Campos/chaves gerados em full_observed: CODE.
+   54  # Campos/chaves gerados em : observed.
+   55  # Campos/chaves gerados em data: modelled.
+   56  # Campos/chaves gerados em p: group_id, pollutant, season, station_id.
+   57  # CÓDIGO DO PROCESSAMENTO
+   58  
+   59  &quot;&quot;&quot;Séries absolutas e sazonalidade meteorológica, com os dados já auditados.&quot;&quot;&quot;
+   60  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   61  import sys as _cp_sys
+   62  from pathlib import Path as _cp_Path
+   63  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   64  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   65      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   66      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   67          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   68          break
+   69  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   70  # FIM DOS CAMINHOS PORTÁTEIS
+   71  
+   72  import json
+   73  import re
+   74  from pathlib import Path
+   75  import numpy as np
+   76  import pandas as pd
+   77  import matplotlib
+   78  matplotlib.use(&#x27;Agg&#x27;)
+   79  import matplotlib.pyplot as plt
+   80  import matplotlib.dates as mdates
+   81  import config
+   82  from groups import GROUPS
+   83  from medias_horarias_verificadas import met_calendar,identity
+   84  
+   85  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   86  OUT=ROOT/&#x27;perfis_grupos&#x27;
+   87  LABELS={&#x27;basilica&#x27;:&#x27;Basílica&#x27;,&#x27;j-prof&#x27;:&#x27;Jardim Profeta&#x27;,&#x27;lobo-leite&#x27;:&#x27;Lobo Leite&#x27;,&#x27;matriz&#x27;:&#x27;Matriz&#x27;,&#x27;motas&#x27;:&#x27;Motas&#x27;,&#x27;n-plat&#x27;:&#x27;Nova Plataforma&#x27;,&#x27;pires&#x27;:&#x27;Pires&#x27;}
+   88  DRY_COLOR=&#x27;#f3deb5&#x27;
+   89  
+   90  # Dry interval
+   91  def dry_interval(series,reference):
+   92      &quot;&quot;&quot;Maior queda cronológica da anomalia acumulada P - referência.&quot;&quot;&quot;
+   93      values=series.to_numpy(float)
+   94      if not np.isfinite(values).all():raise ValueError(&#x27;Não inferir estação seca preenchendo chuva ausente com zero&#x27;)
+   95      anomaly=np.r_[0,np.cumsum(values-reference)]
+   96      end=int(np.argmax(np.maximum.accumulate(anomaly)-anomaly))
+   97      if end==0:raise ValueError(&#x27;Sem intervalo de déficit pluviométrico&#x27;)
+   98      start=int(np.argmax(anomaly[:end]))
+   99      return start,end,float(anomaly[start]-anomaly[end])
+  100  
+  101  # Meteorology
+  102  def meteorology():
+  103      sfc=config.BASE/&#x27;wrf/AERMET-3Y.SFC&#x27;;s=pd.read_csv(sfc,sep=r&#x27;\s+&#x27;,skiprows=1,header=None);s=s[s[0].between(21,23)].copy()
+  104      s[&#x27;day&#x27;]=pd.to_datetime(dict(year=s[0]+2000,month=s[1],day=s[2]))
+  105  
+  106      s[&#x27;rain&#x27;]=s[21].where(s[20].ne(99)&amp;s[21].between(0,500))
+  107      wd=s.groupby(&#x27;day&#x27;).rain.agg([&#x27;sum&#x27;,&#x27;count&#x27;]);wd.loc[wd[&#x27;count&#x27;]&lt;18,&#x27;sum&#x27;]=np.nan
+  108      path=config.DIRS[&#x27;cache&#x27;]/&#x27;monitoramento_mma/horas.pkl.gz&#x27;;raw=pd.read_pickle(path)
+  109      raw=raw[raw.datetime.dt.year.between(2021,2023)].copy()
+  110  
+  111      raw[&#x27;day&#x27;]=(raw.datetime-pd.Timedelta(hours=3)).dt.floor(&#x27;D&#x27;)
+  112      raw=raw[raw.day.dt.year.between(2021,2023)]
+  113      raw[&#x27;PP&#x27;]=raw.PP.where(raw.PP.between(0,500))
+  114      daily=raw.groupby([&#x27;station_id&#x27;,&#x27;day&#x27;]).PP.agg([&#x27;sum&#x27;,&#x27;count&#x27;]);daily.loc[daily[&#x27;count&#x27;]&lt;18,&#x27;sum&#x27;]=np.nan
+  115      wide=daily[&#x27;sum&#x27;].unstack(&#x27;station_id&#x27;).dropna(axis=1,how=&#x27;all&#x27;)
+  116      calendar=pd.date_range(&#x27;2021-01-01&#x27;,&#x27;2023-12-31&#x27;,freq=&#x27;D&#x27;,name=&#x27;day&#x27;);wide=wide.reindex(calendar)
+  117      n=wide.count(axis=1);regional=wide.median(axis=1).where(n&gt;=3)
+  118      if regional.isna().any():raise ValueError(&#x27;Chuva regional insuficiente; revisar antes de sombrear automaticamente&#x27;)
+  119      ref=pd.DataFrame({&#x27;observed_regional_mm&#x27;:regional,&#x27;n_rain_stations&#x27;:n,&#x27;WRF_SFC_mm&#x27;:wd[&#x27;sum&#x27;]}).reindex(calendar)
+  120      wide.to_csv(OUT/&#x27;precipitacao_diaria_estacoes.csv&#x27;)
+  121      intervals=[]
+  122      for source,column in [(&#x27;Rede regional&#x27;,&#x27;observed_regional_mm&#x27;),(&#x27;WRF/SFC&#x27;,&#x27;WRF_SFC_mm&#x27;)]:
+  123          baseline=ref[column].mean()
+  124          for year,g in ref[column].groupby(ref.index.year):
+  125              a,b,deficit=dry_interval(g,baseline)
+  126              intervals.append(dict(source=source,year=int(year),start=str(g.index[a].date()),end=str(g.index[b-1].date()),duration_days=b-a,deficit_mm=deficit,reference_mm_day=baseline,rain_interval_mm=float(g.iloc[a:b].sum())))
+  127      periods=pd.DataFrame(intervals);periods.to_csv(OUT/&#x27;periodos_secos_meteorologicos.csv&#x27;,index=False)
+  128      ref[&#x27;dry_regional&#x27;]=False;ref[&#x27;dry_WRF&#x27;]=False
+  129      for r in periods.itertuples():ref.loc[r.start:r.end,&#x27;dry_regional&#x27; if r.source==&#x27;Rede regional&#x27; else &#x27;dry_WRF&#x27;]=True
+  130      ref.to_csv(OUT/&#x27;precipitacao_referencia_diaria.csv&#x27;)
+  131      bymonth=ref.groupby([ref.index.year,ref.index.month]).agg(regional_mm=(&#x27;observed_regional_mm&#x27;,&#x27;sum&#x27;),WRF_mm=(&#x27;WRF_SFC_mm&#x27;,&#x27;sum&#x27;),minimum_stations=(&#x27;n_rain_stations&#x27;,&#x27;min&#x27;))
+  132      bymonth.to_csv(OUT/&#x27;precipitacao_mensal_conferencia.csv&#x27;)
+  133      return ref,periods,dict(regional_source=identity(path),SFC=identity(sfc),rain_stations=wide.columns.tolist(),
+  134           method=&#x27;Maior queda da anomalia acumulada diária em cada ano, relativa à média diária 2021-2023. Mediana de &gt;=3 estações com &gt;=18 horas de precipitação por dia. Não é climatologia de 30 anos.&#x27;,
+  135           literature=[&#x27;https://www.frontiersin.org/journals/earth-science/articles/10.3389/feart.2017.00014/full&#x27;,&#x27;https://www.scielo.br/j/rbmet/a/wnJMXG9LspR78p3wtddZWNm/?lang=en&#x27;],
+  136           clock=&#x27;Hipótese UTC das observações convertida para UTC-3, ainda pendente de confirmação documental.&#x27;,
+  137           rainfall_valid_independent_of_dispersion=&#x27;Chuva válida em horas de calmaria também é utilizada.&#x27;)
+  138  
+  139  # Numeric
+  140  def numeric(values):
+  141      return [None if not np.isfinite(v) else round(float(v),4) for v in values]
+  142  
+  143  # Clean json
+  144  def clean_json(value):
+  145      if isinstance(value,dict):return {k:clean_json(v) for k,v in value.items()}
+  146      if isinstance(value,list):return [clean_json(v) for v in value]
+  147      if isinstance(value,(float,np.floating)) and not np.isfinite(value):return None
+  148      return value
+  149  
+  150  # Summary figure
+  151  def summary_figure():
+  152      &quot;&quot;&quot;Figura corrente substitui a antiga comparação somente normalizada.&quot;&quot;&quot;
+  153      periods=pd.read_csv(OUT/&#x27;periodos_secos_meteorologicos.csv&#x27;)
+  154      fig,axs=plt.subplots(4,2,figsize=(12,9),layout=&#x27;constrained&#x27;)
+  155      for col,pol in enumerate([&#x27;PM10&#x27;,&#x27;PM25&#x27;]):
+  156          text=(OUT/f&#x27;dados_series/{pol}_basilica.js&#x27;).read_text(encoding=&#x27;utf8&#x27;);payload=json.loads(text[text.index(&#x27;]=&#x27;)+2:-1])
+  157          date=pd.date_range(&#x27;2021-01-01&#x27;,periods=26280,freq=&#x27;h&#x27;)
+  158          for row,key,color,label in [(0,&#x27;observed&#x27;,&#x27;#1b657e&#x27;,&#x27;Observado&#x27;),(1,&#x27;modelled&#x27;,&#x27;#bd4e48&#x27;,&#x27;Modelado · ALL&#x27;)]:
+  159              p=payload[&#x27;profiles&#x27;][&#x27;ALL&#x27;][&#x27;Total&#x27;][key];h=np.arange(24);ax=axs[row,col]
+  160              ax.fill_between(h,np.array(p[&#x27;p10&#x27;],float),np.array(p[&#x27;p90&#x27;],float),color=color,alpha=.18);ax.plot(h,p[&#x27;mean&#x27;],color=color,lw=1.7)
+  161              ax.set(title=(&#x27;MP₁₀&#x27; if pol==&#x27;PM10&#x27; else &#x27;MP₂,₅&#x27;)+&#x27; · &#x27;+label,xlabel=&#x27;Hora inicial&#x27;,ylabel=&#x27;Concentração (µg/m³)&#x27;,xticks=range(0,24,3),ylim=(0,None));ax.grid(alpha=.15)
+  162          for row,values,color,label in [(2,payload[&#x27;observed&#x27;],&#x27;#1b657e&#x27;,&#x27;Série observada&#x27;),(3,payload[&#x27;groups&#x27;][&#x27;ALL&#x27;],&#x27;#bd4e48&#x27;,&#x27;Série modelada · ALL&#x27;)]:
+  163              ax=axs[row,col]
+  164              for r in periods[periods.source.eq(&#x27;Rede regional&#x27;)].itertuples():ax.axvspan(pd.Timestamp(r.start),pd.Timestamp(r.end)+pd.Timedelta(days=1),color=DRY_COLOR,alpha=.65)
+  165              ax.plot(date,np.array(values,float),color=color,lw=.35);ax.set(title=label,ylabel=&#x27;Concentração (µg/m³)&#x27;,ylim=(0,None));ax.xaxis.set_major_locator(mdates.MonthLocator(interval=6));ax.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%m/%Y&#x27;));ax.grid(alpha=.15)
+  166      for ext in [&#x27;svg&#x27;,&#x27;png&#x27;,&#x27;pdf&#x27;]:fig.savefig(ROOT/f&#x27;figuras/PB17_perfis_grupos.{ext}&#x27;,dpi=450,bbox_inches=&#x27;tight&#x27;)
+  167      plt.close(fig)
+  168      caption=&#x27;Basílica, 2021-2023. Perfis em concentração absoluta nas mesmas horas pareadas, com P10-P90, e séries horárias completas. Painéis observado e modelado possuem eixos verticais próprios. Sombreado indica o período menos chuvoso identificado pela precipitação regional. Todos os grupos e estações estão disponíveis no visualizador. Hipótese de relógio pendente de confirmação.&#x27;
+  169      p=ROOT/&#x27;figuras/legendas.json&#x27;;caps=json.loads(p.read_text(encoding=&#x27;utf8&#x27;));caps[&#x27;PB17_perfis_grupos&#x27;]=caption;p.write_text(json.dumps(caps,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  170      p=ROOT/&#x27;figuras/index.html&#x27;;s=p.read_text(encoding=&#x27;utf8&#x27;)
+  171      s=re.sub(r&#x27;&lt;section[^&gt;]*&gt;\s*&lt;h2&gt;[^&lt;]*PB17[^&lt;]*&lt;/h2&gt;.*?&lt;/section&gt;&#x27;,&#x27;&#x27;,s,flags=re.S)
+  172      s+=&#x27;&lt;section&gt;&lt;h2&gt;PB17 Concentrações e séries na Basílica&lt;/h2&gt;&lt;a href=&quot;PB17_perfis_grupos.svg&quot;&gt;&lt;img loading=&quot;lazy&quot; src=&quot;PB17_perfis_grupos.svg&quot;&gt;&lt;/a&gt;&lt;p&gt;&#x27;+caption+&#x27;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;../perfis_grupos/index.html&quot;&gt;Explorar todos os grupos e estações&lt;/a&gt;&lt;/p&gt;&lt;/section&gt;&#x27;
+  173      p.write_text(s,encoding=&#x27;utf8&#x27;)
+  174  
+  175  # Run
+  176  def run():
+  177      OUT.mkdir(exist_ok=True,parents=True);assets=OUT/&#x27;dados_series&#x27;;assets.mkdir(exist_ok=True)
+  178      rain,periods,met=meteorology();cal,_=met_calendar()
+  179      times=pd.to_datetime((cal.CODE//100).astype(str),format=&#x27;%y%m%d&#x27;)+pd.to_timedelta(cal.CODE%100-1,unit=&#x27;h&#x27;)
+  180      cal=cal.assign(datetime=times,daydate=times.dt.floor(&#x27;D&#x27;));cal[&#x27;dry&#x27;]=cal.daydate.map(rain.dry_regional).fillna(False)
+  181      allcodes=cal.CODE.to_numpy();calendar_index=pd.Index(allcodes);metadata={&#x27;stations&#x27;:{},&#x27;names&#x27;:{&#x27;ALL&#x27;:&#x27;Todas as fontes&#x27;,**{k:v[&#x27;name&#x27;] for k,v in GROUPS.items()}},&#x27;station_names&#x27;:LABELS,&#x27;periods&#x27;:periods.to_dict(&#x27;records&#x27;),&#x27;start&#x27;:&#x27;2021-01-01&#x27;,&#x27;hours&#x27;:len(cal),&#x27;rain&#x27;:{&#x27;observed&#x27;:numeric(rain.observed_regional_mm),&#x27;model&#x27;:numeric(rain.WRF_SFC_mm)},&#x27;meteorology&#x27;:met}
+  182      metadata[&#x27;distances&#x27;]=json.loads(pd.read_csv(OUT/&#x27;distancias_grupos_estacoes.csv&#x27;).to_json(orient=&#x27;records&#x27;))
+  183      metadata[&#x27;flags&#x27;]=json.loads(pd.read_csv(OUT/&#x27;grupos_fontes_horarias_e_estaticas.csv&#x27;).to_json(orient=&#x27;records&#x27;))
+  184      full_observed=pd.read_pickle(config.DIRS[&#x27;cache&#x27;]/&#x27;monitoramento_mma/horas.pkl.gz&#x27;)
+  185      clock=full_observed.datetime-pd.Timedelta(hours=3)
+  186      full_observed[&#x27;CODE&#x27;]=(((clock.dt.year%100*100+clock.dt.month)*100+clock.dt.day)*100+clock.dt.hour+1).astype(&#x27;int64&#x27;)
+  187      allprofiles=[];seasons=[]
+  188      plt.rcParams.update({&#x27;font.family&#x27;:&#x27;DejaVu Sans&#x27;,&#x27;font.size&#x27;:10,&#x27;axes.spines.top&#x27;:False,&#x27;axes.spines.right&#x27;:False})
+  189      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  190          observed=pd.read_csv(config.BASE/f&#x27;output/09_projeto_dissertacao/seminarios_02/apresentacao/apoio_meteorologia_perfis/pares_horarios_{pol}.csv&#x27;,usecols=[&#x27;station_id&#x27;,&#x27;CODE&#x27;,&#x27;observed&#x27;])
+  191          station_ids=sorted(observed.station_id.unique());metadata[&#x27;stations&#x27;][pol]=station_ids
+  192          check=observed.merge(full_observed[[&#x27;station_id&#x27;,&#x27;CODE&#x27;,pol]],on=[&#x27;station_id&#x27;,&#x27;CODE&#x27;],validate=&#x27;one_to_one&#x27;)
+  193          if len(check)!=len(observed) or not np.allclose(check.observed,check[pol],equal_nan=True):
+  194              raise ValueError(&#x27;Mudança de relógio ou de valores em relação aos pares auditados&#x27;)
+  195          profiles=pd.read_csv(OUT/&#x27;perfis_normalizados_grupos_estacoes.csv&#x27;)
+  196          group_ids=sorted(profiles.loc[profiles.pollutant.eq(pol),&#x27;group_id&#x27;].unique())
+  197          from out_aermod_reader import discover
+  198          selected,_=discover(config.BASE/f&#x27;out-aermod/{&quot;PM10&quot; if pol==&quot;PM10&quot; else &quot;PM2-5&quot;}&#x27;)
+  199          for group in group_ids:
+  200              stamp=json.loads((OUT/f&#x27;{pol}_{group}_cache.json&#x27;).read_text())
+  201              if stamp!=identity(selected[group,&#x27;1H&#x27;]):
+  202                  raise ValueError(&#x27;POST alterado: executar diagnosticar_perfis_grupos.py ou a opção --perfis-grupos antes do visualizador&#x27;)
+  203          cached={g:pd.read_csv(OUT/f&#x27;{pol}_{g}_estacoes.csv.gz&#x27;,usecols=[&#x27;CODE&#x27;,&#x27;station_id&#x27;,&#x27;modelled&#x27;]) for g in group_ids}
+  204          for sid in station_ids:
+  205              obs=full_observed[full_observed.station_id.eq(sid)].set_index(&#x27;CODE&#x27;)[pol].reindex(allcodes).to_numpy()
+  206              payload={&#x27;observed&#x27;:numeric(obs),&#x27;groups&#x27;:{},&#x27;profiles&#x27;:{},&#x27;daily&#x27;:{&#x27;observed&#x27;:[],&#x27;groups&#x27;:{}},&#x27;stats&#x27;:{}}
+  207              data=pd.DataFrame({&#x27;datetime&#x27;:cal.datetime,&#x27;day&#x27;:cal.daydate,&#x27;hour&#x27;:cal.CODE%100-1,&#x27;dry&#x27;:cal.dry,&#x27;observed&#x27;:obs})
+  208              obs_daily=data.groupby(&#x27;day&#x27;)[&#x27;observed&#x27;].agg([&#x27;mean&#x27;,&#x27;count&#x27;]);payload[&#x27;daily&#x27;][&#x27;observed&#x27;]=numeric(obs_daily[&#x27;mean&#x27;].where(obs_daily[&#x27;count&#x27;]&gt;=config.MONITOR_MIN_VALID_HOURS_DAY))
+  209              for group,cache in cached.items():
+  210                  model=cache[cache.station_id.eq(sid)].set_index(&#x27;CODE&#x27;).modelled.reindex(allcodes).to_numpy()
+  211                  data[&#x27;modelled&#x27;]=model;payload[&#x27;groups&#x27;][group]=numeric(model)
+  212                  md=data.groupby(&#x27;day&#x27;).modelled.agg([&#x27;mean&#x27;,&#x27;count&#x27;]);payload[&#x27;daily&#x27;][&#x27;groups&#x27;][group]=numeric(md[&#x27;mean&#x27;].where(md[&#x27;count&#x27;]&gt;=18))
+  213                  paired=data.dropna(subset=[&#x27;observed&#x27;,&#x27;modelled&#x27;])
+  214                  payload[&#x27;profiles&#x27;][group]={}
+  215                  for season,sub in [(&#x27;Total&#x27;,paired),(&#x27;Período seco&#x27;,paired[paired.dry]),(&#x27;Demais dias&#x27;,paired[~paired.dry])]:
+  216                      prof=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].mean().reindex(range(24));low=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].quantile(.1).reindex(range(24));high=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].quantile(.9).reindex(range(24));maximum=sub.groupby(&#x27;hour&#x27;)[[&#x27;observed&#x27;,&#x27;modelled&#x27;]].max().reindex(range(24))
+  217                      payload[&#x27;profiles&#x27;][group][season]={}
+  218                      for variable in [&#x27;observed&#x27;,&#x27;modelled&#x27;]:
+  219                          payload[&#x27;profiles&#x27;][group][season][variable]={&#x27;mean&#x27;:numeric(prof[variable]),&#x27;p10&#x27;:numeric(low[variable]),&#x27;p90&#x27;:numeric(high[variable]),&#x27;max&#x27;:numeric(maximum[variable])}
+  220                      p=prof.reset_index();p[&#x27;pollutant&#x27;]=pol;p[&#x27;station_id&#x27;]=sid;p[&#x27;group_id&#x27;]=group;p[&#x27;season&#x27;]=season;allprofiles.append(p)
+  221                      seasons.append(dict(pollutant=pol,station_id=sid,group_id=group,season=season,n_pairs=len(sub),observed_mean=sub.observed.mean(),modelled_mean=sub.modelled.mean(),observed_max=sub.observed.max(),modelled_max=sub.modelled.max(),hourly_r=sub.observed.corr(sub.modelled)))
+  222                  stats={&#x27;paired_hours&#x27;:len(paired),&#x27;observed_mean&#x27;:float(paired.observed.mean()),&#x27;modelled_mean&#x27;:float(paired.modelled.mean()),&#x27;observed_max&#x27;:float(paired.observed.max()),&#x27;modelled_max&#x27;:float(paired.modelled.max()),&#x27;hourly_r&#x27;:float(paired.observed.corr(paired.modelled))}
+  223                  payload[&#x27;stats&#x27;][group]=stats
+  224              key=pol+&#x27;_&#x27;+sid
+  225              (assets/f&#x27;{key}.js&#x27;).write_text(&#x27;window.PERFIS=window.PERFIS||{};window.PERFIS[&#x27;+json.dumps(key)+&#x27;]=&#x27;+json.dumps(clean_json(payload),ensure_ascii=False,allow_nan=False,separators=(&#x27;,&#x27;,&#x27;:&#x27;))+&#x27;;&#x27;,encoding=&#x27;utf8&#x27;)
+  226  
+  227              if &#x27;ALL&#x27; in payload[&#x27;groups&#x27;]:
+  228                  model=np.array([np.nan if v is None else v for v in payload[&#x27;groups&#x27;][&#x27;ALL&#x27;]])
+  229                  fig,axs=plt.subplots(4,1,figsize=(10,9),layout=&#x27;constrained&#x27;,gridspec_kw={&#x27;height_ratios&#x27;:[1,1,1.3,1.3]})
+  230                  for ax,var,color,title in [(axs[0],&#x27;observed&#x27;,&#x27;#1b657e&#x27;,&#x27;Observado&#x27;),(axs[1],&#x27;modelled&#x27;,&#x27;#bd4e48&#x27;,&#x27;Modelado · ALL&#x27;)]:
+  231                      pr=payload[&#x27;profiles&#x27;][&#x27;ALL&#x27;][&#x27;Total&#x27;][var];h=np.arange(24);ax.fill_between(h,np.array(pr[&#x27;p10&#x27;],float),np.array(pr[&#x27;p90&#x27;],float),color=color,alpha=.18);ax.plot(h,pr[&#x27;mean&#x27;],color=color,lw=1.7);ax.set(title=title,xlabel=&#x27;Hora inicial do intervalo&#x27;,ylabel=&#x27;Concentração (µg/m³)&#x27;,xticks=range(0,24,3),ylim=(0,None));ax.grid(alpha=.15)
+  232                  for ax,values,color,title in [(axs[2],obs,&#x27;#1b657e&#x27;,&#x27;Série horária observada&#x27;),(axs[3],model,&#x27;#bd4e48&#x27;,&#x27;Série horária modelada · ALL&#x27;)]:
+  233                      for r in periods[periods.source.eq(&#x27;Rede regional&#x27;)].itertuples():ax.axvspan(pd.Timestamp(r.start),pd.Timestamp(r.end)+pd.Timedelta(days=1),color=DRY_COLOR,alpha=.65,zorder=0)
+  234                      ax.plot(cal.datetime,values,color=color,lw=.35);ax.set(title=title,ylabel=&#x27;Concentração (µg/m³)&#x27;,ylim=(0,None));ax.xaxis.set_major_locator(mdates.MonthLocator(interval=4));ax.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%m/%Y&#x27;));ax.grid(alpha=.15)
+  235                  fig.suptitle((&#x27;MP₁₀&#x27; if pol==&#x27;PM10&#x27; else &#x27;MP₂,₅&#x27;)+&#x27; · &#x27;+LABELS.get(sid,sid),fontweight=&#x27;bold&#x27;)
+  236                  for ext in [&#x27;svg&#x27;,&#x27;png&#x27;,&#x27;pdf&#x27;]:fig.savefig(OUT/f&#x27;Concentracoes_{pol}_{sid}.{ext}&#x27;,dpi=450,bbox_inches=&#x27;tight&#x27;)
+  237                  plt.close(fig)
+  238              print(pol,sid,&#x27;concentrações e séries completas preparadas&#x27;,flush=True)
+  239      pd.concat(allprofiles).to_csv(OUT/&#x27;perfis_concentracao_por_estacao_grupo.csv&#x27;,index=False)
+  240      season_table=pd.DataFrame(seasons);season_table.to_csv(OUT/&#x27;comparacao_periodo_seco_grupos_estacoes.csv&#x27;,index=False)
+  241      selected=season_table[season_table.group_id.eq(&#x27;ALL&#x27;)].pivot(index=[&#x27;pollutant&#x27;,&#x27;station_id&#x27;],columns=&#x27;season&#x27;,values=[&#x27;observed_mean&#x27;,&#x27;modelled_mean&#x27;,&#x27;n_pairs&#x27;])
+  242      selected.to_csv(OUT/&#x27;sintese_seco_demais_dias_ALL.csv&#x27;)
+  243      (OUT/&#x27;metodologia_periodo_seco.json&#x27;).write_text(json.dumps(met,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  244      (assets/&#x27;metadados.js&#x27;).write_text(&#x27;const META=&#x27;+json.dumps(metadata,ensure_ascii=False,allow_nan=False,separators=(&#x27;,&#x27;,&#x27;:&#x27;))+&#x27;;&#x27;,encoding=&#x27;utf8&#x27;)
+  245  
+  246      from perfis_concentracao_viewer import write_viewer
+  247      write_viewer(OUT,metadata)
+  248      summary_figure()
+  249      print(&#x27;Perfis em concentração, séries horárias e diagnóstico pluviométrico concluídos.&#x27;,flush=True)
+  250  
+  251  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

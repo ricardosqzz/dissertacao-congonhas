@@ -1,0 +1,261 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/monitoramento_mma.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/monitoramento_mma.py</h2>
+<p>Padroniza as novas planilhas das estações, reúne o histórico disponível e produz indicadores diários, anuais, por quadrimestre e por triênio. Os critérios vêm de config: dia com pelo menos 18 horas válidas e ano com pelo menos 50% de dias válidos em cada quadrimestre no recorte adotado. Preserva a cobertura por estação/poluente e não torna automaticamente simultâneos os anos de monitoramento e modelagem.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\monitoramento_mma.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>calendar</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>re</td><td>Extração e validação de padrões textuais, datas, identificadores e linhas dos modelos.</td></tr><tr><td>standards</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unicodedata</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada pd.read_excel, linha 155.</li>
+<li>E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/assinatura.json — chamada key.read_text, linha 133.</li>
+<li>E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/leitura.json — chamada .read_text, linha 134.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/leitura.json — chamada .write_text, linha 145.</li>
+<li>E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/assinatura.json — chamada key.write_text, linha 146.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>out: DV, PM10, PM25, VV, datetime.</li>
+<li>cols: VV.</li>
+<li>config.DIRS: cache.</li>
+<li>a: station_id, year.</li>
+<li>x: path.</li>
+<li>old: DATA.</li>
+<li>f: datetime.</li>
+<li>df: datetime.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>out: DV, station_id.</li>
+<li>day: quadrimestre, valid_day, year.</li>
+<li>r: n_valid_hourly, n_valid_hourly_historical.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>norm(value)</td><td>47-48</td><td>Chamadas efetivas: re.sub, .lower, .decode, .encode, unicodedata.normalize, .replace, str Retorno: re.sub(&#x27;[^a-z0-9]&#x27;, &#x27;&#x27;, unicodedata.normalize(&#x27;NFKD&#x27;, str(value).replace(&#x27;º&#x27;, &#x27;&#x27;).replace(&#x27;°&#x27;, &#x27;&#x27;)).encode(&#x27;ascii&#x27;, &#x27;ignore&#x27;).decode().lower()).</td></tr><tr><td>read_raw(path)</td><td>61-92</td><td>lê dados Retorno: (out, audit).</td></tr><tr><td>load_network(folder=None)</td><td>95-147</td><td>lê dados; grava produtos Retorno: ({sid: g.copy() for sid, g in d.groupby(&#x27;station_id&#x27;)}, audit), ({sid: g.copy() for sid, g in d.groupby(&#x27;station_id&#x27;)}, audit).</td></tr><tr><td>add_missing_legacy_years(data, audit, paths)</td><td>150-170</td><td>lê dados Retorno: (combined.groupby([&#x27;station_id&#x27;, &#x27;datetime&#x27;], as_index=False).mean(numeric_only=True), audit).</td></tr><tr><td>daily_and_yearly(df, pol, first=2017, last=2025)</td><td>173-190</td><td>Chamadas efetivas: .mean, .reindex, .astype, day.n_hours.ge, day.groupby, df.assign, pd.date_range, sub.value.dropna Retorno: (day, pd.DataFrame(yearly), pd.DataFrame(periods)).</td></tr><tr><td>all_tables(frames, first=2017, last=2025)</td><td>193-199</td><td>Chamadas efetivas: frames.items, pd.concat, daily_and_yearly, ys.append, qs.append, .sum, .notna Retorno: (pd.concat(ys, ignore_index=True), pd.concat(qs, ignore_index=True), daily).</td></tr><tr><td>selected_metrics(yearly, rolling, frames, end=2025)</td><td>202-210</td><td>Chamadas efetivas: yearly.groupby, pd.DataFrame, .to_dict, int, rows.append, .sum, .notna, f.datetime.dt.year.between Retorno: pd.DataFrame(rows).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/monitoramento_mma.py, linhas 62-68.</p>
+<pre><code>    raw=pd.read_excel(path,header=None)
+    header=max(range(min(10,len(raw))),key=lambda i:sum(norm(v) in TOKENS for v in raw.iloc[i]))
+    cols={TOKENS[norm(v)]:j for j,v in enumerate(raw.iloc[header]) if norm(v) in TOKENS}
+    if not cols:raise ValueError(f&#x27;Cabeçalho não reconhecido: {path}&#x27;)
+    n=norm(re.split(r&#x27;20\d{2}&#x27;,path.stem)[0]);matches=[key for key in NAMES if key in n]
+    if len(matches)!=1:raise ValueError(f&#x27;Estação ambígua: {path}&#x27;)
+    sid,name=NAMES[matches[0]]</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p>Trecho de codigo/monitoramento_mma.py, linhas 77-83.</p>
+<pre><code>        out[target]=pd.to_numeric(s.map(lambda v:v.replace(&#x27;,&#x27;,&#x27;.&#x27;) if isinstance(v,str) else v),errors=&#x27;coerce&#x27;).replace([np.inf,-np.inf],np.nan)
+    year=int(re.search(r&#x27;(20\d{2})&#x27;,path.name)[1]);other=int((out.datetime.notna()&amp;out.datetime.dt.year.ne(year)).sum())
+    out=out[out.datetime.dt.year.eq(year)].copy();out.datetime=out.datetime.dt.floor(&#x27;h&#x27;)
+    for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+        if pol not in out:out[pol]=np.nan
+        out[pol]=out[pol].mask(out[pol].le(0) if config.ZERO_AS_MISSING else out[pol].lt(0))
+    for c in [&#x27;VV&#x27;,&#x27;PP&#x27;,&#x27;RS&#x27;]:</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | pd.read_excel.
+    5  # Entrada: E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/assinatura.json | key.read_text.
+    6  # Entrada: E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/leitura.json | .read_text.
+    7  # Campos/chaves em out: DV, PM10, PM25, VV, datetime.
+    8  # Campos/chaves em cols: VV.
+    9  # Campos/chaves em config.DIRS: cache.
+   10  # Campos/chaves em a: station_id, year.
+   11  # Campos/chaves em x: path.
+   12  # Campos/chaves em old: DATA.
+   13  # Campos/chaves em f: datetime.
+   14  # Campos/chaves em df: datetime.
+   15  # Saída: E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/leitura.json | .write_text.
+   16  # Saída: E:/projeto/config.DIRS[&#x27;cache&#x27;]/monitoramento_mma/assinatura.json | key.write_text.
+   17  # Campos/chaves gerados em out: DV, station_id.
+   18  # Campos/chaves gerados em day: quadrimestre, valid_day, year.
+   19  # Campos/chaves gerados em r: n_valid_hourly, n_valid_hourly_historical.
+   20  # CÓDIGO DO PROCESSAMENTO
+   21  
+   22  &quot;&quot;&quot;Leitura da rede regional e representatividade MMA 2020, Quadro 7.
+   23  
+   24  Dias: pelo menos 16 horas únicas. Ano: pelo menos 50% dos dias em CADA
+   25  quadrimestre do calendário completo. Ausências não são convertidas em zero.
+   26  &quot;&quot;&quot;
+   27  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   28  import sys as _cp_sys
+   29  from pathlib import Path as _cp_Path
+   30  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   31  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   32      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   33      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   34          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   35          break
+   36  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   37  # FIM DOS CAMINHOS PORTÁTEIS
+   38  
+   39  from pathlib import Path
+   40  import calendar, re, unicodedata, json
+   41  import numpy as np
+   42  import pandas as pd
+   43  import config
+   44  from standards import STANDARDS, STAGE_ORDER, annual_p98
+   45  
+   46  # Norm
+   47  def norm(value):
+   48      return re.sub(&#x27;[^a-z0-9]&#x27;,&#x27;&#x27;,unicodedata.normalize(&#x27;NFKD&#x27;,str(value).replace(&#x27;º&#x27;,&#x27;&#x27;).replace(&#x27;°&#x27;,&#x27;&#x27;)).encode(&#x27;ascii&#x27;,&#x27;ignore&#x27;).decode().lower())
+   49  
+   50  NAMES={&#x27;basilica&#x27;:(&#x27;basilica&#x27;,&#x27;Basílica&#x27;),&#x27;jardimprofeta&#x27;:(&#x27;j-prof&#x27;,&#x27;Jardim Profeta&#x27;),
+   51   &#x27;loboleite&#x27;:(&#x27;lobo-leite&#x27;,&#x27;Lobo Leite&#x27;),&#x27;matriz&#x27;:(&#x27;matriz&#x27;,&#x27;Matriz&#x27;),
+   52   &#x27;motas&#x27;:(&#x27;motas&#x27;,&#x27;Motas&#x27;),&#x27;novoplataforma&#x27;:(&#x27;n-plat&#x27;,&#x27;Nova Plataforma&#x27;),
+   53   &#x27;pires&#x27;:(&#x27;pires&#x27;,&#x27;Pires&#x27;),&#x27;casadepedra&#x27;:(&#x27;casa-de-pedra&#x27;,&#x27;Casa de Pedra&#x27;),
+   54   &#x27;minadaviga&#x27;:(&#x27;mina-da-viga&#x27;,&#x27;Mina da Viga&#x27;),&#x27;namisa&#x27;:(&#x27;namisa&#x27;,&#x27;Namisa&#x27;),
+   55   &#x27;fabrica&#x27;:(&#x27;fabrica&#x27;,&#x27;Fábrica&#x27;),&#x27;miguelburnier&#x27;:(&#x27;miguel-burnier&#x27;,&#x27;Miguel Burnier&#x27;),
+   56   &#x27;ferro&#x27;:(&#x27;ferro&#x27;,&#x27;Ferro+&#x27;)}
+   57  TOKENS={&#x27;pm10&#x27;:&#x27;PM10&#x27;,&#x27;mp10&#x27;:&#x27;PM10&#x27;,&#x27;pm25&#x27;:&#x27;PM25&#x27;,&#x27;mp25&#x27;:&#x27;PM25&#x27;,
+   58   &#x27;t&#x27;:&#x27;T&#x27;,&#x27;temperatura&#x27;:&#x27;T&#x27;,&#x27;dv&#x27;:&#x27;DV&#x27;,&#x27;pp&#x27;:&#x27;PP&#x27;,&#x27;pa&#x27;:&#x27;PA&#x27;,&#x27;vv&#x27;:&#x27;VV&#x27;,&#x27;rs&#x27;:&#x27;RS&#x27;,&#x27;ur&#x27;:&#x27;UR&#x27;}
+   59  
+   60  # Read raw
+   61  def read_raw(path):
+   62      raw=pd.read_excel(path,header=None)
+   63      header=max(range(min(10,len(raw))),key=lambda i:sum(norm(v) in TOKENS for v in raw.iloc[i]))
+   64      cols={TOKENS[norm(v)]:j for j,v in enumerate(raw.iloc[header]) if norm(v) in TOKENS}
+   65      if not cols:raise ValueError(f&#x27;Cabeçalho não reconhecido: {path}&#x27;)
+   66      n=norm(re.split(r&#x27;20\d{2}&#x27;,path.stem)[0]);matches=[key for key in NAMES if key in n]
+   67      if len(matches)!=1:raise ValueError(f&#x27;Estação ambígua: {path}&#x27;)
+   68      sid,name=NAMES[matches[0]]
+   69      body=raw.iloc[header+1:].copy()
+   70      dt=pd.to_datetime(body.iloc[:,0],errors=&#x27;coerce&#x27;,dayfirst=True)
+   71  
+   72      numeric=body.iloc[:,0].map(lambda x:isinstance(x,(float,int)) and not isinstance(x,bool))
+   73      if numeric.any():dt.loc[numeric]=pd.to_datetime(pd.to_numeric(body.loc[numeric,0]),unit=&#x27;D&#x27;,origin=&#x27;1899-12-30&#x27;,errors=&#x27;coerce&#x27;)
+   74      out=pd.DataFrame({&#x27;datetime&#x27;:dt})
+   75      for target,j in cols.items():
+   76          s=body.iloc[:,j]
+   77          out[target]=pd.to_numeric(s.map(lambda v:v.replace(&#x27;,&#x27;,&#x27;.&#x27;) if isinstance(v,str) else v),errors=&#x27;coerce&#x27;).replace([np.inf,-np.inf],np.nan)
+   78      year=int(re.search(r&#x27;(20\d{2})&#x27;,path.name)[1]);other=int((out.datetime.notna()&amp;out.datetime.dt.year.ne(year)).sum())
+   79      out=out[out.datetime.dt.year.eq(year)].copy();out.datetime=out.datetime.dt.floor(&#x27;h&#x27;)
+   80      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+   81          if pol not in out:out[pol]=np.nan
+   82          out[pol]=out[pol].mask(out[pol].le(0) if config.ZERO_AS_MISSING else out[pol].lt(0))
+   83      for c in [&#x27;VV&#x27;,&#x27;PP&#x27;,&#x27;RS&#x27;]:
+   84          if c in out:out[c]=out[c].mask(out[c]&lt;0)
+   85      if &#x27;DV&#x27; in out:out[&#x27;DV&#x27;]=out.DV.where(out.DV.between(0,360))
+   86      units=&#x27; | &#x27;.join(str(v) for v in raw.iloc[header+1].tolist())
+   87      if &#x27;VV&#x27; in cols and &#x27;km/h&#x27; in str(raw.iloc[header+1,cols[&#x27;VV&#x27;]]).lower():out.VV=out.VV/3.6
+   88      out[&#x27;station_id&#x27;]=sid
+   89      audit={&#x27;file&#x27;:str(path),&#x27;station_id&#x27;:sid,&#x27;station_name&#x27;:name,&#x27;year&#x27;:year,&#x27;header_row&#x27;:header+1,
+   90        &#x27;rows&#x27;:len(out),&#x27;out_of_filename_year&#x27;:other,&#x27;duplicate_hours&#x27;:int(out.datetime.duplicated().sum()),
+   91        &#x27;columns&#x27;:list(cols),&#x27;units&#x27;:units,&#x27;PM10_hours&#x27;:int(out.PM10.notna().sum()),&#x27;PM25_hours&#x27;:int(out.PM25.notna().sum())}
+   92      return out,audit
+   93  
+   94  # Load network
+   95  def load_network(folder=None):
+   96      folder=Path(folder or config.BASE/&#x27;qar_met&#x27;);paths=sorted(folder.rglob(&#x27;*.xlsx&#x27;))
+   97      if not paths:raise FileNotFoundError(f&#x27;Sem arquivos em {folder}&#x27;)
+   98      cache=config.DIRS[&#x27;cache&#x27;]/&#x27;monitoramento_mma&#x27;;cache.mkdir(parents=True,exist_ok=True)
+   99      manifest=[{&#x27;path&#x27;:str(p),&#x27;size&#x27;:p.stat().st_size,&#x27;mtime_ns&#x27;:p.stat().st_mtime_ns} for p in paths]
+  100      legacy_paths=sorted((config.BASE/&#x27;qar&#x27;).glob(&#x27;*.xlsx&#x27;))
+  101      legacy_paths=[p for p in legacy_paths if p.stem in {v[0] for v in NAMES.values()}]
+  102      legacy_manifest=[{&#x27;path&#x27;:str(p),&#x27;size&#x27;:p.stat().st_size,&#x27;mtime_ns&#x27;:p.stat().st_mtime_ns} for p in legacy_paths]
+  103      signature={&#x27;version&#x27;:3,&#x27;files&#x27;:manifest,&#x27;legacy_files&#x27;:legacy_manifest,&#x27;zero_as_missing&#x27;:config.ZERO_AS_MISSING}
+  104      key=cache/&#x27;assinatura.json&#x27;
+  105      if key.exists() and json.loads(key.read_text(encoding=&#x27;utf8&#x27;))==signature:
+  106          d=pd.read_pickle(cache/&#x27;horas.pkl.gz&#x27;);audit=json.loads((cache/&#x27;leitura.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+  107          return {sid:g.copy() for sid,g in d.groupby(&#x27;station_id&#x27;)},audit
+  108  
+  109      if key.exists():
+  110          old=json.loads(key.read_text(encoding=&#x27;utf8&#x27;))
+  111          if old.get(&#x27;files&#x27;)==manifest and old.get(&#x27;zero_as_missing&#x27;)==config.ZERO_AS_MISSING:
+  112              d=pd.read_pickle(cache/&#x27;horas.pkl.gz&#x27;)
+  113              audit=json.loads((cache/&#x27;leitura.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+  114              for a in [a for a in audit if a.get(&#x27;source_kind&#x27;)==&#x27;legacy_missing_year&#x27;]:
+  115                  d=d[~(d.station_id.eq(a[&#x27;station_id&#x27;])&amp;d.datetime.dt.year.eq(a[&#x27;year&#x27;]))]
+  116              audit=[a for a in audit if a.get(&#x27;source_kind&#x27;)!=&#x27;legacy_missing_year&#x27;]
+  117              d,audit=add_missing_legacy_years(d,audit,legacy_paths)
+  118              d.to_pickle(cache/&#x27;horas.pkl.gz&#x27;)
+  119              (cache/&#x27;leitura.json&#x27;).write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  120              key.write_text(json.dumps(signature,ensure_ascii=False),encoding=&#x27;utf8&#x27;)
+  121              return {sid:g.copy() for sid,g in d.groupby(&#x27;station_id&#x27;)},audit
+  122  
+  123      if key.exists():
+  124          old=json.loads(key.read_text(encoding=&#x27;utf8&#x27;))
+  125          now={x[&#x27;path&#x27;]:x for x in manifest};before={x[&#x27;path&#x27;]:x for x in old.get(&#x27;files&#x27;,[])}
+  126          additions=[p for p in paths if str(p) not in before]
+  127          if additions and old.get(&#x27;version&#x27;)==2 and old.get(&#x27;zero_as_missing&#x27;)==config.ZERO_AS_MISSING and all(now.get(k)==v for k,v in before.items()):
+  128              previous=pd.read_pickle(cache/&#x27;horas.pkl.gz&#x27;);audit=json.loads((cache/&#x27;leitura.json&#x27;).read_text(encoding=&#x27;utf8&#x27;));chunks=[previous]
+  129              for p in additions:
+  130                  frame,a=read_raw(p);chunks.append(frame);audit.append(a)
+  131              combined=pd.concat(chunks,ignore_index=True).groupby([&#x27;station_id&#x27;,&#x27;datetime&#x27;],as_index=False).mean(numeric_only=True)
+  132              combined.to_pickle(cache/&#x27;horas.pkl.gz&#x27;);(cache/&#x27;leitura.json&#x27;).write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;);key.write_text(json.dumps(signature,ensure_ascii=False),encoding=&#x27;utf8&#x27;)
+  133      if key.exists() and json.loads(key.read_text(encoding=&#x27;utf8&#x27;))==signature:
+  134          d=pd.read_pickle(cache/&#x27;horas.pkl.gz&#x27;);audit=json.loads((cache/&#x27;leitura.json&#x27;).read_text(encoding=&#x27;utf8&#x27;))
+  135      else:
+  136          chunks=[];audit=[]
+  137          for i,p in enumerate(paths):
+  138              d,a=read_raw(p);chunks.append(d);audit.append(a)
+  139              if (i+1)%20==0:print(f&#x27;Estações: {i+1}/{len(paths)} arquivos lidos&#x27;,flush=True)
+  140          d=pd.concat(chunks,ignore_index=True)
+  141  
+  142          d=d.groupby([&#x27;station_id&#x27;,&#x27;datetime&#x27;],as_index=False).mean(numeric_only=True)
+  143          d,audit=add_missing_legacy_years(d,audit,legacy_paths)
+  144          d.to_pickle(cache/&#x27;horas.pkl.gz&#x27;)
+  145          (cache/&#x27;leitura.json&#x27;).write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;)
+  146          key.write_text(json.dumps(signature,ensure_ascii=False),encoding=&#x27;utf8&#x27;)
+  147      return {sid:g.copy() for sid,g in d.groupby(&#x27;station_id&#x27;)},audit
+  148  
+  149  # Add missing legacy years
+  150  def add_missing_legacy_years(data,audit,paths):
+  151      &quot;&quot;&quot;Completar apenas anos sem arquivo anual; nunca preencher lacunas anuais.&quot;&quot;&quot;
+  152      present={(a[&#x27;station_id&#x27;],a[&#x27;year&#x27;]) for a in audit if a.get(&#x27;source_kind&#x27;)!=&#x27;legacy_missing_year&#x27;}
+  153      chunks=[data]
+  154      for path in paths:
+  155          old=pd.read_excel(path)
+  156          if &#x27;DATA&#x27; not in old:continue
+  157          dt=pd.to_datetime(old[&#x27;DATA&#x27;],errors=&#x27;coerce&#x27;).dt.floor(&#x27;h&#x27;)
+  158          f=pd.DataFrame({&#x27;datetime&#x27;:dt,&#x27;station_id&#x27;:path.stem})
+  159          for pol,col in [(&#x27;PM10&#x27;,&#x27;PM10_ugm-3&#x27;),(&#x27;PM25&#x27;,&#x27;PM2-5_ugm-3&#x27;)]:
+  160              f[pol]=pd.to_numeric(old[col],errors=&#x27;coerce&#x27;) if col in old else np.nan
+  161              f[pol]=f[pol].replace([np.inf,-np.inf],np.nan)
+  162              f[pol]=f[pol].mask(f[pol].le(0) if config.ZERO_AS_MISSING else f[pol].lt(0))
+  163          for year,sub in f.dropna(subset=&#x27;datetime&#x27;).groupby(f.datetime.dt.year):
+  164              if (path.stem,int(year)) in present:continue
+  165              audit.append(dict(file=str(path),station_id=path.stem,year=int(year),source_kind=&#x27;legacy_missing_year&#x27;,
+  166                  rows=len(sub),duplicate_hours=int(sub.datetime.duplicated().sum()),
+  167                  PM10_hours=int(sub.PM10.count()),PM25_hours=int(sub.PM25.count())))
+  168              chunks.append(sub)
+  169      combined=pd.concat(chunks,ignore_index=True)
+  170      return combined.groupby([&#x27;station_id&#x27;,&#x27;datetime&#x27;],as_index=False).mean(numeric_only=True),audit
+  171  
+  172  # Daily and yearly
+  173  def daily_and_yearly(df,pol,first=2017,last=2025):
+  174      if &#x27;station_id&#x27; not in df:df=df.assign(station_id=&#x27;serie&#x27;)
+  175      h=df[[&#x27;datetime&#x27;,pol]].assign(datetime=df.datetime.dt.floor(&#x27;h&#x27;)).groupby(&#x27;datetime&#x27;)[pol].mean()
+  176      day=h.resample(&#x27;D&#x27;).agg([&#x27;mean&#x27;,&#x27;count&#x27;]).reindex(pd.date_range(f&#x27;{first}-01-01&#x27;,f&#x27;{last}-12-31&#x27;,freq=&#x27;D&#x27;,name=&#x27;date&#x27;))
+  177      day.columns=[&#x27;value&#x27;,&#x27;n_hours&#x27;];day.n_hours=day.n_hours.fillna(0).astype(int)
+  178      day[&#x27;valid_day&#x27;]=day.n_hours.ge(config.MONITOR_MIN_VALID_HOURS_DAY);day.loc[~day.valid_day,&#x27;value&#x27;]=np.nan
+  179      day[&#x27;year&#x27;]=day.index.year;day[&#x27;quadrimestre&#x27;]=(day.index.month-1)//4+1
+  180      yearly=[];periods=[]
+  181      for year,sub in day.groupby(&#x27;year&#x27;):
+  182          q=[];vals=sub.value.dropna()
+  183          for num,v in sub.groupby(&#x27;quadrimestre&#x27;):
+  184              valid=int(v.valid_day.sum());fraction=valid/len(v);q.append(fraction)
+  185              periods.append(dict(station_id=df.station_id.iloc[0],pollutant=pol,year=int(year),quadrimestre=int(num),expected_days=len(v),valid_days=valid,completeness=fraction,representative=fraction&gt;=config.MONITOR_MIN_QUADRIMESTER_COMPLETENESS))
+  186          yearly.append(dict(station_id=df.station_id.iloc[0],pollutant=pol,year=int(year),valid_year=min(q)&gt;=config.MONITOR_MIN_QUADRIMESTER_COMPLETENESS,
+  187            n_valid_days=len(vals),expected_days=len(sub),valid_days_pct=100*len(vals)/len(sub),
+  188            annual_mean=float(vals.mean()) if len(vals) else np.nan,p98=annual_p98(vals) if len(vals) else np.nan,
+  189            quadrim1=q[0],quadrim2=q[1],quadrim3=q[2],quadrimestre_min_completeness=min(q)))
+  190      return day,pd.DataFrame(yearly),pd.DataFrame(periods)
+  191  
+  192  # All tables
+  193  def all_tables(frames,first=2017,last=2025):
+  194      ys=[];qs=[];daily={}
+  195      for sid,frame in frames.items():
+  196          for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  197              if frame[pol].notna().sum()==0:continue
+  198              day,y,q=daily_and_yearly(frame,pol,first,last);daily[sid,pol]=day;ys.append(y);qs.append(q)
+  199      return pd.concat(ys,ignore_index=True),pd.concat(qs,ignore_index=True),daily
+  200  
+  201  # Selected metrics
+  202  def selected_metrics(yearly,rolling,frames,end=2025):
+  203      rows=[]
+  204      for (sid,pol),g in yearly.groupby([&#x27;station_id&#x27;,&#x27;pollutant&#x27;]):
+  205          r=rolling[(rolling.station_id==sid)&amp;(rolling.pollutant==pol)&amp;(rolling.end_year==end)].iloc[0].to_dict()
+  206          f=frames[sid]
+  207          r[&#x27;n_valid_hourly&#x27;]=int(f.loc[f.datetime.dt.year.between(end-2,end),pol].notna().sum())
+  208          r[&#x27;n_valid_hourly_historical&#x27;]=int(f[pol].notna().sum())
+  209          rows.append(r)
+  210      return pd.DataFrame(rows)</code></pre></article></html>

@@ -1,0 +1,112 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/standards.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/standards.py</h2>
+<p>Standards. Processamento ou módulo de apoio. A organização passa por nearest_rank_percentile, annual_p98.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\standards.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>math</td><td>Funções matemáticas escalares.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>nearest_rank_percentile(values, p=0.98)</td><td>57-72</td><td>Chamadas efetivas: np.asarray, arr.sort, max, float, list, np.isfinite, min, int Retorno: float(arr[rank - 1]), np.nan.</td></tr><tr><td>annual_p98(values)</td><td>75-88</td><td>Chamadas efetivas: np.asarray, np.sort, float, list, len, np.isfinite Retorno: float(arr[-rank]), float(&#x27;nan&#x27;).</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/standards.py, linhas 57-65.</p>
+<pre><code>def nearest_rank_percentile(values, p=0.98):
+    &quot;&quot;&quot;Percentil por posto (nearest-rank), sem interpolação.
+
+    Para n valores ordenados crescentemente, usa posição ceil(p*n), limitada a 1..n.
+    Essa forma é mais próxima do procedimento de seleção por posto usado em métricas
+    regulatórias do que a interpolação linear padrão de muitas bibliotecas.
+    &quot;&quot;&quot;
+    import math
+    import numpy as np</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    6  # CÓDIGO DO PROCESSAMENTO
+    7  
+    8  # INÍCIO DOS CAMINHOS PORTÁTEIS
+    9  import sys as _cp_sys
+   10  from pathlib import Path as _cp_Path
+   11  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   12  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   13      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   14      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   15          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   16          break
+   17  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   18  # FIM DOS CAMINHOS PORTÁTEIS
+   19  
+   20  STANDARDS = {
+   21      &quot;PM10&quot;: {
+   22          &quot;PV&quot;: {&quot;label&quot;: &quot;PI-2&quot;, &quot;24H&quot;: 100.0, &quot;ANNUAL&quot;: 35.0},
+   23          &quot;PF&quot;: {&quot;label&quot;: &quot;PF&quot;,   &quot;24H&quot;: 45.0,  &quot;ANNUAL&quot;: 15.0},
+   24      },
+   25      &quot;PM25&quot;: {
+   26          &quot;PV&quot;: {&quot;label&quot;: &quot;PI-2&quot;, &quot;24H&quot;: 50.0, &quot;ANNUAL&quot;: 17.0},
+   27          &quot;PF&quot;: {&quot;label&quot;: &quot;PF&quot;,   &quot;24H&quot;: 15.0, &quot;ANNUAL&quot;: 5.0},
+   28      },
+   29  }
+   30  
+   31  STAGE_ORDER = (&#x27;PF&#x27;, &#x27;PI4&#x27;, &#x27;PI3&#x27;, &#x27;PI2&#x27;, &#x27;PI1&#x27;)
+   32  _STAGE_VALUES = {
+   33      &#x27;PM10&#x27;: ((45,15),(50,20),(75,30),(100,35),(120,40)),
+   34      &#x27;PM25&#x27;: ((15,5),(25,10),(37,15),(50,17),(60,20)),
+   35  }
+   36  for _pol, _values in _STAGE_VALUES.items():
+   37      for _stage, (_daily, _annual) in zip(STAGE_ORDER, _values):
+   38          STANDARDS[_pol][_stage] = {&#x27;label&#x27;: _stage.replace(&#x27;PI&#x27;,&#x27;PI-&#x27;),
+   39                                    &#x27;24H&#x27;: float(_daily), &#x27;ANNUAL&#x27;: float(_annual)}
+   40  
+   41  POLLUTANT_ALIASES = {
+   42      &quot;PM10&quot;: [&quot;PM10&quot;, &quot;MP10&quot;, &quot;PM10_UGM-3&quot;, &quot;MP10_UGM-3&quot;],
+   43      &quot;PM25&quot;: [
+   44          &quot;PM2-5&quot;, &quot;PM2.5&quot;, &quot;PM2,5&quot;, &quot;PM25&quot;, &quot;MP2-5&quot;, &quot;MP2.5&quot;, &quot;MP2,5&quot;, &quot;MP25&quot;,
+   45          &quot;PM2-5_UGM-3&quot;, &quot;PM2.5_UGM-3&quot;, &quot;PM2,5_UGM-3&quot;, &quot;MP2-5_UGM-3&quot;
+   46      ],
+   47  }
+   48  
+   49  STATUS_ORDER = {
+   50      &quot;sem_dado&quot;: 0,
+   51      &quot;insuficiente&quot;: 1,
+   52      &quot;atendimento&quot;: 2,
+   53      &quot;nao_atendimento&quot;: 3,
+   54  }
+   55  
+   56  # Nearest rank percentile
+   57  def nearest_rank_percentile(values, p=0.98):
+   58      &quot;&quot;&quot;Percentil por posto (nearest-rank), sem interpolação.
+   59  
+   60      Para n valores ordenados crescentemente, usa posição ceil(p*n), limitada a 1..n.
+   61      Essa forma é mais próxima do procedimento de seleção por posto usado em métricas
+   62      regulatórias do que a interpolação linear padrão de muitas bibliotecas.
+   63      &quot;&quot;&quot;
+   64      import math
+   65      import numpy as np
+   66      arr = np.asarray(list(values), dtype=float)
+   67      arr = arr[np.isfinite(arr)]
+   68      if arr.size == 0:
+   69          return np.nan
+   70      arr.sort()
+   71      rank = max(1, min(arr.size, int(math.ceil(float(p) * arr.size))))
+   72      return float(arr[rank - 1])
+   73  
+   74  # Annual p98
+   75  def annual_p98(values):
+   76      &quot;&quot;&quot;Tabela 1 do 40 CFR 50, Apêndice N, §4.5, para série diária contínua.
+   77  
+   78      Seleciona o ceil(n/50)-ésimo MAIOR dia válido, sem interpolação. Difere
+   79      de ceil(0,98*n) quando n é múltiplo de 50. Todos os dias válidos desta
+   80      série são creditáveis; não se aplica a calendário de amostragem distinto.
+   81      A extensão ao MP10 é comparativa, não uma regra legal desse poluente.
+   82      &quot;&quot;&quot;
+   83      import numpy as np
+   84      arr=np.asarray(list(values),dtype=float)
+   85      arr=np.sort(arr[np.isfinite(arr)])
+   86      if not len(arr):return float(&#x27;nan&#x27;)
+   87      rank=(len(arr)+49)//50
+   88      return float(arr[-rank])</code></pre></article></html>

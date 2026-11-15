@@ -1,0 +1,114 @@
+{
+  "base": {
+    "arquivo": "dados/celulas.geojson"
+  },
+  "chaves": [
+    "receptor_id"
+  ],
+  "normalizacao": "zscore",
+  "semente": 20261105,
+  "passo_semente": 0,
+  "inicializacoes": 10,
+  "metodos": [
+    "ward",
+    "kmeans"
+  ],
+  "moran": false,
+  "k_testados": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "saida": "output/reproducao_configuravel",
+  "variaveis": [
+    {
+      "nome": "PM10_1h",
+      "origem": "tabela",
+      "arquivo": "dados/PM10_1h_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    },
+    {
+      "nome": "PM10_24h",
+      "origem": "tabela",
+      "arquivo": "dados/PM10_24h_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    },
+    {
+      "nome": "PM10_anual",
+      "origem": "tabela",
+      "arquivo": "dados/PM10_anual_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    },
+    {
+      "nome": "PM25_1h",
+      "origem": "tabela",
+      "arquivo": "dados/PM25_1h_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    },
+    {
+      "nome": "PM25_24h",
+      "origem": "tabela",
+      "arquivo": "dados/PM25_24h_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    },
+    {
+      "nome": "PM25_anual",
+      "origem": "tabela",
+      "arquivo": "dados/PM25_anual_receptores.csv",
+      "campo": "concentration",
+      "chave_base": "receptor_id",
+      "chave_origem": "receptor_id",
+      "transformacao": "log1p",
+      "unidade": "µg/m³"
+    }
+  ],
+  "cenarios": {
+    "S0": {
+      "pesos": {
+        "PM10_1h": 1,
+        "PM10_24h": 1,
+        "PM10_anual": 1,
+        "PM25_1h": 1,
+        "PM25_24h": 1,
+        "PM25_anual": 1
+      }
+    }
+  },
+  "como_ampliar": {
+    "origens": [
+      "base",
+      "tabela",
+      "vetor",
+      "raster"
+    ],
+    "agregacoes": [
+      "por_chave",
+      "media_area",
+      "soma_pontos",
+      "media_raster"
+    ],
+    "regra": "Definir campo, unidade, transformação e chave/agregação. Informar peso em cada cenário; ausência de peso equivale a zero. Usar camada de vizinhanças no TECO. Falhas de esquema interrompem a execução. Outros tipos de dados exigem ampliar anexar_variavel."
+  }
+}

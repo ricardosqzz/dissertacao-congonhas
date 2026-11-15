@@ -1,0 +1,48 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/paleta_concentracoes.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/paleta_concentracoes.py</h2>
+<p>Paleta contínua de concentração aprovada, independente dos cortes numéricos.</p>
+<p><strong>Papel.</strong> Cartografia/apresentação. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\paleta_concentracoes.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>matplotlib.colors</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>concentration_cmap()</td><td>26-29</td><td>Chamadas efetivas: LinearSegmentedColormap.from_list, cmap.set_over Retorno: cmap.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/paleta_concentracoes.py, linhas 26-29.</p>
+<pre><code>def concentration_cmap():
+    cmap=LinearSegmentedColormap.from_list(&#x27;concentracao_azul_vermelho&#x27;,CORES_CONCENTRACAO)
+    cmap.set_over(&#x27;#ae1325&#x27;)
+    return cmap</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    6  # CÓDIGO DO PROCESSAMENTO
+    7  
+    8  &quot;&quot;&quot;Paleta contínua de concentração aprovada, independente dos cortes numéricos.&quot;&quot;&quot;
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  from matplotlib.colors import LinearSegmentedColormap
+   22  
+   23  CORES_CONCENTRACAO=[&#x27;#cee9fa&#x27;,&#x27;#7cc2db&#x27;,&#x27;#72bc8c&#x27;,&#x27;#d4d96b&#x27;,&#x27;#f9df64&#x27;,&#x27;#f5a54b&#x27;,&#x27;#df503a&#x27;,&#x27;#b8182c&#x27;]
+   24  
+   25  # Concentration cmap
+   26  def concentration_cmap():
+   27      cmap=LinearSegmentedColormap.from_list(&#x27;concentracao_azul_vermelho&#x27;,CORES_CONCENTRACAO)
+   28      cmap.set_over(&#x27;#ae1325&#x27;)
+   29      return cmap</code></pre></article></html>

@@ -1,0 +1,179 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/complementar_quintis_gestao.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/complementar_quintis_gestao.py</h2>
+<p>Calcula quintis, procura cortes de emissão associados a faixas de concentração e testa estabilidade em blocos espaciais. A associação não estabelece um limite causal ou legal de emissão.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\complementar_quintis_gestao.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>revisao_espacial_pos_banca</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>scipy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.sparse.csgraph</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gpd.read_file, linha 79.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gpd.read_file, linha 79.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv — chamada pd.read_csv, linha 79.</li>
+<p><strong>Saídas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/{name}.gpkg — chamada frame.to_file, linha 123.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/{name}.csv — chamada .to_csv, linha 123.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv — chamada .to_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/emissoes_por_faixa_concentracao.csv — chamada .to_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/ABC_regioes_gestao.csv — chamada .to_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/regioes_gestao_zoneamento.csv — chamada .to_csv, linha 124.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/resumo_quintis_gestao.json — chamada .write_text, linha 125.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>cells: X, Y, receptor_id.</li>
+<li>v: kind.</li>
+<li>folds_here: basis, pollutant.</li>
+<li>links: receptor_id, zone_area_fraction, zone_index.</li>
+<li>z: zone_index.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>binary_cut(x, y)</td><td>49-57</td><td>Chamadas efetivas: np.asarray, np.argsort, sy.sum, np.arange, int, float, len, sy.cumsum Retorno: float((sx[idx] + sx[idx + 1]) / 2), np.nan.</td></tr><tr><td>balanced_accuracy(y, pred)</td><td>60-62</td><td>Chamadas efetivas: np.asarray, float, y.any, .any, .mean Retorno: float(0.5 * (pred[y].mean() + (~pred[~y]).mean())) if y.any() and (~y).any() else np.nan.</td></tr><tr><td>estimate_cuts(x, c, xy, pol, basis)</td><td>65-75</td><td>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial. Retorno: rows.</td></tr><tr><td>run()</td><td>78-125</td><td>lê dados; grava produtos; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.; Identifica componentes conectados de uma rede de vizinhança. Une regiões espacialmente conectadas; não estima transporte físico.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/complementar_quintis_gestao.py, linhas 65-71.</p>
+<pre><code>def estimate_cuts(x,c,xy,pol,basis):
+    concentration_cuts=np.quantile(c,[.2,.4,.6,.8]);rows=[];folds=[]
+    for size in [2000,4000]:
+        b=np.floor((xy-xy.min(0))/size).astype(int);keys=list(map(tuple,b));unique=sorted(set(keys));np.random.default_rng(SEED).shuffle(unique);lookup={key:i%5 for i,key in enumerate(unique)};folds.append((size,np.array([lookup[v] for v in keys])))
+    for percentile,ccut in zip([20,40,60,80],concentration_cuts):
+        y=c&gt;ccut;cut=binary_cut(x,y)
+        for size,f in folds:</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p>Trecho de codigo/complementar_quintis_gestao.py, linhas 85-91.</p>
+<pre><code>            for i in range(1,6):
+                vals=x[q==i];conditional.append({&#x27;pollutant&#x27;:pol,&#x27;basis&#x27;:basis,&#x27;concentration_band&#x27;:i,&#x27;n&#x27;:len(vals),&#x27;emission_min&#x27;:vals.min(),&#x27;emission_p20&#x27;:np.quantile(vals,.2),&#x27;emission_median&#x27;:np.median(vals),&#x27;emission_p80&#x27;:np.quantile(vals,.8),&#x27;emission_max&#x27;:vals.max(),&#x27;concentration_low&#x27;:float(c[q==i].min()),&#x27;concentration_high&#x27;:float(c[q==i].max())})
+        e=cells[pol+&#x27;_density_tpy_km2&#x27;].to_numpy();cuts=np.array([binary_cut(e,c&gt;v) for v in ccuts]);ordered=bool(np.isfinite(cuts).all() and np.all(np.diff(cuts)&gt;0))
+        cells[pol+&#x27;_emission_associated_band&#x27;]=np.searchsorted(cuts,e,side=&#x27;left&#x27;)+1 if ordered else np.nan
+        eq_rank,ecuts=relative_quintile(e);eq=(cells[pol+&#x27;_emission_associated_band&#x27;].to_numpy().astype(int) if ordered else eq_rank);cells[pol+&#x27;_emission_rank_quintile&#x27;]=eq_rank;cells[pol+&#x27;_emission_q&#x27;]=eq
+
+        e80=cuts[-1];cells[pol+&#x27;_matrix_associative&#x27;]=np.where(q==5,&#x27;Alta C&#x27;,&#x27;Demais C&#x27;)+&#x27; / &#x27;+np.where(e&gt;e80,&#x27;Alta E&#x27;,&#x27;Demais E&#x27;)</code></pre>
+<p>Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>connected_components: Identifica componentes conectados de uma rede de vizinhança. Une regiões espacialmente conectadas; não estima transporte físico.</li>
+<li>average: Média com ou sem pesos. As unidades do resultado são as da variável antes de eventual normalização.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gpd.read_file.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gpd.read_file.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv | pd.read_csv.
+    7  # Campos/chaves em cells: X, Y, receptor_id.
+    8  # Campos/chaves em v: kind.
+    9  # Campos/chaves em folds_here: basis, pollutant.
+   10  # Campos/chaves em links: receptor_id, zone_area_fraction, zone_index.
+   11  # Campos/chaves em z: zone_index.
+   12  # Saída: E:/projeto/output/16_revisao_pos_banca/{name}.gpkg | frame.to_file.
+   13  # Saída: E:/projeto/output/16_revisao_pos_banca/{name}.csv | .to_csv.
+   14  # Saída: E:/projeto/output/16_revisao_pos_banca/limiares_cinco_faixas_validacao.csv | .to_csv.
+   15  # Saída: E:/projeto/output/16_revisao_pos_banca/emissoes_por_faixa_concentracao.csv | .to_csv.
+   16  # Saída: E:/projeto/output/16_revisao_pos_banca/ABC_regioes_gestao.csv | .to_csv.
+   17  # Saída: E:/projeto/output/16_revisao_pos_banca/regioes_gestao_zoneamento.csv | .to_csv.
+   18  # Saída: E:/projeto/output/16_revisao_pos_banca/resumo_quintis_gestao.json | .write_text.
+   19  # receptor_id: identificador do receptor.
+   20  # X: coordenada leste em metros.
+   21  # Y: coordenada norte em metros.
+   22  # CÓDIGO DO PROCESSAMENTO
+   23  
+   24  &quot;&quot;&quot;Cinco faixas descritivas, cortes associativos testados e regiões de gestão.&quot;&quot;&quot;
+   25  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   26  import sys as _cp_sys
+   27  from pathlib import Path as _cp_Path
+   28  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   29  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   30      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   31      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   32          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   33          break
+   34  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   35  # FIM DOS CAMINHOS PORTÁTEIS
+   36  
+   37  import json
+   38  import numpy as np
+   39  import pandas as pd
+   40  import geopandas as gpd
+   41  from scipy import sparse
+   42  from scipy.sparse.csgraph import connected_components
+   43  from revisao_espacial_pos_banca import relative_quintile,SEED
+   44  from groups import GROUPS
+   45  import config
+   46  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   47  
+   48  # Binary cut
+   49  def binary_cut(x,y):
+   50      &quot;&quot;&quot;Limiar crescente que maximiza a acurácia balanceada, sem causalidade.&quot;&quot;&quot;
+   51      x=np.asarray(x,float);y=np.asarray(y,bool);order=np.argsort(x,kind=&#x27;stable&#x27;);sx=x[order];sy=y[order];p=sy.sum();n=len(y)-p
+   52      if min(p,n)==0 or np.unique(x).size&lt;2:return np.nan
+   53      cumulative=sy.cumsum()[:-1];j=np.arange(1,len(x));tn=j-cumulative;tp=p-cumulative;score=.5*(tp/p+tn/n)
+   54      allowed=(sx[:-1]&lt;sx[1:])&amp;(j&gt;=max(5,int(.05*len(x))))&amp;(len(x)-j&gt;=max(5,int(.05*len(x))))
+   55      score[~allowed]=-np.inf
+   56      if not np.isfinite(score).any():return np.nan
+   57      idx=int(score.argmax());return float((sx[idx]+sx[idx+1])/2)
+   58  
+   59  # Balanced accuracy
+   60  def balanced_accuracy(y,pred):
+   61      y=np.asarray(y,bool);pred=np.asarray(pred,bool)
+   62      return float(.5*(pred[y].mean()+(~pred[~y]).mean())) if y.any() and (~y).any() else np.nan
+   63  
+   64  # Estimate cuts
+   65  def estimate_cuts(x,c,xy,pol,basis):
+   66      concentration_cuts=np.quantile(c,[.2,.4,.6,.8]);rows=[];folds=[]
+   67      for size in [2000,4000]:
+   68          b=np.floor((xy-xy.min(0))/size).astype(int);keys=list(map(tuple,b));unique=sorted(set(keys));np.random.default_rng(SEED).shuffle(unique);lookup={key:i%5 for i,key in enumerate(unique)};folds.append((size,np.array([lookup[v] for v in keys])))
+   69      for percentile,ccut in zip([20,40,60,80],concentration_cuts):
+   70          y=c&gt;ccut;cut=binary_cut(x,y)
+   71          for size,f in folds:
+   72              for fold in range(5):
+   73                  test=f==fold;train=~test;fit=binary_cut(x[train],y[train]);ba=balanced_accuracy(y[test],x[test]&gt;fit) if np.isfinite(fit) else np.nan
+   74                  rows.append({&#x27;pollutant&#x27;:pol,&#x27;basis&#x27;:basis,&#x27;percentile_target&#x27;:percentile,&#x27;concentration_cut&#x27;:ccut,&#x27;cut_all_data&#x27;:cut,&#x27;block_m&#x27;:size,&#x27;fold&#x27;:fold,&#x27;cut_train&#x27;:fit,&#x27;balanced_accuracy_test&#x27;:ba,&#x27;n_train&#x27;:int(train.sum()),&#x27;n_test&#x27;:int(test.sum())})
+   75      return rows
+   76  
+   77  # Run
+   78  def run():
+   79      cells=gpd.read_file(ROOT/&#x27;celulas_analise.gpkg&#x27;);z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);links=pd.read_csv(ROOT/&#x27;vinculo_celula_zona.csv&#x27;);xy=cells[[&#x27;X&#x27;,&#x27;Y&#x27;]].to_numpy();results=[];conditional=[];summary={};regions=[];contrib=[];region_links=[]
+   80      primary=[k for k,v in GROUPS.items() if v[&#x27;kind&#x27;]==&#x27;primary&#x27;]
+   81      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+   82          c=cells[pol+&#x27;_annual&#x27;].to_numpy();q,ccuts=relative_quintile(c);cells[pol+&#x27;_quintile&#x27;]=q
+   83          for basis,column in [(&#x27;mass_tpy&#x27;,pol+&#x27;_mass_tpy&#x27;),(&#x27;density_tpy_km2&#x27;,pol+&#x27;_density_tpy_km2&#x27;)]:
+   84              x=cells[column].to_numpy();results.extend(estimate_cuts(x,c,xy,pol,basis))
+   85              for i in range(1,6):
+   86                  vals=x[q==i];conditional.append({&#x27;pollutant&#x27;:pol,&#x27;basis&#x27;:basis,&#x27;concentration_band&#x27;:i,&#x27;n&#x27;:len(vals),&#x27;emission_min&#x27;:vals.min(),&#x27;emission_p20&#x27;:np.quantile(vals,.2),&#x27;emission_median&#x27;:np.median(vals),&#x27;emission_p80&#x27;:np.quantile(vals,.8),&#x27;emission_max&#x27;:vals.max(),&#x27;concentration_low&#x27;:float(c[q==i].min()),&#x27;concentration_high&#x27;:float(c[q==i].max())})
+   87          e=cells[pol+&#x27;_density_tpy_km2&#x27;].to_numpy();cuts=np.array([binary_cut(e,c&gt;v) for v in ccuts]);ordered=bool(np.isfinite(cuts).all() and np.all(np.diff(cuts)&gt;0))
+   88          cells[pol+&#x27;_emission_associated_band&#x27;]=np.searchsorted(cuts,e,side=&#x27;left&#x27;)+1 if ordered else np.nan
+   89          eq_rank,ecuts=relative_quintile(e);eq=(cells[pol+&#x27;_emission_associated_band&#x27;].to_numpy().astype(int) if ordered else eq_rank);cells[pol+&#x27;_emission_rank_quintile&#x27;]=eq_rank;cells[pol+&#x27;_emission_q&#x27;]=eq
+   90  
+   91          e80=cuts[-1];cells[pol+&#x27;_matrix_associative&#x27;]=np.where(q==5,&#x27;Alta C&#x27;,&#x27;Demais C&#x27;)+&#x27; / &#x27;+np.where(e&gt;e80,&#x27;Alta E&#x27;,&#x27;Demais E&#x27;)
+   92          cells[pol+&#x27;_matrix&#x27;]=np.where(q==5,&#x27;Alta C&#x27;,&#x27;Demais C&#x27;)+&#x27; / &#x27;+np.where(eq==5,&#x27;Alta E&#x27;,&#x27;Demais E&#x27;)
+   93          labels=np.full(len(cells),&#x27;Acompanhamento&#x27;,dtype=object);labels[(q&lt;=2)&amp;(eq&lt;=2)]=&#x27;Menor impacto relativo&#x27;;labels[(eq==5)&amp;(q&lt;5)]=&#x27;Controle de fontes&#x27;;labels[q==5]=&#x27;Prioridade receptora&#x27;
+   94          cells[pol+&#x27;_management&#x27;]=labels
+   95  
+   96          cells[pol+&#x27;_priority_LISA_confirmed&#x27;]=(q==5)&amp;cells[pol+&#x27;_lisa&#x27;].eq(&#x27;Alto–alto&#x27;).to_numpy()
+   97          for label,code in [(&#x27;Prioridade receptora&#x27;,&#x27;PRI&#x27;),(&#x27;Controle de fontes&#x27;,&#x27;CON&#x27;),(&#x27;Menor impacto relativo&#x27;,&#x27;MEN&#x27;),(&#x27;Acompanhamento&#x27;,&#x27;ACO&#x27;)]:
+   98              sub=cells[cells[pol+&#x27;_management&#x27;].eq(label)].copy().reset_index(drop=True)
+   99              if sub.empty:continue
+  100              pairs=sub.sindex.query(sub.geometry,predicate=&#x27;touches&#x27;);keep=[]
+  101              for a,b in pairs.T:
+  102                  if a!=b and sub.geometry.iloc[a].boundary.intersection(sub.geometry.iloc[b].boundary).length&gt;.01:keep.append((a,b))
+  103              pairs2=np.array(keep).T if keep else np.zeros((2,0),int);adj=sparse.coo_matrix((np.ones(pairs2.shape[1]),pairs2),shape=(len(sub),len(sub)));n,lab=connected_components(adj,directed=False)
+  104              order=sorted(range(n),key=lambda k:(sub[lab==k].geometry.union_all().centroid.x,sub[lab==k].geometry.union_all().centroid.y))
+  105              for j,k in enumerate(order,1):
+  106                  g=sub[lab==k];geom=g.geometry.union_all();area=g.area.to_numpy();mean=float(np.average(g[pol+&#x27;_annual&#x27;],weights=area));rid=f&#x27;{pol}_{code}_{j:02d}&#x27;
+  107                  regions.append({&#x27;region_id&#x27;:rid,&#x27;pollutant&#x27;:pol,&#x27;management_class&#x27;:label,&#x27;n_receptors&#x27;:len(g),&#x27;area_km2&#x27;:geom.area/1e6,&#x27;annual_area_mean&#x27;:mean,&#x27;lisa_hh_area_pct&#x27;:100*float(g.loc[g[pol+&#x27;_lisa&#x27;].eq(&#x27;Alto–alto&#x27;)].area.sum())/geom.area,&#x27;geometry&#x27;:geom})
+  108                  cum=0.;values=[(key,float(np.average(g[pol+&#x27;_annual&#x27;]*g[pol+&#x27;_share_&#x27;+key]/100,weights=area))) for key in primary]
+  109                  assert np.isclose(sum(v for _,v in values),mean,rtol=3e-5)
+  110                  for key,value in sorted(values,key=lambda t:-t[1]):
+  111                      share=100*value/mean;abc=(&#x27;A&#x27; if cum&lt;80 else &#x27;B&#x27; if cum&lt;95 else &#x27;C&#x27;) if code==&#x27;PRI&#x27; else None
+  112                      contrib.append({&#x27;region_id&#x27;:rid,&#x27;pollutant&#x27;:pol,&#x27;management_class&#x27;:label,&#x27;group_id&#x27;:key,&#x27;group_name&#x27;:GROUPS[key][&#x27;name&#x27;],&#x27;annual_contribution&#x27;:value,&#x27;share_pct&#x27;:share,&#x27;cumulative_before_pct&#x27;:cum,&#x27;ABC&#x27;:abc});cum+=share
+  113                  for row in z.itertuples():
+  114                      a=row.geometry.intersection(geom).area
+  115                      if a&gt;0:region_links.append({&#x27;region_id&#x27;:rid,&#x27;pollutant&#x27;:pol,&#x27;zone_index&#x27;:row.zone_index,&#x27;area_m2&#x27;:a,&#x27;zone_area_pct&#x27;:100*a/row.geometry.area})
+  116          folds_here=pd.DataFrame(results);folds_here=folds_here[folds_here.pollutant.eq(pol)&amp;folds_here.basis.eq(&#x27;density_tpy_km2&#x27;)]
+  117          summary[pol]={&#x27;concentration_cuts_P20_P40_P60_P80&#x27;:ccuts.tolist(),&#x27;emission_density_quintile_cuts&#x27;:ecuts.tolist(),&#x27;candidate_associated_emission_cuts&#x27;:cuts.tolist(),&#x27;five_emission_bands_identifiable&#x27;:ordered,&#x27;matrix_basis&#x27;:&#x27;C acima de P80 e E acima do corte associativo para P80; cortes exploratórios&#x27; if ordered else &#x27;P80 de C e P80 da densidade de E, independentes; cortes associativos não ordenados&#x27;,&#x27;balanced_accuracy_by_target&#x27;:folds_here.groupby(&#x27;percentile_target&#x27;).balanced_accuracy_test.mean().to_dict(),&#x27;management_counts&#x27;:pd.Series(labels).value_counts().to_dict(),&#x27;priority_confirmed_HH&#x27;:int(cells[pol+&#x27;_priority_LISA_confirmed&#x27;].sum())}
+  118          ll=links[[&#x27;zone_index&#x27;,&#x27;receptor_id&#x27;,&#x27;zone_area_fraction&#x27;]].merge(cells[[&#x27;receptor_id&#x27;,pol+&#x27;_management&#x27;,pol+&#x27;_matrix_associative&#x27;]],on=&#x27;receptor_id&#x27;,validate=&#x27;many_to_one&#x27;)
+  119          for label in np.unique(labels):z[pol+&#x27;_management_&#x27;+{&#x27;Prioridade receptora&#x27;:&#x27;PRI&#x27;,&#x27;Controle de fontes&#x27;:&#x27;CON&#x27;,&#x27;Menor impacto relativo&#x27;:&#x27;MEN&#x27;,&#x27;Acompanhamento&#x27;:&#x27;ACO&#x27;}[label]+&#x27;_pct&#x27;]=100*z.zone_index.map(ll[ll[pol+&#x27;_management&#x27;].eq(label)].groupby(&#x27;zone_index&#x27;).zone_area_fraction.sum()).fillna(0)
+  120      for name,frame in [(&#x27;celulas_analise&#x27;,cells),(&#x27;zoneamento_pos_banca&#x27;,z),(&#x27;regioes_gestao&#x27;,gpd.GeoDataFrame(regions,crs=cells.crs))]:
+  121          path=ROOT/f&#x27;{name}.gpkg&#x27;
+  122          if path.exists():path.unlink()
+  123          frame.to_file(path,driver=&#x27;GPKG&#x27;);frame.drop(columns=&#x27;geometry&#x27;).to_csv(ROOT/f&#x27;{name}.csv&#x27;,index=False)
+  124      pd.DataFrame(results).to_csv(ROOT/&#x27;limiares_cinco_faixas_validacao.csv&#x27;,index=False);pd.DataFrame(conditional).to_csv(ROOT/&#x27;emissoes_por_faixa_concentracao.csv&#x27;,index=False);pd.DataFrame(contrib).to_csv(ROOT/&#x27;ABC_regioes_gestao.csv&#x27;,index=False);pd.DataFrame(region_links).to_csv(ROOT/&#x27;regioes_gestao_zoneamento.csv&#x27;,index=False)
+  125      (ROOT/&#x27;resumo_quintis_gestao.json&#x27;).write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding=&#x27;utf8&#x27;);print(json.dumps(summary,ensure_ascii=False),flush=True)
+  126  
+  127  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

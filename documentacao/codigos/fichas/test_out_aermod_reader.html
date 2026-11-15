@@ -1,0 +1,80 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/test_out_aermod_reader.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/test_out_aermod_reader.py</h2>
+<p>Test out aermod reader. Conferência/teste. A organização passa por test_numeric_plt_mapping, test_exact_groups, test_boundaries, test_recover_only_documented_rounding.</p>
+<p><strong>Papel.</strong> Conferência/teste. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\test_out_aermod_reader.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unittest</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>audit: zones_original_precision, zones_strict_export.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>Tests()</td><td>30-52</td><td>Chamadas efetivas: self.assertEqual, gpd.GeoDataFrame, pd.DataFrame, link_receptors, len, filename_identity, saturation_class, canonical_post_group</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/test_out_aermod_reader.py, linhas 31-39.</p>
+<pre><code>    def test_numeric_plt_mapping(self):
+        self.assertEqual(len(PLT_GROUPS),29)
+        self.assertEqual(filename_identity(&#x27;24H1G028.PLT&#x27;),(&#x27;SCOF&#x27;,&#x27;24H&#x27;))
+        self.assertEqual(filename_identity(&#x27;AN00G025.PLT&#x27;),(&#x27;VALE_FAB&#x27;,&#x27;ANNUAL&#x27;))
+        self.assertEqual(filename_identity(&#x27;01HGALL.PLT&#x27;),(&#x27;ALL&#x27;,&#x27;1H&#x27;))
+        self.assertEqual(filename_identity(&#x27;01_GURB-VIA.POS&#x27;),(&#x27;URB-VIA&#x27;,&#x27;1H&#x27;))
+    def test_exact_groups(self):
+        for gid in [&#x27;URB&#x27;,&#x27;URB-FER&#x27;,&#x27;URB-NUC&#x27;,&#x27;URB-VIA&#x27;,&#x27;SCOF&#x27;,&#x27;COOPERA&#x27;,&#x27;VALE_FAB&#x27;]:
+            self.assertEqual(canonical_post_group(&#x27;24_G&#x27;+gid),gid)</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Campos/chaves em audit: zones_original_precision, zones_strict_export.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # Uso: teste; entradas sintéticas ou produtos de referência indicados abaixo.
+    8  # CÓDIGO DO PROCESSAMENTO
+    9  
+   10  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   11  import sys as _cp_sys
+   12  from pathlib import Path as _cp_Path
+   13  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   14  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   15      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   16      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   17          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   18          break
+   19  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   20  # FIM DOS CAMINHOS PORTÁTEIS
+   21  
+   22  import unittest
+   23  import pandas as pd
+   24  import geopandas as gpd
+   25  from shapely.geometry import Point,box
+   26  from groups import canonical_post_group
+   27  from out_aermod_reader import link_receptors,saturation_class,filename_identity,PLT_GROUPS
+   28  
+   29  # Tests
+   30  class Tests(unittest.TestCase):
+   31      def test_numeric_plt_mapping(self):
+   32          self.assertEqual(len(PLT_GROUPS),29)
+   33          self.assertEqual(filename_identity(&#x27;24H1G028.PLT&#x27;),(&#x27;SCOF&#x27;,&#x27;24H&#x27;))
+   34          self.assertEqual(filename_identity(&#x27;AN00G025.PLT&#x27;),(&#x27;VALE_FAB&#x27;,&#x27;ANNUAL&#x27;))
+   35          self.assertEqual(filename_identity(&#x27;01HGALL.PLT&#x27;),(&#x27;ALL&#x27;,&#x27;1H&#x27;))
+   36          self.assertEqual(filename_identity(&#x27;01_GURB-VIA.POS&#x27;),(&#x27;URB-VIA&#x27;,&#x27;1H&#x27;))
+   37      def test_exact_groups(self):
+   38          for gid in [&#x27;URB&#x27;,&#x27;URB-FER&#x27;,&#x27;URB-NUC&#x27;,&#x27;URB-VIA&#x27;,&#x27;SCOF&#x27;,&#x27;COOPERA&#x27;,&#x27;VALE_FAB&#x27;]:
+   39              self.assertEqual(canonical_post_group(&#x27;24_G&#x27;+gid),gid)
+   40      def test_boundaries(self):
+   41          self.assertEqual(saturation_class(90),&#x27;Abaixo da faixa preventiva&#x27;)
+   42          self.assertEqual(saturation_class(100),&#x27;Próxima do padrão&#x27;)
+   43          self.assertEqual(saturation_class(100.001),&#x27;Acima do padrão&#x27;)
+   44          self.assertEqual(saturation_class(float(&#x27;nan&#x27;)),&#x27;Informação insuficiente&#x27;)
+   45      def test_recover_only_documented_rounding(self):
+   46          z=gpd.GeoDataFrame({&#x27;zone_index&#x27;:[0]},geometry=[box(0,0,1,1)],crs=31983)
+   47          grid=gpd.GeoDataFrame(geometry=[Point(.004,.5)],crs=31983)
+   48          coords=pd.DataFrame({&#x27;X&#x27;:[0.,1.01],&#x27;Y&#x27;:[.5,.5]})
+   49          links,audit=link_receptors(coords,z,grid)
+   50          self.assertEqual(len(links),1)
+   51          self.assertEqual(audit[&#x27;zones_strict_export&#x27;],0)
+   52          self.assertEqual(audit[&#x27;zones_original_precision&#x27;],1)
+   53  
+   54  if __name__==&#x27;__main__&#x27;:unittest.main()</code></pre></article></html>

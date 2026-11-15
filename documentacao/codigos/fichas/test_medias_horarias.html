@@ -1,0 +1,61 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/test_medias_horarias.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/test_medias_horarias.py</h2>
+<p>Test medias horarias. Conferência/teste. A organização passa por test_calm_hours_do_not_become_valid_zeros, test_zero_total_keeps_valid_calendar, test_impossible_calendar_rejected.</p>
+<p><strong>Papel.</strong> Conferência/teste. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\test_medias_horarias.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unittest</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>DailyMeans()</td><td>26-35</td><td>Chamadas efetivas: self.assertAlmostEqual, np.testing.assert_array_equal, float, model_daily_mean, self.assertRaises</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/test_medias_horarias.py, linhas 27-35.</p>
+<pre><code> def test_calm_hours_do_not_become_valid_zeros(self):
+  self.assertAlmostEqual(float(model_daily_mean(120,20)),6)
+  self.assertAlmostEqual(float(model_daily_mean(120,12)),120/18)
+  self.assertAlmostEqual(float(model_daily_mean(120,24)),5)
+ def test_zero_total_keeps_valid_calendar(self):
+  np.testing.assert_array_equal(model_daily_mean([0,180,190],[24,18,19]),[0,10,10])
+ def test_impossible_calendar_rejected(self):
+  for n in [-1,25]:
+   with self.assertRaises(ValueError):model_daily_mean(100,n)</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    6  # Uso: teste; entradas sintéticas ou produtos de referência indicados abaixo.
+    7  # CÓDIGO DO PROCESSAMENTO
+    8  
+    9  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   10  import sys as _cp_sys
+   11  from pathlib import Path as _cp_Path
+   12  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   13  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   14      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   15      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   16          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   17          break
+   18  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   19  # FIM DOS CAMINHOS PORTÁTEIS
+   20  
+   21  import unittest
+   22  import numpy as np
+   23  from medias_horarias_verificadas import model_daily_mean
+   24  
+   25  # Dailymeans
+   26  class DailyMeans(unittest.TestCase):
+   27   def test_calm_hours_do_not_become_valid_zeros(self):
+   28    self.assertAlmostEqual(float(model_daily_mean(120,20)),6)
+   29    self.assertAlmostEqual(float(model_daily_mean(120,12)),120/18)
+   30    self.assertAlmostEqual(float(model_daily_mean(120,24)),5)
+   31   def test_zero_total_keeps_valid_calendar(self):
+   32    np.testing.assert_array_equal(model_daily_mean([0,180,190],[24,18,19]),[0,10,10])
+   33   def test_impossible_calendar_rejected(self):
+   34    for n in [-1,25]:
+   35     with self.assertRaises(ValueError):model_daily_mean(100,n)
+   36  
+   37  if __name__==&#x27;__main__&#x27;:unittest.main()</code></pre></article></html>

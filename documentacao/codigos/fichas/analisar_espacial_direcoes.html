@@ -1,0 +1,438 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/analisar_espacial_direcoes.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/analisar_espacial_direcoes.py</h2>
+<p>Aplica os mesmos testes aos envelopes por direção e ao cenário geral, recupera contribuições no evento ALL de cada receptor, compara Ward/k-means, Moran, correlogramas, limiares e regiões de gestão.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\analisar_espacial_direcoes.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>complementar_quintis_gestao</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>medias_horarias_verificadas</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>out_aermod_reader</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>post_amostragem</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>revisao_espacial_pos_banca</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>scipy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.cluster.hierarchy</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.cluster.vq</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.sparse.csgraph</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>scipy.spatial</td><td>Agrupamento, matrizes esparsas, distâncias, interpolação e estatísticas; conferir as chamadas na ficha.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/eventos_{pol}_{period}_manifesto.json — chamada signature.read_text, linha 113.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/eventos_{pol}_{period}.npz — chamada np.load, linha 114.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_{&#x27;horarios&#x27; if period == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv — chamada pd.read_csv, linha 115.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vento/&#x27;calendario_vento_horario.csv&#x27; if period == &#x27;1h&#x27; else &#x27;dias_direcao_persistente.csv&#x27; — chamada pd.read_csv, linha 136.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg — chamada gpd.read_file, linha 202.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg — chamada gpd.read_file, linha 203.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv — chamada pd.read_csv, linha 203.</li>
+<li>E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv — chamada pd.read_csv, linha 217.</li>
+<li>E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv — chamada pd.read_csv, linha 218.</li>
+<li>E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv — chamada pd.read_csv, linha 219.</li>
+<li>{p} — chamada load, linha 226.</li>
+<p><strong>Saídas.</strong></p>
+<li>{path} — chamada path.write_text, linha 100.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/comparacao_agrupamentos.csv — chamada .to_csv, linha 232.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/{pol}_{period}_receptores.csv — chamada table.to_csv, linha 327.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/correlogramas.csv — chamada .to_csv, linha 329.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/sensibilidade_espacial.csv — chamada .to_csv, linha 329.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/limiares_cinco_faixas.csv — chamada .to_csv, linha 330.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/limiares_regressao_complementar.csv — chamada .to_csv, linha 330.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/distribuicoes_emissao_por_faixa.csv — chamada .to_csv, linha 331.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais&#x27; if general else &#x27;regioes_direcionais&#x27;.gpkg — chamada region_frame.to_file, linha 335.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais&#x27; if general else &#x27;regioes_direcionais&#x27;.csv — chamada .to_csv, linha 335.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/ABC_contribuicoes_regioes.csv — chamada .to_csv, linha 336.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/regioes_zoneamento.csv — chamada .to_csv, linha 336.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;zoneamento_geral&#x27; if general else &#x27;zoneamento_direcional&#x27;.csv — chamada zones.to_csv, linha 337.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/contribuicoes_receptores_no_evento_ALL.csv.gz — chamada .to_csv, linha 338.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>v: kind.</li>
+<li>cells: X, Y, geometry, receptor_id.</li>
+<li>raw: direction.</li>
+<li>paths: ALL.</li>
+<li>calendar: CODE, day.</li>
+<li>r: silhouette.</li>
+<li>best: k, method.</li>
+<li>labels: ward.</li>
+<li>eligible: n_design_years, pollutant.</li>
+<li>sg: station_id.</li>
+<li>d: codes, concentrations, counts, group_values, groups, yearly.</li>
+<li>sg.loc: station_id.</li>
+<li>z: zone_index.</li>
+<li>spatial: network_priority.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>calendar: native_code.</li>
+<li>f: best_cluster, dominant_group, emission_band, emission_band_basis, emission_density, five_emission_bands_identifiable, management, mass_tpy, matrix, network_priority, ward4.</li>
+<li>spatial: network_priority.</li>
+<li>summary: clustering_joint_1h_24h_anual.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>dump(path, obj)</td><td>99-100</td><td>grava produtos</td></tr><tr><td>peak_data(pol, period, cells)</td><td>103-152</td><td>lê dados; grava produtos Retorno: result, {k: f[k] for k in f.files}.</td></tr><tr><td>partition(frame, field)</td><td>155-165</td><td>Identifica componentes conectados de uma rede de vizinhança. Une regiões espacialmente conectadas; não estima transporte físico.</td></tr><tr><td>silhouette_fast(dm, labels)</td><td>168-175</td><td>Chamadas efetivas: np.unique, np.stack, np.array, np.searchsorted, means.min, np.maximum, np.divide, float Retorno: float(score.mean()).</td></tr><tr><td>clustering(features)</td><td>178-190</td><td>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.; Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.; Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida. Retorno: (records, labels[best[&#x27;method&#x27;], best[&#x27;k&#x27;]], labels[&#x27;ward&#x27;, 4], best).</td></tr><tr><td>run(*, directions=None, periods=None, output=None, loader=None)</td><td>193-343</td><td>lê dados; grava produtos; Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.; Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/analisar_espacial_direcoes.py, linhas 162-168.</p>
+<pre><code>        adjacency=sparse.coo_matrix((np.ones(e.shape[1]),e),shape=(len(sub),len(sub)))
+        n,labels=connected_components(adjacency,directed=False)
+        order=sorted(range(n),key=lambda k:(sub[labels==k].geometry.union_all().centroid.x,sub[labels==k].geometry.union_all().centroid.y))
+        for j,k in enumerate(order,1):yield value,j,sub[labels==k]
+
+# Silhouette fast
+def silhouette_fast(dm,labels):</code></pre>
+<p>Identifica componentes conectados de uma rede de vizinhança. Une regiões espacialmente conectadas; não estima transporte físico.</p>
+<p>Trecho de codigo/analisar_espacial_direcoes.py, linhas 178-184.</p>
+<pre><code>def clustering(features):
+    x=np.log1p(features);scale=x.std(0);x=(x-x.mean(0))/np.where(scale&gt;0,scale,1);dm=distance.cdist(x,x);tree=linkage(x,method=&#x27;ward&#x27;);records=[];labels={}
+    for method in [&#x27;ward&#x27;,&#x27;kmeans&#x27;]:
+        for k in range(2,7):
+            if method==&#x27;ward&#x27;:lab=fcluster(tree,k,criterion=&#x27;maxclust&#x27;)-1
+            else:
+                fits=[kmeans2(x,k,minit=&#x27;++&#x27;,iter=100,rng=np.random.default_rng(SEED+j)) for j in range(10)]</code></pre>
+<p>Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</p>
+<p>Desvio-padrão. Na padronização z, coloca colunas em escala comparável; conferir ddof no trecho.</p>
+<p>Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</p>
+<p>Matriz de distâncias entre observações. É usada no agrupamento, na silhouette ou na comparação entre centroides.</p>
+<p>Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.</p>
+<p>Transforma a árvore hierárquica em rótulos de grupos segundo o critério fornecido.</p>
+<p>Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<li>connected_components: Identifica componentes conectados de uma rede de vizinhança. Une regiões espacialmente conectadas; não estima transporte físico.</li>
+<li>mean: Média no eixo explicitado. Não representa automaticamente média anual ou diária sem a seleção temporal correspondente.</li>
+<li>log1p: Calcula ln(1+x), reduzindo assimetria e preservando zero. O resultado transformado não mantém a unidade física original.</li>
+<li>std: Desvio-padrão. Na padronização z, coloca colunas em escala comparável; conferir ddof no trecho.</li>
+<li>cdist: Matriz de distâncias entre observações. É usada no agrupamento, na silhouette ou na comparação entre centroides.</li>
+<li>linkage: Agrupamento hierárquico. Com method=ward, as fusões procuram o menor aumento da dispersão interna.</li>
+<li>fcluster: Transforma a árvore hierárquica em rótulos de grupos segundo o critério fornecido.</li>
+<li>kmeans2: Ajusta centroides pelo k-means. A matriz de entrada, a inicialização ++, a semente e as repetições determinam a solução reproduzida.</li>
+<li>quantile: Quantil da amostra fornecida. O eixo e o conjunto de dados da chamada definem se o quantil é temporal ou espacial.</li>
+<li>average: Média com ou sem pesos. As unidades do resultado são as da variável antes de eventual normalização.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/eventos_{pol}_{period}_manifesto.json | signature.read_text.
+    5  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/analises_espaciais/eventos_{pol}_{period}.npz | np.load.
+    6  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/{pol}_envelopes_{&#x27;horarios&#x27; if period == &#x27;1h&#x27; else &#x27;diarios_persistentes&#x27;}.csv | pd.read_csv.
+    7  # Entrada: E:/projeto/output/16_revisao_pos_banca/vento/&#x27;calendario_vento_horario.csv&#x27; if period == &#x27;1h&#x27; else &#x27;dias_direcao_persistente.csv&#x27; | pd.read_csv.
+    8  # Entrada: E:/projeto/output/16_revisao_pos_banca/celulas_analise.gpkg | gpd.read_file.
+    9  # Entrada: E:/projeto/output/16_revisao_pos_banca/zoneamento_pos_banca.gpkg | gpd.read_file.
+   10  # Entrada: E:/projeto/output/16_revisao_pos_banca/vinculo_celula_zona.csv | pd.read_csv.
+   11  # Entrada: E:/projeto/output/16_revisao_pos_banca/perfis_grupos/perfis_normalizados_grupos_estacoes.csv | pd.read_csv.
+   12  # Entrada: E:/projeto/output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv | pd.read_csv.
+   13  # Entrada: E:/projeto/output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv | pd.read_csv.
+   14  # Entrada: {p} | load.
+   15  # Campos/chaves em v: kind.
+   16  # Campos/chaves em cells: X, Y, geometry, receptor_id.
+   17  # Campos/chaves em raw: direction.
+   18  # Campos/chaves em paths: ALL.
+   19  # Campos/chaves em calendar: CODE, day.
+   20  # Campos/chaves em r: silhouette.
+   21  # Campos/chaves em best: k, method.
+   22  # Campos/chaves em labels: ward.
+   23  # Campos/chaves em eligible: n_design_years, pollutant.
+   24  # Campos/chaves em sg: station_id.
+   25  # Campos/chaves em d: codes, concentrations, counts, group_values, groups, yearly.
+   26  # Campos/chaves em sg.loc: station_id.
+   27  # Campos/chaves em z: zone_index.
+   28  # Campos/chaves em spatial: network_priority.
+   29  # Saída: {path} | path.write_text.
+   30  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/comparacao_agrupamentos.csv | .to_csv.
+   31  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/{pol}_{period}_receptores.csv | table.to_csv.
+   32  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/correlogramas.csv | .to_csv.
+   33  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/sensibilidade_espacial.csv | .to_csv.
+   34  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/limiares_cinco_faixas.csv | .to_csv.
+   35  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/limiares_regressao_complementar.csv | .to_csv.
+   36  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/distribuicoes_emissao_por_faixa.csv | .to_csv.
+   37  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais&#x27; if general else &#x27;regioes_direcionais&#x27;.gpkg | region_frame.to_file.
+   38  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais&#x27; if general else &#x27;regioes_direcionais&#x27;.csv | .to_csv.
+   39  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/ABC_contribuicoes_regioes.csv | .to_csv.
+   40  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/regioes_zoneamento.csv | .to_csv.
+   41  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;zoneamento_geral&#x27; if general else &#x27;zoneamento_direcional&#x27;.csv | zones.to_csv.
+   42  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/contribuicoes_receptores_no_evento_ALL.csv.gz | .to_csv.
+   43  # Campos/chaves gerados em calendar: native_code.
+   44  # Campos/chaves gerados em f: best_cluster, dominant_group, emission_band, emission_band_basis, emission_density, five_emission_bands_identifiable, management, mass_tpy, matrix, network_priority, ward4.
+   45  # Campos/chaves gerados em spatial: network_priority.
+   46  # Campos/chaves gerados em summary: clustering_joint_1h_24h_anual.
+   47  # receptor_id: identificador do receptor.
+   48  # mass_tpy: massa anual em t/ano.
+   49  # emission_density: densidade de emissão em t/ano/km².
+   50  # X: coordenada leste em metros.
+   51  # Y: coordenada norte em metros.
+   52  # best_cluster: perfil conjunto selecionado pela silhouette.
+   53  # Novas variáveis: config/analise_extensivel.json; definir origem, campo, agregação, transformação e peso.
+   54  # CÓDIGO DO PROCESSAMENTO
+   55  
+   56  &quot;&quot;&quot;Repete a análise espacial nos envelopes, preservando evento e suporte.
+   57  
+   58  Máximos de receptores diferentes não são um evento simultâneo. Contribuições
+   59  sempre são consultadas no horário/dia do máximo de ALL no mesmo receptor.
+   60  &quot;&quot;&quot;
+   61  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   62  import sys as _cp_sys
+   63  from pathlib import Path as _cp_Path
+   64  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   65  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   66      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   67      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   68          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   69          break
+   70  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   71  # FIM DOS CAMINHOS PORTÁTEIS
+   72  
+   73  from pathlib import Path
+   74  import json
+   75  import numpy as np
+   76  import pandas as pd
+   77  import geopandas as gpd
+   78  from scipy import sparse
+   79  from scipy.spatial import distance,cKDTree
+   80  from scipy.cluster.hierarchy import linkage,fcluster
+   81  from scipy.cluster.vq import kmeans2
+   82  from scipy.sparse.csgraph import connected_components
+   83  from shapely.geometry import Point
+   84  import config
+   85  from groups import GROUPS
+   86  from out_aermod_reader import discover
+   87  from post_amostragem import FixedPost
+   88  from medias_horarias_verificadas import identity
+   89  from revisao_espacial_pos_banca import (weights,moran,local_moran,relative_quintile,ari,bh,thresholds,SEED)
+   90  from complementar_quintis_gestao import estimate_cuts,binary_cut
+   91  
+   92  ROOT=config.BASE/&#x27;output/16_revisao_pos_banca&#x27;
+   93  OUT=ROOT/&#x27;vento/analises_espaciais&#x27;
+   94  DIRS=[&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;]
+   95  PRIMARY=[k for k,v in GROUPS.items() if v[&#x27;kind&#x27;]==&#x27;primary&#x27;]
+   96  ROLES=[&#x27;Prioridade receptora&#x27;,&#x27;Controle de fontes&#x27;,&#x27;Menor impacto relativo&#x27;,&#x27;Acompanhamento&#x27;]
+   97  
+   98  # Dump
+   99  def dump(path,obj):
+  100      path.write_text(json.dumps(obj,ensure_ascii=False,indent=2,default=lambda v:v.item() if isinstance(v,np.generic) else str(v)),encoding=&#x27;utf8&#x27;)
+  101  
+  102  # Peak data
+  103  def peak_data(pol,period,cells):
+  104      folder=config.BASE/f&#x27;out-aermod/{&quot;PM10&quot; if pol==&quot;PM10&quot; else &quot;PM2-5&quot;}&#x27;
+  105      selected,_=discover(folder);native=&#x27;1H&#x27; if period==&#x27;1h&#x27; else &#x27;24H&#x27;
+  106      paths={g:p for (g,a),p in selected.items() if a==native}
+  107      groups=sorted(paths)
+  108      if set(groups)!=(set(GROUPS)|{&#x27;ALL&#x27;}):raise ValueError(&#x27;Conjunto dos 29 grupos incompleto&#x27;)
+  109      source=ROOT/&#x27;vento&#x27;/f&#x27;{pol}_envelopes_{&quot;horarios&quot; if period==&quot;1h&quot; else &quot;diarios_persistentes&quot;}.csv&#x27;
+  110      met=ROOT/&#x27;vento&#x27;/(&#x27;calendario_vento_horario.csv&#x27; if period==&#x27;1h&#x27; else &#x27;dias_direcao_persistente.csv&#x27;)
+  111      stamp={&#x27;version&#x27;:2,&#x27;files&#x27;:{g:identity(p) for g,p in paths.items()},&#x27;envelope&#x27;:identity(source),&#x27;calendar&#x27;:identity(met),&#x27;support&#x27;:identity(ROOT/&#x27;celulas_analise.gpkg&#x27;)}
+  112      cache=OUT/f&#x27;eventos_{pol}_{period}.npz&#x27;;signature=OUT/f&#x27;eventos_{pol}_{period}_manifesto.json&#x27;
+  113      if cache.exists() and signature.exists() and json.loads(signature.read_text(encoding=&#x27;utf8&#x27;))==stamp:
+  114          with np.load(cache) as f:return {k:f[k] for k in f.files}
+  115      raw=pd.read_csv(source);xy=cells[[&#x27;X&#x27;,&#x27;Y&#x27;]];col=&#x27;max_1h&#x27; if period==&#x27;1h&#x27; else &#x27;daily_from_1h&#x27;
+  116      c=[];code=[]
+  117      for direction in DIRS:
+  118          s=xy.merge(raw[raw.direction.eq(direction)],on=[&#x27;X&#x27;,&#x27;Y&#x27;],validate=&#x27;one_to_one&#x27;)
+  119          if len(s)!=len(cells) or s[col].isna().any():raise ValueError(&#x27;Envelope direcional incompleto&#x27;)
+  120          c.append(s[col].to_numpy());code.append(s.max_code.to_numpy() if period==&#x27;1h&#x27; else s.day.to_numpy()*100+24)
+  121      all_values=np.array(c);codes=np.array(code,dtype=np.int64);sample_xy=np.tile(xy.to_numpy(),(8,1));contribution=[]
+  122      for group in groups:
+  123          f=FixedPost(paths[group])
+  124          try:contribution.append(f.sample(codes.ravel(),sample_xy).reshape(8,len(cells)))
+  125          finally:f.close()
+  126          print(pol,period,group,&#x27;evento ALL recuperado&#x27;,flush=True)
+  127      contribution=np.stack(contribution,axis=-1);all_index=groups.index(&#x27;ALL&#x27;)
+  128      if not np.allclose(contribution[:,:,all_index],all_values,rtol=2e-7,atol=1e-5):
+  129          raise ValueError(&#x27;Evento recuperado diverge do máximo ALL&#x27;)
+  130      indexes=[groups.index(g) for g in PRIMARY]
+  131      if not np.allclose(contribution[:,:,indexes].sum(axis=-1),all_values,rtol=3e-5,atol=2e-4):
+  132          raise ValueError(&#x27;Grupos exclusivos não fecham com ALL no evento&#x27;)
+  133      f=FixedPost(paths[&#x27;ALL&#x27;])
+  134      try:
+  135          values=f.values(receptor_indices=f.receptor_indices(xy.to_numpy()))
+  136          calendar=pd.read_csv(met)
+  137          calendar[&#x27;native_code&#x27;]=calendar.CODE if period==&#x27;1h&#x27; else calendar.day*100+24
+  138          lookup=calendar.set_index(&#x27;native_code&#x27;).direction_idx
+  139          sectors=pd.Series(f.codes).map(lookup).fillna(-1).to_numpy()
+  140          years=2000+f.codes//1_000_000
+  141          yearly=np.full((3,8,len(cells)),np.nan);counts=np.zeros((3,8),int)
+  142          for yi,year in enumerate([2021,2022,2023]):
+  143              for di in range(8):
+  144                  mask=(years==year)&amp;(sectors==di);counts[yi,di]=int(mask.sum())
+  145                  if mask.any():yearly[yi,di]=values[mask].max(axis=0)
+  146          if not np.allclose(np.nanmax(yearly,axis=0),all_values,rtol=2e-7,atol=1e-5):
+  147              raise ValueError(&#x27;Máximos anuais não reproduzem o envelope trienal&#x27;)
+  148      finally:f.close()
+  149      result=dict(concentrations=all_values,codes=codes,group_values=contribution,groups=np.array(groups),yearly=yearly,counts=counts)
+  150      np.savez_compressed(cache,**result);dump(signature,stamp)
+  151      print(pol,period,&#x27;contribuições nos eventos e envelopes anuais conferidos&#x27;,flush=True)
+  152      return result
+  153  
+  154  # Partition
+  155  def partition(frame,field):
+  156      &quot;&quot;&quot;Conectividade por segmento compartilhado, sem unir somente vértices.&quot;&quot;&quot;
+  157      for value,sub in frame.groupby(field,sort=True):
+  158          sub=sub.copy().reset_index(drop=True)
+  159          pairs=sub.sindex.query(sub.geometry,predicate=&#x27;touches&#x27;)
+  160          edges=[(a,b) for a,b in pairs.T if a!=b and sub.geometry.iloc[a].boundary.intersection(sub.geometry.iloc[b].boundary).length&gt;.01]
+  161          e=np.array(edges).T if edges else np.zeros((2,0),int)
+  162          adjacency=sparse.coo_matrix((np.ones(e.shape[1]),e),shape=(len(sub),len(sub)))
+  163          n,labels=connected_components(adjacency,directed=False)
+  164          order=sorted(range(n),key=lambda k:(sub[labels==k].geometry.union_all().centroid.x,sub[labels==k].geometry.union_all().centroid.y))
+  165          for j,k in enumerate(order,1):yield value,j,sub[labels==k]
+  166  
+  167  # Silhouette fast
+  168  def silhouette_fast(dm,labels):
+  169      groups=np.unique(labels);means=np.stack([dm[:,labels==g].mean(axis=1) for g in groups],axis=1)
+  170      size=np.array([(labels==g).sum() for g in groups]);membership=np.searchsorted(groups,labels)
+  171      own=means[np.arange(len(labels)),membership]
+  172      a=own*np.divide(size[membership],size[membership]-1,out=np.zeros(len(labels)),where=size[membership]&gt;1)
+  173      means[np.arange(len(labels)),membership]=np.inf;b=means.min(axis=1);den=np.maximum(a,b)
+  174      score=np.divide(b-a,den,out=np.zeros(len(a)),where=den&gt;0);score[size[membership]==1]=0
+  175      return float(score.mean())
+  176  
+  177  # Clustering
+  178  def clustering(features):
+  179      x=np.log1p(features);scale=x.std(0);x=(x-x.mean(0))/np.where(scale&gt;0,scale,1);dm=distance.cdist(x,x);tree=linkage(x,method=&#x27;ward&#x27;);records=[];labels={}
+  180      for method in [&#x27;ward&#x27;,&#x27;kmeans&#x27;]:
+  181          for k in range(2,7):
+  182              if method==&#x27;ward&#x27;:lab=fcluster(tree,k,criterion=&#x27;maxclust&#x27;)-1
+  183              else:
+  184                  fits=[kmeans2(x,k,minit=&#x27;++&#x27;,iter=100,rng=np.random.default_rng(SEED+j)) for j in range(10)]
+  185                  _,lab=min(fits,key=lambda v:((x-v[0][v[1]])**2).sum())
+  186              rank=pd.Series(x.mean(axis=1)).groupby(lab).mean().sort_values().index
+  187              mapping={old:i+1 for i,old in enumerate(rank)};lab=np.array([mapping[v] for v in lab])
+  188              labels[method,k]=lab;records.append(dict(method=method,k=k,silhouette=silhouette_fast(dm,lab),smallest_cluster=int(pd.Series(lab).value_counts().min())))
+  189      best=max(records,key=lambda r:r[&#x27;silhouette&#x27;])
+  190      return records,labels[best[&#x27;method&#x27;],best[&#x27;k&#x27;]],labels[&#x27;ward&#x27;,4],best
+  191  
+  192  # Run
+  193  def run(*, directions=None, periods=None, output=None, loader=None):
+  194      DIRS=directions or globals()[&#x27;DIRS&#x27;]
+  195      PERIODS=periods or [&#x27;1h&#x27;,&#x27;24h&#x27;]
+  196      OUT=Path(output) if output is not None else globals()[&#x27;OUT&#x27;]
+  197      load=loader or peak_data
+  198      general=directions==[&#x27;GERAL&#x27;]
+  199      region_stem=&#x27;regioes_gerais&#x27; if general else &#x27;regioes_direcionais&#x27;
+  200      zone_stem=&#x27;zoneamento_geral&#x27; if general else &#x27;zoneamento_direcional&#x27;
+  201      feature_description=&#x27;Máximos 1h e 24h e média anual trienal dos dois poluentes&#x27; if general else &#x27;Máximos 1h e 24h dos dois poluentes em cada direção&#x27;
+  202      OUT.mkdir(parents=True,exist_ok=True);cells=gpd.read_file(ROOT/&#x27;celulas_analise.gpkg&#x27;).reset_index(drop=True)
+  203      z=gpd.read_file(ROOT/&#x27;zoneamento_pos_banca.gpkg&#x27;);links=pd.read_csv(ROOT/&#x27;vinculo_celula_zona.csv&#x27;,usecols=[&#x27;zone_index&#x27;,&#x27;receptor_id&#x27;,&#x27;zone_area_fraction&#x27;])
+  204      xy=cells[[&#x27;X&#x27;,&#x27;Y&#x27;]].to_numpy();areas=cells.area.to_numpy();n=len(cells)
+  205      w,ids,_=weights(xy,8);neighbors={k:weights(xy,k)[1] for k in [4,12]};dm=distance.cdist(xy,xy)
+  206      band_weights=[]
+  207      for upper in range(750,8250,750):
+  208          keep=(dm&gt;upper-750)&amp;(dm&lt;=upper);wc=sparse.csr_matrix(keep.astype(float));rs=np.asarray(wc.sum(1)).ravel()
+  209          wc=sparse.diags(np.divide(1,rs,out=np.zeros_like(rs),where=rs&gt;0))@wc
+  210          band_weights.append((upper,wc,int(keep.sum()),int((rs==0).sum())))
+  211      support=[]
+  212      municipality=z.geometry.union_all();xmin,ymin,xmax,ymax=municipality.bounds
+  213      for dx,dy in [(0,0),(250,0),(0,250),(250,250)]:
+  214          xx=np.arange(np.ceil(xmin/500)*500+dx,xmax,500);yy=np.arange(np.ceil(ymin/500)*500+dy,ymax,500)
+  215          target=np.array([(x,y) for x in xx for y in yy if municipality.covers(Point(x,y))]);dist,index=cKDTree(xy).query(target)
+  216          support.append((dx,dy,index[dist&lt;=354],int((dist&gt;354).sum())))
+  217      present=pd.read_csv(ROOT/&#x27;perfis_grupos/perfis_normalizados_grupos_estacoes.csv&#x27;)[[&#x27;pollutant&#x27;,&#x27;station_id&#x27;]].drop_duplicates()
+  218      station_coords=pd.read_csv(config.BASE/&#x27;output/15_auditoria_metodologica/revisao_cientifica/vinculos_estacoes_receptores.csv&#x27;).merge(present,on=[&#x27;pollutant&#x27;,&#x27;station_id&#x27;],validate=&#x27;one_to_one&#x27;)
+  219      eligible=pd.read_csv(config.BASE/&#x27;output/11_integracao/nova_modelagem/estacoes_trienio_comum.csv&#x27;);eligible=eligible[eligible.n_design_years.eq(3)]
+  220      networks={}
+  221      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  222          st=station_coords[station_coords.pollutant.eq(pol)].copy()
+  223          sg=gpd.GeoDataFrame(st,geometry=gpd.points_from_xy(st.X,st.Y),crs=cells.crs)
+  224          es=sg[sg.station_id.isin(eligible[eligible.pollutant.eq(pol)].station_id)]
+  225          networks[pol]=(sg,sg.buffer(config.REPRESENTATIVITY_RADIUS_M).union_all(),es.buffer(config.REPRESENTATIVITY_RADIUS_M).union_all(),es)
+  226      raw={(p,t):load(p,t,cells) for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;] for t in PERIODS}
+  227      cluster_rows=[];joint={}
+  228      for di,direction in enumerate(DIRS):
+  229          feat=np.column_stack([raw[p,t][&#x27;concentrations&#x27;][di] for p in [&#x27;PM10&#x27;,&#x27;PM25&#x27;] for t in PERIODS])
+  230          records,lab,ward4,best=clustering(feat);joint[direction]=(lab,ward4,best)
+  231          cluster_rows.extend(dict(direction=direction,feature_set=feature_description,**r) for r in records)
+  232      pd.DataFrame(cluster_rows).to_csv(OUT/&#x27;comparacao_agrupamentos.csv&#x27;,index=False)
+  233      rows=[];corr=[];stability=[];cut_rows=[];regression=[];conditional=[];region_rows=[];abc=[];zone_rows=[];region_zone=[];audit=[]
+  234      field_tables={};group_event_rows=[];cov_cluster=[]
+  235      for period in PERIODS:
+  236          for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  237              d=raw[pol,period];group_ids=d[&#x27;groups&#x27;].tolist();primary_idx=[group_ids.index(g) for g in PRIMARY]
+  238              sg,union,eligible_union,es=networks[pol];e=cells[pol+&#x27;_density_tpy_km2&#x27;].to_numpy();mass=cells[pol+&#x27;_mass_tpy&#x27;].to_numpy();tables=[]
+  239              for di,direction in enumerate(DIRS):
+  240                  print(&#x27;Análise espacial&#x27;,pol,period,direction,flush=True)
+  241                  c=d[&#x27;concentrations&#x27;][di];q,cuts=relative_quintile(c);lv=np.log1p(c)
+  242                  lisa=local_moran(lv,ids);biv=local_moran(lv,ids,np.log1p(e));global_i=moran(lv,w)
+  243                  f=pd.DataFrame({&#x27;receptor_id&#x27;:cells.receptor_id,&#x27;X&#x27;:cells.X,&#x27;Y&#x27;:cells.Y,&#x27;pollutant&#x27;:pol,&#x27;period&#x27;:period,&#x27;direction&#x27;:direction,&#x27;concentration&#x27;:c,&#x27;event_code&#x27;:d[&#x27;codes&#x27;][di],
+  244                                  &#x27;quintile&#x27;:q,&#x27;lisa&#x27;:lisa.cluster,&#x27;local_I&#x27;:lisa.local_I,&#x27;p_local&#x27;:lisa.p_conditional,&#x27;q_local&#x27;:lisa.q_FDR,
+  245                                  &#x27;bivariate&#x27;:biv.cluster,&#x27;p_bivariate&#x27;:biv.p_conditional,&#x27;q_bivariate&#x27;:biv.q_FDR})
+  246                  ecut=np.array([binary_cut(e,c&gt;cut) for cut in cuts]);ordered=bool(np.isfinite(ecut).all() and (np.diff(ecut)&gt;0).all())
+  247                  eq=np.searchsorted(ecut,e,side=&#x27;left&#x27;)+1 if ordered else relative_quintile(e)[0]
+  248                  e80=ecut[3] if np.isfinite(ecut[3]) else np.quantile(e,.8)
+  249                  matrix=np.where(q==5,&#x27;Alta C&#x27;,&#x27;Demais C&#x27;)+&#x27; / &#x27;+np.where(e&gt;e80,&#x27;Alta E&#x27;,&#x27;Demais E&#x27;)
+  250                  f[&#x27;emission_band&#x27;]=eq;f[&#x27;matrix&#x27;]=matrix;f[&#x27;emission_density&#x27;]=e;f[&#x27;mass_tpy&#x27;]=mass
+  251                  f[&#x27;emission_band_basis&#x27;]=&#x27;cortes associativos ordenados&#x27; if ordered else &#x27;quintis independentes da densidade; cinco cortes associativos não identificáveis&#x27;
+  252                  f[&#x27;five_emission_bands_identifiable&#x27;]=ordered
+  253  
+  254                  e40=ecut[1] if np.isfinite(ecut[1]) else np.quantile(e,.4)
+  255                  role=np.full(n,&#x27;Acompanhamento&#x27;,object);role[(q&lt;=2)&amp;(e&lt;=e40)]=&#x27;Menor impacto relativo&#x27;;role[(q&lt;5)&amp;(e&gt;e80)]=&#x27;Controle de fontes&#x27;;role[q==5]=&#x27;Prioridade receptora&#x27;
+  256                  f[&#x27;management&#x27;]=role;f[&#x27;best_cluster&#x27;]=joint[direction][0];f[&#x27;ward4&#x27;]=joint[direction][1]
+  257                  event=d[&#x27;group_values&#x27;][di][:,primary_idx]
+  258                  f[&#x27;dominant_group&#x27;]=np.array(PRIMARY)[event.argmax(axis=1)]
+  259                  for j,group in enumerate(PRIMARY):f[&#x27;C_&#x27;+group]=event[:,j]
+  260                  for label,k in [(&#x27;p20&#x27;,0),(&#x27;p40&#x27;,1),(&#x27;p60&#x27;,2),(&#x27;p80&#x27;,3)]:f[label]=cuts[k]
+  261                  for basis,x in [(&#x27;density_tpy_km2&#x27;,e),(&#x27;mass_tpy&#x27;,mass)]:
+  262                      cut_rows.extend(dict(period=period,direction=direction,**r) for r in estimate_cuts(x,c,xy,pol,basis))
+  263                      regression.extend(dict(period=period,direction=direction,**r) for r in thresholds(x,c,xy,pol,basis))
+  264                      for band in range(1,6):
+  265                          v=x[q==band]
+  266                          if len(v):conditional.append(dict(pollutant=pol,period=period,direction=direction,quintile=band,basis=basis,n=len(v),min=v.min(),p20=np.quantile(v,.2),median=np.median(v),p80=np.quantile(v,.8),max=v.max()))
+  267                  for k,ii in neighbors.items():
+  268                      ss=local_moran(lv,ii,seed=SEED+k);a=lisa.cluster.eq(&#x27;Alto–alto&#x27;).to_numpy();b=ss.cluster.eq(&#x27;Alto–alto&#x27;).to_numpy()
+  269                      stability.append(dict(pollutant=pol,period=period,direction=direction,comparison=f&#x27;LISA k8 vs k{k}&#x27;,ARI=ari(lisa.cluster,ss.cluster),HH_jaccard=(a&amp;b).sum()/(a|b).sum() if (a|b).any() else 1))
+  270                  for year_i,year in enumerate([2021,2022,2023]):
+  271                      yc=d[&#x27;yearly&#x27;][year_i,di]
+  272                      if not np.isfinite(yc).all():
+  273                          stability.append(dict(pollutant=pol,period=period,direction=direction,comparison=f&#x27;Envelope {year}&#x27;,n_eligible=d[&#x27;counts&#x27;][year_i,di],status=&#x27;Sem horas/dias da direção neste ano&#x27;));continue
+  274                      yrank,_=relative_quintile(yc);fixed=np.searchsorted(cuts,yc,side=&#x27;left&#x27;)+1
+  275                      stability.append(dict(pollutant=pol,period=period,direction=direction,comparison=f&#x27;Quintis recalculados {year}&#x27;,ARI=ari(q,yrank),n_eligible=d[&#x27;counts&#x27;][year_i,di],pct_same_fixed_cut=float((fixed==q).mean()*100)))
+  276                  for dx,dy,index,unsupported in support:
+  277                      _,cc=relative_quintile(c[index]);lab=np.searchsorted(cc,c,side=&#x27;left&#x27;)+1
+  278                      stability.append(dict(pollutant=pol,period=period,direction=direction,comparison=f&#x27;Reamostragem suporte {dx}/{dy} m&#x27;,ARI=ari(q,lab),supported_targets=len(index),unsupported_targets=unsupported,p80=cc[3]))
+  279                  for upper,wc,pairs,isolates in band_weights:
+  280                      corr.append(dict(pollutant=pol,period=period,direction=direction,min_distance_m=upper-750,max_distance_m=upper,directed_pairs=pairs,isolates=isolates,**moran(lv,wc,199,seed=SEED+upper)))
+  281                  spatial=cells[[&#x27;receptor_id&#x27;,&#x27;geometry&#x27;]].merge(f,on=&#x27;receptor_id&#x27;,validate=&#x27;one_to_one&#x27;)
+  282                  spatial[&#x27;network_priority&#x27;]=&#x27;Demais áreas&#x27;
+  283                  for kind,field in [(&#x27;gestao&#x27;,&#x27;management&#x27;),(&#x27;LISA&#x27;,&#x27;lisa&#x27;),(&#x27;perfil&#x27;,&#x27;best_cluster&#x27;)]:
+  284                      subset=spatial[spatial.lisa.ne(&#x27;Não significativo&#x27;)] if kind==&#x27;LISA&#x27; else spatial
+  285                      for label,j,g in partition(subset,field):
+  286                          geom=g.geometry.union_all();area=g.area.to_numpy();total=float(np.average(g.concentration,weights=area));area_total=geom.area
+  287                          covered=100*geom.intersection(union).area/area_total;cov_eligible=100*geom.intersection(eligible_union).area/area_total
+  288                          rid=f&#x27;{pol}_{period}_{direction}_{kind}_{str(label).replace(&quot; &quot;,&quot;&quot;).replace(&quot;–&quot;,&quot;-&quot;)}_{j:02d}&#x27;
+  289                          record=dict(region_id=rid,pollutant=pol,period=period,direction=direction,region_type=kind,label=str(label),n_receptors=len(g),area_km2=area_total/1e6,concentration_area_mean=total,
+  290                                      monitored_area_pct=covered,eligible_monitored_area_pct=cov_eligible,
+  291                                      stations_intersecting=&#x27;;&#x27;.join(sg.loc[sg.buffer(config.REPRESENTATIVITY_RADIUS_M).intersects(geom),&#x27;station_id&#x27;]),
+  292                                      expansion_candidate=bool(kind==&#x27;gestao&#x27; and label in [&#x27;Prioridade receptora&#x27;,&#x27;Controle de fontes&#x27;] and cov_eligible&lt;50),geometry=geom)
+  293                          region_rows.append(record)
+  294                          if kind==&#x27;gestao&#x27; and label==&#x27;Prioridade receptora&#x27;:
+  295                              spatial.loc[spatial.receptor_id.isin(g.receptor_id),&#x27;network_priority&#x27;]=&#x27;Prioridade: cobertura ≥50%&#x27; if cov_eligible&gt;=50 else &#x27;Prioridade: cobertura &lt;50%&#x27;
+  296                          cumulative=0.
+  297                          values=[(group,float(np.average(g[&#x27;C_&#x27;+group],weights=area))) for group in PRIMARY]
+  298                          for group,val in sorted(values,key=lambda v:-v[1]):
+  299                              share=100*val/total if total&gt;0 else np.nan
+  300                              cls=(&#x27;A&#x27; if cumulative&lt;80 else &#x27;B&#x27; if cumulative&lt;95 else &#x27;C&#x27;) if ((kind==&#x27;gestao&#x27; and label==&#x27;Prioridade receptora&#x27;) or (kind==&#x27;LISA&#x27; and label==&#x27;Alto–alto&#x27;)) else None
+  301                              abc.append(dict(region_id=rid,pollutant=pol,period=period,direction=direction,region_type=kind,label=str(label),group_id=group,group_name=GROUPS[group][&#x27;name&#x27;],contribution=val,share_pct=share,cumulative_before_pct=cumulative,ABC=cls))
+  302                              cumulative+=share
+  303                          overlaps=z.geometry.intersection(geom).area
+  304                          for zi,a in zip(z.zone_index[overlaps&gt;0],overlaps[overlaps&gt;0]):
+  305                              region_zone.append(dict(region_id=rid,zone_index=int(zi),area_m2=float(a)))
+  306                  f[&#x27;network_priority&#x27;]=spatial[&#x27;network_priority&#x27;].to_numpy()
+  307                  ll=links.merge(f.drop(columns=[&#x27;X&#x27;,&#x27;Y&#x27;]),on=&#x27;receptor_id&#x27;,validate=&#x27;many_to_one&#x27;)
+  308                  for zid,zz in ll.groupby(&#x27;zone_index&#x27;):
+  309                      weights_zone=zz.zone_area_fraction.to_numpy()
+  310                      rec=dict(pollutant=pol,period=period,direction=direction,zone_index=int(zid),concentration_area_mean=np.average(zz.concentration,weights=weights_zone),
+  311                               dominant_group=PRIMARY[int(np.argmax([np.average(zz[&#x27;C_&#x27;+g],weights=weights_zone) for g in PRIMARY]))])
+  312                      for v in range(1,6):rec[f&#x27;Q{v}_area_pct&#x27;]=100*weights_zone[zz.quintile.eq(v)].sum()
+  313                      for label in [&#x27;Alto–alto&#x27;,&#x27;Alto–baixo&#x27;,&#x27;Baixo–alto&#x27;,&#x27;Baixo–baixo&#x27;,&#x27;Não significativo&#x27;]:rec[&#x27;LISA_&#x27;+label+&#x27;_pct&#x27;]=100*weights_zone[zz.lisa.eq(label)].sum()
+  314                      for label in ROLES:rec[&#x27;management_&#x27;+label+&#x27;_pct&#x27;]=100*weights_zone[zz.management.eq(label)].sum()
+  315                      zone_rows.append(rec)
+  316                  for gj,group in enumerate(group_ids):
+  317                      group_event_rows.append(pd.DataFrame(dict(pollutant=pol,period=period,direction=direction,receptor_id=cells.receptor_id,group_id=group,concentration_at_ALL_event=d[&#x27;group_values&#x27;][di,:,gj],ALL_event_code=d[&#x27;codes&#x27;][di])))
+  318                  summary=dict(pollutant=pol,period=period,direction=direction,n_receptors=n,concentration_cuts=cuts.tolist(),emission_cuts=ecut.tolist(),five_emission_bands_identifiable=ordered,
+  319                               lisa_counts=lisa.cluster.value_counts().to_dict(),management_counts=pd.Series(role).value_counts().to_dict(),
+  320                               global_moran=global_i,max_concentration=float(c.max()),n_hours_or_days_by_year=d[&#x27;counts&#x27;][:,di].tolist(),clustering_joint_1h_24h=joint[direction][2],
+  321                               group_closure_max_abs=float(np.abs(event.sum(1)-c).max()))
+  322                  if general:summary[&#x27;clustering_joint_1h_24h_anual&#x27;]=summary.pop(&#x27;clustering_joint_1h_24h&#x27;)
+  323                  rows.append(summary);tables.append(f)
+  324              table=pd.concat(tables,ignore_index=True)
+  325              table[&#x27;q_local_family_8_directions&#x27; if not general else &#x27;q_local_family_scenario&#x27;]=bh(table.p_local)
+  326              table[&#x27;q_bivariate_family_8_directions&#x27; if not general else &#x27;q_bivariate_family_scenario&#x27;]=bh(table.p_bivariate)
+  327              table.to_csv(OUT/f&#x27;{pol}_{period}_receptores.csv&#x27;,index=False);field_tables[pol,period]=table
+  328              audit.append(dict(pollutant=pol,period=period,rows=len(table),all_fields_classified=bool(table.quintile.between(1,5).all()),field_FDR=&#x27;BH nominal por mapa&#x27;,additional_family_FDR=&#x27;BH nos campos do mesmo poluente e duração&#x27;))
+  329      pd.DataFrame(corr).to_csv(OUT/&#x27;correlogramas.csv&#x27;,index=False);pd.DataFrame(stability).to_csv(OUT/&#x27;sensibilidade_espacial.csv&#x27;,index=False)
+  330      pd.DataFrame(cut_rows).to_csv(OUT/&#x27;limiares_cinco_faixas.csv&#x27;,index=False);pd.DataFrame(regression).to_csv(OUT/&#x27;limiares_regressao_complementar.csv&#x27;,index=False)
+  331      pd.DataFrame(conditional).to_csv(OUT/&#x27;distribuicoes_emissao_por_faixa.csv&#x27;,index=False)
+  332      region_frame=gpd.GeoDataFrame(region_rows,crs=cells.crs)
+  333      target=OUT/(region_stem+&#x27;.gpkg&#x27;)
+  334      if target.exists():target.unlink()
+  335      region_frame.to_file(target,driver=&#x27;GPKG&#x27;);region_frame.drop(columns=&#x27;geometry&#x27;).to_csv(OUT/(region_stem+&#x27;.csv&#x27;),index=False)
+  336      pd.DataFrame(abc).to_csv(OUT/&#x27;ABC_contribuicoes_regioes.csv&#x27;,index=False);pd.DataFrame(region_zone).to_csv(OUT/&#x27;regioes_zoneamento.csv&#x27;,index=False)
+  337      zones=pd.DataFrame(zone_rows);zones.to_csv(OUT/(zone_stem+&#x27;.csv&#x27;),index=False)
+  338      pd.concat(group_event_rows,ignore_index=True).to_csv(OUT/&#x27;contribuicoes_receptores_no_evento_ALL.csv.gz&#x27;,index=False,compression=&#x27;gzip&#x27;)
+  339      assert zones.groupby([&#x27;pollutant&#x27;,&#x27;period&#x27;,&#x27;direction&#x27;]).zone_index.nunique().eq(311).all()
+  340      assert np.allclose(zones[[f&#x27;Q{i}_area_pct&#x27; for i in range(1,6)]].sum(axis=1),100)
+  341      contrib=pd.DataFrame(abc);sums=contrib.groupby(&#x27;region_id&#x27;).share_pct.sum();assert np.allclose(sums,100,atol=.01)
+  342      dump(OUT/&#x27;resumo.json&#x27;,dict(cases=rows,audit=audit,source_contribution=&#x27;Mesmo evento ALL para 1h/24h; médias nativas dos três anos para anual&#x27; if general else &#x27;Mesmo horário/dia do máximo ALL em cada receptor; máximo não simultâneo&#x27;,emission_basis=&#x27;Massa anual inventariada estática; não massa emitida no evento&#x27;,cluster_features=feature_description+&#x27;, log1p e padronização por variável&#x27;,network_radius_m=config.REPRESENTATIVITY_RADIUS_M,network_period=&#x27;2021-2023&#x27;,inputs_preserved=True,new_simulation=False))
+  343      print(f&#x27;Análises de {len(rows)} campos concluídas; 311 zonas em cada campo.&#x27;,flush=True)
+  344  
+  345  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

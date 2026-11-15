@@ -1,0 +1,81 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/test_inventario_anual.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/test_inventario_anual.py</h2>
+<p>Test inventario anual. Conferência/teste. A organização passa por test_mixed_geometry_preserves_area, test_ids, test_annual_mass_not_annualized_twice, test_known_high_not_masked_by_unknown.</p>
+<p><strong>Papel.</strong> Conferência/teste. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\test_inventario_anual.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>aermod_sources</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>groups</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>methodology_rules</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>unittest</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Saídas.</strong></p>
+<p>Interface por parâmetros, retorno de funções ou programas chamados; os caminhos literais e as funções estão no inventário e no código integral.</p>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>m.loc: emission_class, emission_high, emission_total_tpy.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>InventoryTests()</td><td>30-53</td><td>Chamadas efetivas: Polygon, _clean_geometry, self.assertEqual, pd.DataFrame, group_mass_classes, self.assertTrue, self.assertFalse, GeometryCollection</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/test_inventario_anual.py, linhas 31-39.</p>
+<pre><code>    def test_mixed_geometry_preserves_area(self):
+        poly=Polygon([(0,0),(2,0),(2,2),(0,2)])
+        g=_clean_geometry(GeometryCollection([poly,LineString([(2,2),(3,3)])]))
+        self.assertEqual(g.geom_type,&#x27;Polygon&#x27;);self.assertEqual(g.area,4)
+
+    def test_ids(self):
+        for source,group in [(&#x27;AEX01BCCA&#x27;,&#x27;CSN-CDP&#x27;),(&#x27;VIA02CPI&#x27;,&#x27;CSN-PIR&#x27;),(&#x27;CH01GER&#x27;,&#x27;GERDAU&#x27;),(&#x27;VIA01VMF&#x27;,&#x27;VALE_FAB&#x27;),(&#x27;VIA01VMV&#x27;,&#x27;VALE_VIG&#x27;),(&#x27;AEX01FEP&#x27;,&#x27;FERRO&#x27;),(&#x27;WG01&#x27;,&#x27;WGM&#x27;)]:
+            self.assertEqual(infer_primary_group_from_source(source),group)
+        self.assertEqual(canonical_group(&#x27;VALE S.A. - Mina de Fábrica&#x27;),&#x27;VALE_FAB&#x27;)</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entradas: argumentos do chamador e módulos locais relacionados no relatório.
+    5  # Campos/chaves em m.loc: emission_class, emission_high, emission_total_tpy.
+    6  # Saídas: retorno de funções, verificações ou arquivos definidos pelo chamador.
+    7  # Uso: teste; entradas sintéticas ou produtos de referência indicados abaixo.
+    8  # CÓDIGO DO PROCESSAMENTO
+    9  
+   10  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   11  import sys as _cp_sys
+   12  from pathlib import Path as _cp_Path
+   13  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   14  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   15      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   16      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   17          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   18          break
+   19  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   20  # FIM DOS CAMINHOS PORTÁTEIS
+   21  
+   22  import unittest
+   23  import pandas as pd
+   24  from shapely.geometry import Polygon,LineString,GeometryCollection
+   25  from aermod_sources import _clean_geometry
+   26  from groups import infer_primary_group_from_source,canonical_group
+   27  from methodology_rules import group_mass_classes
+   28  
+   29  # Inventorytests
+   30  class InventoryTests(unittest.TestCase):
+   31      def test_mixed_geometry_preserves_area(self):
+   32          poly=Polygon([(0,0),(2,0),(2,2),(0,2)])
+   33          g=_clean_geometry(GeometryCollection([poly,LineString([(2,2),(3,3)])]))
+   34          self.assertEqual(g.geom_type,&#x27;Polygon&#x27;);self.assertEqual(g.area,4)
+   35  
+   36      def test_ids(self):
+   37          for source,group in [(&#x27;AEX01BCCA&#x27;,&#x27;CSN-CDP&#x27;),(&#x27;VIA02CPI&#x27;,&#x27;CSN-PIR&#x27;),(&#x27;CH01GER&#x27;,&#x27;GERDAU&#x27;),(&#x27;VIA01VMF&#x27;,&#x27;VALE_FAB&#x27;),(&#x27;VIA01VMV&#x27;,&#x27;VALE_VIG&#x27;),(&#x27;AEX01FEP&#x27;,&#x27;FERRO&#x27;),(&#x27;WG01&#x27;,&#x27;WGM&#x27;)]:
+   38              self.assertEqual(infer_primary_group_from_source(source),group)
+   39          self.assertEqual(canonical_group(&#x27;VALE S.A. - Mina de Fábrica&#x27;),&#x27;VALE_FAB&#x27;)
+   40          self.assertEqual(infer_primary_group_from_source(&#x27;SCOF11&#x27;,&#x27;ÁREA CARREGAMENTO FERROVIÁRIO&#x27;),&#x27;SCOF&#x27;)
+   41  
+   42      def test_annual_mass_not_annualized_twice(self):
+   43          a=pd.DataFrame({&#x27;zone_index&#x27;:[1,1,2,2,3], &#x27;group_id&#x27;:[&#x27;a&#x27;,&#x27;a&#x27;,&#x27;a&#x27;,&#x27;b&#x27;,&#x27;a&#x27;],
+   44              &#x27;emission_gs&#x27;:[1.]*5,&#x27;emission_tpy&#x27;:[60.,41.,60.,60.,100.]})
+   45          m,g=group_mass_classes(a,[1,2,3],&#x27;PM10&#x27;,annualization_basis=&#x27;inventario_conciliado&#x27;)
+   46          self.assertTrue(m.loc[1,&#x27;emission_high&#x27;]);self.assertTrue(m.loc[2,&#x27;emission_high&#x27;])
+   47          self.assertFalse(m.loc[3,&#x27;emission_high&#x27;]);self.assertEqual(m.loc[2,&#x27;emission_total_tpy&#x27;],120)
+   48  
+   49      def test_known_high_not_masked_by_unknown(self):
+   50          a=pd.DataFrame({&#x27;zone_index&#x27;:[1,1],&#x27;group_id&#x27;:[&#x27;a&#x27;,None],
+   51              &#x27;emission_gs&#x27;:[1.,1.],&#x27;emission_tpy&#x27;:[101.,10.]})
+   52          m,g=group_mass_classes(a,[1],&#x27;PM10&#x27;,annualization_basis=&#x27;inventario_conciliado&#x27;)
+   53          self.assertTrue(m.loc[1,&#x27;emission_high&#x27;]);self.assertEqual(m.loc[1,&#x27;emission_class&#x27;],&#x27;Majoritária&#x27;)
+   54  
+   55  if __name__==&#x27;__main__&#x27;:unittest.main()</code></pre></article></html>

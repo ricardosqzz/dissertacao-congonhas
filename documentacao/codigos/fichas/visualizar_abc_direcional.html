@@ -1,0 +1,155 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/visualizar_abc_direcional.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/visualizar_abc_direcional.py</h2>
+<p>ABC consultável por região, evitando centenas de páginas estáticas.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\visualizar_abc_direcional.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>cartografia_apendices</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>config</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>json</td><td>Configurações, metadados e registros estruturados de auditoria.</td></tr><tr><td>matplotlib</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>matplotlib.pyplot</td><td>Construção de gráficos, mapas, barras de cores e exportação vetorial/raster.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais.csv&#x27; if general else &#x27;regioes_direcionais.csv&#x27; — chamada pd.read_csv, linha 49.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/ABC_contribuicoes_regioes.csv — chamada pd.read_csv, linha 100.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/index.html — chamada entry.read_text, linha 92.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/regioes_direcionais.csv — chamada pd.read_csv, linha 100.</li>
+<p><strong>Saídas.</strong></p>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/abc_por_regiao.html — chamada .write_text, linha 91.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/index.html — chamada entry.write_text, linha 94.</li>
+<li>Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/figuras/{pol}_{period}_Contribuicoes_prioridades.{ext} — chamada fig.savefig, linha 112.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>regions: label, region_id, region_type.</li>
+<li>abc: region_id.</li>
+<li>values: ABC, cumulative_before_pct, group_name, share_pct.</li>
+<li>all_abc: label, period, pollutant, region_type.</li>
+<li>all_regions: area_km2, region_id.</li>
+<p><strong>Campos e chaves gerados.</strong></p>
+<li>d: weighted.</li>
+<li>plot: Demais grupos.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>run(output=None)</td><td>45-114</td><td>lê dados; grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/visualizar_abc_direcional.py, linhas 104-110.</p>
+<pre><code>            d=sub.merge(all_regions[[&#x27;region_id&#x27;,&#x27;area_km2&#x27;]],on=&#x27;region_id&#x27;,validate=&#x27;many_to_one&#x27;);d[&#x27;weighted&#x27;]=d.contribution*d.area_km2
+            v=d.groupby([&#x27;direction&#x27;,&#x27;group_name&#x27;]).weighted.sum().unstack(fill_value=0).reindex(DIRS)
+            shares=100*v.div(v.sum(axis=1),axis=0);names=v.sum().nlargest(6).index.tolist();plot=shares[names].copy();plot[&#x27;Demais grupos&#x27;]=shares.drop(columns=names).sum(axis=1)
+            fig,ax=plt.subplots(figsize=(9,4.4));left=np.zeros(8)
+            for group,color in zip(plot.columns,[&#x27;#247c96&#x27;,&#x27;#64ada8&#x27;,&#x27;#bdc77c&#x27;,&#x27;#d6b06a&#x27;,&#x27;#b77f79&#x27;,&#x27;#8c83aa&#x27;,&#x27;#d9e1de&#x27;]):
+                ax.barh(DIRS,plot[group],left=left,color=color,label=group);left+=plot[group].to_numpy()
+            ax.set(xlim=(0,100),xlabel=&#x27;Contribuição nas regiões prioritárias (%)&#x27;,ylabel=&#x27;Direção de origem do vento&#x27;);ax.invert_yaxis();fig.subplots_adjust(left=.12,right=.99,top=.98,bottom=.31)</code></pre>
+<p>Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</p>
+<p><strong>Cálculos a observar nesta rotina.</strong></p>
+<li>sum: Soma no eixo definido. Em suportes sobrepostos, uma soma entre vizinhanças pode contar o mesmo local repetidas vezes.</li>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/&#x27;regioes_gerais.csv&#x27; if general else &#x27;regioes_direcionais.csv&#x27; | pd.read_csv.
+    5  # Entrada: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/ABC_contribuicoes_regioes.csv | pd.read_csv.
+    6  # Entrada: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/index.html | entry.read_text.
+    7  # Entrada: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/regioes_direcionais.csv | pd.read_csv.
+    8  # Campos/chaves em regions: label, region_id, region_type.
+    9  # Campos/chaves em abc: region_id.
+   10  # Campos/chaves em values: ABC, cumulative_before_pct, group_name, share_pct.
+   11  # Campos/chaves em all_abc: label, period, pollutant, region_type.
+   12  # Campos/chaves em all_regions: area_km2, region_id.
+   13  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/abc_por_regiao.html | .write_text.
+   14  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/index.html | entry.write_text.
+   15  # Saída: Path(output) if output is not None else globals()[&#x27;OUT&#x27;]/figuras/{pol}_{period}_Contribuicoes_prioridades.{ext} | fig.savefig.
+   16  # Campos/chaves gerados em d: weighted.
+   17  # Campos/chaves gerados em plot: Demais grupos.
+   18  # CÓDIGO DO PROCESSAMENTO
+   19  
+   20  &quot;&quot;&quot;ABC consultável por região, evitando centenas de páginas estáticas.&quot;&quot;&quot;
+   21  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   22  import sys as _cp_sys
+   23  from pathlib import Path as _cp_Path
+   24  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   25  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   26      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   27      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   28          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   29          break
+   30  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   31  # FIM DOS CAMINHOS PORTÁTEIS
+   32  
+   33  import json
+   34  from pathlib import Path
+   35  import numpy as np
+   36  import pandas as pd
+   37  import matplotlib
+   38  matplotlib.use(&#x27;Agg&#x27;)
+   39  import matplotlib.pyplot as plt
+   40  import config
+   41  import cartografia_apendices as cart
+   42  OUT=config.BASE/&#x27;output/16_revisao_pos_banca/vento/analises_espaciais&#x27;
+   43  
+   44  # Run
+   45  def run(output=None):
+   46      OUT=Path(output) if output is not None else globals()[&#x27;OUT&#x27;]
+   47      general=OUT.name==&#x27;cenario_geral&#x27;
+   48      region_file=&#x27;regioes_gerais.csv&#x27; if general else &#x27;regioes_direcionais.csv&#x27;
+   49      regions=pd.read_csv(OUT/region_file)
+   50      keep=(regions.region_type.eq(&#x27;gestao&#x27;)&amp;regions.label.eq(&#x27;Prioridade receptora&#x27;))|(regions.region_type.eq(&#x27;LISA&#x27;)&amp;regions.label.eq(&#x27;Alto–alto&#x27;))
+   51      regions=regions[keep].copy();abc=pd.read_csv(OUT/&#x27;ABC_contribuicoes_regioes.csv&#x27;);abc=abc[abc.region_id.isin(regions.region_id)]
+   52      data={}
+   53      for r in regions.itertuples():
+   54          values=abc[abc.region_id.eq(r.region_id)].sort_values(&#x27;share_pct&#x27;,ascending=False)
+   55          data[r.region_id]=dict(pol=r.pollutant,period=r.period,direction=r.direction,kind=r.region_type,area=r.area_km2,
+   56                                 coverage=r.eligible_monitored_area_pct,receptors=r.n_receptors,C=r.concentration_area_mean,
+   57                                 groups=values[[&#x27;group_name&#x27;,&#x27;share_pct&#x27;,&#x27;cumulative_before_pct&#x27;,&#x27;ABC&#x27;]].rename(columns={&#x27;group_name&#x27;:&#x27;name&#x27;,&#x27;share_pct&#x27;:&#x27;share&#x27;,&#x27;cumulative_before_pct&#x27;:&#x27;before&#x27;,&#x27;ABC&#x27;:&#x27;abc&#x27;}).to_dict(&#x27;records&#x27;))
+   58      template=r&#x27;&#x27;&#x27;&lt;!doctype html&gt;&lt;html lang=&quot;pt-BR&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;ABC das regiões direcionais&lt;/title&gt;
+   59  &lt;style&gt;body{font:16px/1.6 Arial;max-width:1200px;margin:30px auto;padding:0 20px;color:#193f4c}label{display:inline-block;margin:0 15px 12px 0}select{font:inherit;display:block;padding:7px;max-width:400px}svg{width:100%;height:auto;background:#fff}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:6px 10px;text-align:left;border-bottom:1px solid #dce4e6}a{color:#176b88}&lt;/style&gt;
+   60  &lt;h1&gt;Contribuições e curva ABC por região&lt;/h1&gt;
+   61  &lt;p&gt;Selecione uma região para examinar quais grupos contribuem para as concentrações do envelope. As parcelas são consultadas no mesmo horário ou dia do máximo ALL de cada receptor e depois ponderadas pela área. Os máximos dos receptores podem ocorrer em momentos diferentes.&lt;/p&gt;
+   62  &lt;label&gt;Poluente&lt;select id=&quot;pol&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Duração&lt;select id=&quot;period&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Vento de&lt;select id=&quot;direction&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Recorte&lt;select id=&quot;kind&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Região&lt;select id=&quot;region&quot;&gt;&lt;/select&gt;&lt;/label&gt;
+   63  &lt;p id=&quot;stats&quot;&gt;&lt;/p&gt;&lt;svg id=&quot;bars&quot; viewBox=&quot;0 0 1150 590&quot; aria-label=&quot;Participação dos grupos&quot;&gt;&lt;/svg&gt;&lt;svg id=&quot;curve&quot; viewBox=&quot;0 0 1150 310&quot; aria-label=&quot;Curva ABC acumulada&quot;&gt;&lt;/svg&gt;
+   64  &lt;p&gt;As barras mostram a participação de cada grupo. Na curva, a posição horizontal é a ordem do grupo na tabela e a posição vertical é a participação acumulada. A linha pontilhada em 80% delimita a classe A e a de 95% a classe B. O grupo que atravessa um corte permanece na classe anterior. A classe C contém as parcelas restantes.&lt;/p&gt;
+   65  &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Ordem&lt;/th&gt;&lt;th&gt;Grupo&lt;/th&gt;&lt;th&gt;Participação (%)&lt;/th&gt;&lt;th&gt;Acumulada (%)&lt;/th&gt;&lt;th&gt;ABC&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody id=&quot;table&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;
+   66  &lt;p&gt;Empresas e Urbano Total formam a partição exclusiva. AEX e subgrupos urbanos não são somados novamente. Urbano Total reúne ferrovias, núcleos urbanos e vias urbanas. A participação em concentração recebida não corresponde à participação na massa emitida dentro da região.&lt;/p&gt;
+   67  &lt;p&gt;&lt;a href=&quot;ABC_contribuicoes_regioes.csv&quot;&gt;Tabela completa de contribuições e ABC&lt;/a&gt; · &lt;a href=&quot;regioes_direcionais.csv&quot;&gt;Áreas e cobertura&lt;/a&gt; · &lt;a href=&quot;index.html&quot;&gt;Voltar às análises por direção&lt;/a&gt;&lt;/p&gt;&lt;script&gt;
+   68  const DATA=__DATA__, $=id=&gt;document.getElementById(id), pol=$(&#x27;pol&#x27;),period=$(&#x27;period&#x27;),direction=$(&#x27;direction&#x27;),kind=$(&#x27;kind&#x27;),region=$(&#x27;region&#x27;);
+   69  function options(el,values,labels={}){let old=el.value;el.replaceChildren();for(let v of values){let o=document.createElement(&#x27;option&#x27;);o.value=v;o.textContent=labels[v]||v;el.appendChild(o)}if(values.includes(old))el.value=old;}
+   70  const fmt=v=&gt;v.toLocaleString(&#x27;pt-BR&#x27;,{maximumFractionDigits:2});
+   71  options(pol,[&#x27;PM10&#x27;,&#x27;PM25&#x27;],{PM10:&#x27;MP10&#x27;,PM25:&#x27;MP2,5&#x27;});options(period,__PERIODS__,{&#x27;1h&#x27;:&#x27;1 h&#x27;,&#x27;24h&#x27;:&#x27;24 h&#x27;,&#x27;anual&#x27;:&#x27;Média anual trienal&#x27;});options(direction,__DIRECTIONS__,{GERAL:&#x27;Meteorologia completa&#x27;});options(kind,[&#x27;gestao&#x27;,&#x27;LISA&#x27;],{gestao:&#x27;Regiões prioritárias acima de P80&#x27;,LISA:&#x27;Clusters HH significativos&#x27;});
+   72  function update(){let ids=Object.keys(DATA).filter(k=&gt;{let r=DATA[k];return r.pol===pol.value&amp;&amp;r.period===period.value&amp;&amp;r.direction===direction.value&amp;&amp;r.kind===kind.value}).sort((a,b)=&gt;DATA[b].area-DATA[a].area);let labels={};ids.forEach((v,j)=&gt;labels[v]=&#x27;R&#x27;+String(j+1).padStart(2,&#x27;0&#x27;)+&#x27; · &#x27;+fmt(DATA[v].area)+&#x27; km² · cobertura &#x27;+fmt(DATA[v].coverage)+&#x27;%&#x27;);options(region,ids,labels);draw();}
+   73  function draw(){let r=DATA[region.value];if(!r){$(&#x27;stats&#x27;).textContent=&#x27;Não há região elegível neste recorte.&#x27;;$(&#x27;bars&#x27;).innerHTML=&#x27;&#x27;;$(&#x27;curve&#x27;).innerHTML=&#x27;&#x27;;$(&#x27;table&#x27;).replaceChildren();return;}
+   74  $(&#x27;stats&#x27;).textContent=region.value+&#x27; · &#x27;+r.receptors+&#x27; receptores · área &#x27;+fmt(r.area)+&#x27; km² · cobertura elegível &#x27;+fmt(r.coverage)+&#x27;% · &#x27;+(r.period===&#x27;anual&#x27;?&#x27;média espacial do indicador anual &#x27;:&#x27;média espacial dos máximos &#x27;)+fmt(r.C)+&#x27; µg/m³.&#x27;;
+   75  let top=28,bottom=560,left=280,right=1110,step=(bottom-top)/r.groups.length,max=Math.max(...r.groups.map(g=&gt;g.share))*1.05,x=v=&gt;left+v/max*(right-left),s=&#x27;&#x27;;
+   76  for(let j=0;j&lt;=4;j++){let v=max*j/4;s+=&#x27;&lt;line x1=&quot;&#x27;+x(v)+&#x27;&quot; x2=&quot;&#x27;+x(v)+&#x27;&quot; y1=&quot;&#x27;+top+&#x27;&quot; y2=&quot;&#x27;+bottom+&#x27;&quot; stroke=&quot;#dce4e6&quot;/&gt;&lt;text x=&quot;&#x27;+x(v)+&#x27;&quot; y=&quot;585&quot; text-anchor=&quot;middle&quot; font-size=&quot;13&quot;&gt;&#x27;+fmt(v)+&#x27;%&lt;/text&gt;&#x27;;}
+   77  r.groups.forEach((g,i)=&gt;{let y=top+i*step;let color=g.abc===&#x27;A&#x27;?&#x27;#247c96&#x27;:g.abc===&#x27;B&#x27;?&#x27;#d6b06a&#x27;:&#x27;#aabbb9&#x27;;s+=&#x27;&lt;rect x=&quot;&#x27;+left+&#x27;&quot; y=&quot;&#x27;+(y+step*.13)+&#x27;&quot; width=&quot;&#x27;+(x(g.share)-left)+&#x27;&quot; height=&quot;&#x27;+(step*.74)+&#x27;&quot; fill=&quot;&#x27;+color+&#x27;&quot;/&gt;&lt;text x=&quot;265&quot; y=&quot;&#x27;+(y+step*.68)+&#x27;&quot; text-anchor=&quot;end&quot; font-size=&quot;13&quot;&gt;&#x27;+g.name+&#x27;&lt;/text&gt;&#x27;;});
+   78  $(&#x27;bars&#x27;).innerHTML=s;let pts=[],c=&#x27;&#x27;,n=r.groups.length,cx=i=&gt;90+i/Math.max(1,n-1)*1020,cy=v=&gt;250-v/100*220;
+   79  for(let v of [0,20,40,60,80,95,100])c+=&#x27;&lt;line x1=&quot;90&quot; x2=&quot;1110&quot; y1=&quot;&#x27;+cy(v)+&#x27;&quot; y2=&quot;&#x27;+cy(v)+&#x27;&quot; stroke=&quot;&#x27;+([80,95].includes(v)?&#x27;#b28647&#x27;:&#x27;#ddd&#x27;)+&#x27;&quot; stroke-dasharray=&quot;&#x27;+([80,95].includes(v)?&#x27;5 3&#x27;:&#x27;0&#x27;)+&#x27;&quot;/&gt;&lt;text x=&quot;75&quot; y=&quot;&#x27;+(cy(v)+4)+&#x27;&quot; text-anchor=&quot;end&quot; font-size=&quot;13&quot;&gt;&#x27;+v+&#x27;%&lt;/text&gt;&#x27;;
+   80  r.groups.forEach((g,i)=&gt;{let v=g.before+g.share;pts.push(cx(i)+&#x27;,&#x27;+cy(v));c+=&#x27;&lt;circle cx=&quot;&#x27;+cx(i)+&#x27;&quot; cy=&quot;&#x27;+cy(v)+&#x27;&quot; r=&quot;3&quot; fill=&quot;#247c96&quot;/&gt;&lt;text x=&quot;&#x27;+cx(i)+&#x27;&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; font-size=&quot;12&quot;&gt;&#x27;+(i+1)+&#x27;&lt;/text&gt;&#x27;;});
+   81  c+=&#x27;&lt;polyline points=&quot;&#x27;+pts.join(&#x27; &#x27;)+&#x27;&quot; fill=&quot;none&quot; stroke=&quot;#247c96&quot; stroke-width=&quot;2&quot;/&gt;&lt;text x=&quot;600&quot; y=&quot;305&quot; text-anchor=&quot;middle&quot; font-size=&quot;14&quot;&gt;Ordem do grupo na tabela&lt;/text&gt;&#x27;;$(&#x27;curve&#x27;).innerHTML=c;
+   82  $(&#x27;table&#x27;).replaceChildren();r.groups.forEach((g,i)=&gt;{let tr=document.createElement(&#x27;tr&#x27;);for(let text of [i+1,g.name,fmt(g.share),fmt(g.before+g.share),g.abc]){let td=document.createElement(&#x27;td&#x27;);td.textContent=text;tr.appendChild(td)}$(&#x27;table&#x27;).appendChild(tr)});}
+   83  [pol,period,direction,kind].forEach(el=&gt;el.onchange=update);region.onchange=draw;update();&lt;/script&gt;&lt;/html&gt;&#x27;&#x27;&#x27;
+   84      if general:
+   85          template=template.replace(&#x27;ABC das regiões direcionais&#x27;,&#x27;ABC das regiões · cenário geral&#x27;).replace(&#x27;&lt;label&gt;Vento de&#x27;,&#x27;&lt;label&gt;Cenário&#x27;)
+   86          template=template.replace(&#x27;As parcelas são consultadas no mesmo horário ou dia do máximo ALL de cada receptor e depois ponderadas pela área.&#x27;,&#x27;Nos máximos de 1 h e 24 h, as parcelas são consultadas no mesmo horário ou dia do máximo ALL de cada receptor. No anual, são usadas as médias nativas dos três anos. As parcelas regionais são ponderadas pela área.&#x27;)
+   87          template=template.replace(&#x27;regioes_direcionais.csv&#x27;,&#x27;regioes_gerais.csv&#x27;).replace(&#x27;Voltar às análises por direção&#x27;,&#x27;Voltar ao cenário geral&#x27;)
+   88      periods=[&#x27;1h&#x27;,&#x27;24h&#x27;,&#x27;anual&#x27;] if general else [&#x27;1h&#x27;,&#x27;24h&#x27;]
+   89      directions=[&#x27;GERAL&#x27;] if general else [&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;]
+   90      template=template.replace(&#x27;__PERIODS__&#x27;,json.dumps(periods)).replace(&#x27;__DIRECTIONS__&#x27;,json.dumps(directions))
+   91      (OUT/&#x27;abc_por_regiao.html&#x27;).write_text(template.replace(&#x27;__DATA__&#x27;,json.dumps(data,ensure_ascii=False,separators=(&#x27;,&#x27;,&#x27;:&#x27;)).replace(&#x27;&lt;/&#x27;,&#x27;&lt;\\/&#x27;)),encoding=&#x27;utf8&#x27;)
+   92      entry=OUT/&#x27;index.html&#x27;;s=entry.read_text(encoding=&#x27;utf8&#x27;);link=&#x27;&lt;p&gt;&lt;a href=&quot;abc_por_regiao.html&quot;&gt;Explorar a ABC de cada região e de cada cluster HH&lt;/a&gt;&lt;/p&gt;&#x27;
+   93      if link not in s:s=s.replace(&#x27;&lt;/h1&gt;&#x27;,&#x27;&lt;/h1&gt;&#x27;+link,1)
+   94      entry.write_text(s,encoding=&#x27;utf8&#x27;)
+   95      if general:
+   96          print(&#x27;ABC interativa geral:&#x27;,len(data),&#x27;regiões&#x27;,flush=True)
+   97          return
+   98  
+   99      DIRS=[&#x27;N&#x27;,&#x27;NE&#x27;,&#x27;L&#x27;,&#x27;SE&#x27;,&#x27;S&#x27;,&#x27;SO&#x27;,&#x27;O&#x27;,&#x27;NO&#x27;]
+  100      all_abc=pd.read_csv(OUT/&#x27;ABC_contribuicoes_regioes.csv&#x27;);all_regions=pd.read_csv(OUT/&#x27;regioes_direcionais.csv&#x27;)
+  101      for pol in [&#x27;PM10&#x27;,&#x27;PM25&#x27;]:
+  102          for period in [&#x27;1h&#x27;,&#x27;24h&#x27;]:
+  103              sub=all_abc[all_abc.pollutant.eq(pol)&amp;all_abc.period.eq(period)&amp;all_abc.region_type.eq(&#x27;gestao&#x27;)&amp;all_abc.label.eq(&#x27;Prioridade receptora&#x27;)]
+  104              d=sub.merge(all_regions[[&#x27;region_id&#x27;,&#x27;area_km2&#x27;]],on=&#x27;region_id&#x27;,validate=&#x27;many_to_one&#x27;);d[&#x27;weighted&#x27;]=d.contribution*d.area_km2
+  105              v=d.groupby([&#x27;direction&#x27;,&#x27;group_name&#x27;]).weighted.sum().unstack(fill_value=0).reindex(DIRS)
+  106              shares=100*v.div(v.sum(axis=1),axis=0);names=v.sum().nlargest(6).index.tolist();plot=shares[names].copy();plot[&#x27;Demais grupos&#x27;]=shares.drop(columns=names).sum(axis=1)
+  107              fig,ax=plt.subplots(figsize=(9,4.4));left=np.zeros(8)
+  108              for group,color in zip(plot.columns,[&#x27;#247c96&#x27;,&#x27;#64ada8&#x27;,&#x27;#bdc77c&#x27;,&#x27;#d6b06a&#x27;,&#x27;#b77f79&#x27;,&#x27;#8c83aa&#x27;,&#x27;#d9e1de&#x27;]):
+  109                  ax.barh(DIRS,plot[group],left=left,color=color,label=group);left+=plot[group].to_numpy()
+  110              ax.set(xlim=(0,100),xlabel=&#x27;Contribuição nas regiões prioritárias (%)&#x27;,ylabel=&#x27;Direção de origem do vento&#x27;);ax.invert_yaxis();fig.subplots_adjust(left=.12,right=.99,top=.98,bottom=.31)
+  111              handles,_=ax.get_legend_handles_labels();cart.centered_legend(fig,handles,ncol=3,y=.16,fontsize=9,row_step=.055,center=.535)
+  112              for ext in [&#x27;svg&#x27;,&#x27;pdf&#x27;,&#x27;png&#x27;]:fig.savefig(OUT/f&#x27;figuras/{pol}_{period}_Contribuicoes_prioridades.{ext}&#x27;,dpi=450,bbox_inches=&#x27;tight&#x27;)
+  113              plt.close(fig)
+  114      print(&#x27;ABC interativa de&#x27;,len(data),&#x27;regiões, com quatro figuras de síntese atualizadas.&#x27;,flush=True)
+  115  
+  116  if __name__==&#x27;__main__&#x27;:run()</code></pre></article></html>

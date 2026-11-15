@@ -1,0 +1,150 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>codigo/vector_portable.py</title><style>body{font:16px/1.6 Arial,sans-serif;max-width:1250px;margin:auto;padding:30px;color:#173445;background:#f5f8fa}a{color:#126781}header,article,section{background:white;padding:24px;margin:18px 0;border-radius:10px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:9px;border-bottom:1px solid #d2dfe4;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#eaf1f4}pre{overflow:auto;background:#112e3f;color:#ecf5fb;padding:18px;font:13px/1.6 Consolas,monospace}code{overflow-wrap:anywhere}h1,h2,h3{line-height:1.25;overflow-wrap:anywhere}input{padding:13px;width:80%;font-size:16px}li{margin:7px 0}</style><header><a href="../index.html">Voltar ao índice</a></header><article><h2>codigo/vector_portable.py</h2>
+<p>I/O vetorial sem dependência de GDAL; preserva CRS e geometrias, sem alterar segurança.</p>
+<p><strong>Papel.</strong> Processamento ou módulo de apoio. <strong>Fonte inspecionada.</strong> E:\projeto\codigo\vector_portable.py.</p>
+<p><strong>Bibliotecas e dependências.</strong></p>
+<table><tr><th>Importação</th><th>Uso na implementação</th></tr><tr><td>caminhos_congonhas</td><td>Configuração local dos caminhos, independente dos cálculos.</td></tr><tr><td>geopandas</td><td>Camadas vetoriais com referência espacial, reprojeção, recorte e interseção de geometrias.</td></tr><tr><td>io_utils</td><td>Módulo autoral local; sua ficha está neste relatório.</td></tr><tr><td>numpy</td><td>Matrizes numéricas, máscaras de validade, transformações, percentis e estatísticas vetorizadas.</td></tr><tr><td>pandas</td><td>Leitura tabular, chaves de junção, agrupamento por período e exportação de indicadores.</td></tr><tr><td>pathlib</td><td>Caminhos de arquivos independentes da concatenação manual de separadores.</td></tr><tr><td>pyproj</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>shapefile</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>shapely</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.geometry</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.geometry.polygon</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>shapely.ops</td><td>Operações geométricas usadas nas áreas, distâncias, limites e relações espaciais.</td></tr><tr><td>sqlite3</td><td>Dependência importada; conferir as chamadas efetivas abaixo e a instalação do ambiente correspondente.</td></tr><tr><td>struct</td><td>Decodificação binária com tipos, tamanhos e ordem de bytes definidos.</td></tr><tr><td>sys</td><td>Argumentos, interpretador Python e caminhos de importação.</td></tr><tr><td>xml.etree.ElementTree</td><td>Leitura/edição de XML de projetos e documentos.</td></tr></table>
+<p><strong>Entradas.</strong></p>
+<li>{path} — chamada gpd.read_file, linha 44.</li>
+<li>path.with_suffix(&#x27;.cpg&#x27;) — chamada .read_text, linha 45.</li>
+<li>path.with_suffix(&#x27;.prj&#x27;) — chamada .read_text, linha 48.</li>
+<p><strong>Saídas.</strong></p>
+<li>Path(path).with_suffix(&#x27;.prj&#x27;) — chamada .write_text, linha 118.</li>
+<li>Path(path).with_suffix(&#x27;.cpg&#x27;) — chamada .write_text, linha 119.</li>
+<li>Path(path).with_name(Path(path).stem + &#x27;_campos.csv&#x27;) — chamada .to_csv, linha 120.</li>
+<p><strong>Campos e chaves lidos.</strong></p>
+<li>r.__geo_interface__: features.</li>
+<p><strong>Etapas e interfaces.</strong> As funções abaixo são apresentadas na ordem do arquivo. A existência de uma função não significa que seja chamada em toda execução.</p>
+<table><tr><th>Função/interface</th><th>Linhas</th><th>Operação e retorno</th></tr><tr><td>read(path)</td><td>38-70</td><td>lê dados Retorno: gpd.GeoDataFrame.from_features(features, crs=CRS.from_wkt(path.with_suffix(&#x27;.prj&#x27;).read_text())), gpd.GeoDataFrame(geometry=geoms, crs=4326).</td></tr><tr><td>write_gpkg(gdf, path, layer=&#x27;zoneamento&#x27;)</td><td>73-98</td><td>Chamadas efetivas: Path, path.with_name, tmp.exists, gdf.crs.to_epsg, c.close, tmp.replace, FileExistsError, sqlite3.connect Retorno: &#x27;&quot;&#x27; + s.replace(&#x27;&quot;&#x27;, &#x27;&quot;&quot;&#x27;) + &#x27;&quot;&#x27;, &#x27;INTEGER&#x27; if pd.api.types.is_integer_dtype(s) or pd.api.types.is_bool_dtype(s) else &#x27;REAL&#x27; if pd.api.types.is_numeric_dtype(s) else &#x27;TEXT&#x27;.</td></tr><tr><td>write_shp(gdf, path)</td><td>101-120</td><td>grava produtos</td></tr></table>
+<p><strong>Trechos citados do código.</strong> A numeração corresponde ao arquivo inspecionado nesta edição. São citações do processamento, não instruções para executar fragmentos isolados.</p>
+<p>Trecho de codigo/vector_portable.py, linhas 38-46.</p>
+<pre><code>def read(path):
+    path=Path(path)
+    if path.suffix.lower()==&#x27;.shp&#x27;:
+        try:
+            import shapefile
+        except ImportError:
+            return gpd.read_file(path)
+        enc=path.with_suffix(&#x27;.cpg&#x27;).read_text().strip() if path.with_suffix(&#x27;.cpg&#x27;).exists() else &#x27;utf-8&#x27;
+        with shapefile.Reader(str(path),encoding=enc) as r:</code></pre>
+<p><strong>Reutilização e limites.</strong> Alterar arquivos pelo JSON de caminhos e preservar nomes de campos/chaves, tipos e unidades citados. Antes de trocar a entrada, verificar a cobertura, o sistema de referência e a unicidade das chaves. Um teste ou auditoria confere consistência dentro do recorte previsto; não substitui a justificativa científica do método. </p>
+<h3>Código integral numerado</h3>
+<pre><code>    1  # CONFIGURAÇÃO DE ENTRADAS E SAÍDAS
+    2  # Configuração editável: codigo/caminhos_projeto.json
+    3  # Raiz dos dados: raiz_projeto; pastas e arquivos admitem caminhos próprios.
+    4  # Entrada: {path} | gpd.read_file.
+    5  # Entrada: path.with_suffix(&#x27;.cpg&#x27;) | .read_text.
+    6  # Entrada: path.with_suffix(&#x27;.prj&#x27;) | .read_text.
+    7  # Campos/chaves em r.__geo_interface__: features.
+    8  # Saída: Path(path).with_suffix(&#x27;.prj&#x27;) | .write_text.
+    9  # Saída: Path(path).with_suffix(&#x27;.cpg&#x27;) | .write_text.
+   10  # Saída: Path(path).with_name(Path(path).stem + &#x27;_campos.csv&#x27;) | .to_csv.
+   11  # CÓDIGO DO PROCESSAMENTO
+   12  
+   13  &quot;&quot;&quot;I/O vetorial sem dependência de GDAL; preserva CRS e geometrias, sem alterar segurança.&quot;&quot;&quot;
+   14  # INÍCIO DOS CAMINHOS PORTÁTEIS
+   15  import sys as _cp_sys
+   16  from pathlib import Path as _cp_Path
+   17  _cp_file = _cp_Path(globals().get(&#x27;__file__&#x27;, _cp_Path.cwd() / &#x27;codigo&#x27; / &#x27;script.py&#x27;)).resolve()
+   18  for _cp_parent in [_cp_file.parent, *_cp_file.parents]:
+   19      _cp_code = _cp_parent if (_cp_parent / &#x27;caminhos_congonhas.py&#x27;).is_file() else _cp_parent / &#x27;codigo&#x27;
+   20      if (_cp_code / &#x27;caminhos_congonhas.py&#x27;).is_file():
+   21          if str(_cp_code) not in _cp_sys.path: _cp_sys.path.insert(0, str(_cp_code))
+   22          break
+   23  from caminhos_congonhas import raiz_projeto as _cp_raiz, texto_caminho as _cp_texto, externo as _cp_externo, adaptar_texto as _cp_adaptar
+   24  # FIM DOS CAMINHOS PORTÁTEIS
+   25  
+   26  from pathlib import Path
+   27  import sqlite3,struct,xml.etree.ElementTree as ET
+   28  import numpy as np
+   29  import pandas as pd
+   30  import geopandas as gpd
+   31  from shapely.geometry import shape,Polygon,mapping
+   32  from shapely import from_wkb,to_wkb
+   33  from shapely.geometry.polygon import orient
+   34  from shapely.ops import transform
+   35  from pyproj import CRS
+   36  
+   37  # Read
+   38  def read(path):
+   39      path=Path(path)
+   40      if path.suffix.lower()==&#x27;.shp&#x27;:
+   41          try:
+   42              import shapefile
+   43          except ImportError:
+   44              return gpd.read_file(path)
+   45          enc=path.with_suffix(&#x27;.cpg&#x27;).read_text().strip() if path.with_suffix(&#x27;.cpg&#x27;).exists() else &#x27;utf-8&#x27;
+   46          with shapefile.Reader(str(path),encoding=enc) as r:
+   47              features=list(r.__geo_interface__[&#x27;features&#x27;])
+   48          return gpd.GeoDataFrame.from_features(features,crs=CRS.from_wkt(path.with_suffix(&#x27;.prj&#x27;).read_text()))
+   49      if path.suffix.lower()==&#x27;.kml&#x27;:
+   50          root=ET.parse(path).getroot();ns={&#x27;k&#x27;:&#x27;http://www.opengis.net/kml/2.2&#x27;};geoms=[]
+   51          def coords(node):return [tuple(map(float,t.split(&#x27;,&#x27;)[:2])) for t in node.text.split()]
+   52          for p in root.findall(&#x27;.//k:Polygon&#x27;,ns):
+   53              outer=p.find(&#x27;k:outerBoundaryIs/k:LinearRing/k:coordinates&#x27;,ns)
+   54              inner=p.findall(&#x27;k:innerBoundaryIs/k:LinearRing/k:coordinates&#x27;,ns)
+   55              geoms.append(Polygon(coords(outer),[coords(i) for i in inner]))
+   56          if not geoms:raise ValueError(f&#x27;Nenhum polígono em {path}&#x27;)
+   57          return gpd.GeoDataFrame(geometry=geoms,crs=4326)
+   58      if path.suffix.lower()==&#x27;.gpkg&#x27;:
+   59          with sqlite3.connect(f&#x27;file:{path.as_posix()}?mode=ro&#x27;,uri=True) as c:
+   60              table,col,srid=c.execute(&#x27;select table_name,column_name,srs_id from gpkg_geometry_columns&#x27;).fetchone()
+   61              df=pd.read_sql_query(f&#x27;SELECT * FROM &quot;{table}&quot;&#x27;,c)
+   62              wkt=c.execute(&#x27;select definition from gpkg_spatial_ref_sys where srs_id=?&#x27;,(srid,)).fetchone()[0]
+   63          c.close()
+   64          def decode(blob):
+   65              envelope=(blob[3]&gt;&gt;1)&amp;7
+   66              offset=8+{0:0,1:32,2:48,3:48,4:64}[envelope]
+   67              return from_wkb(blob[offset:])
+   68          geom=df.pop(col).map(decode)
+   69          return gpd.GeoDataFrame(df,geometry=geom,crs=wkt)
+   70      raise ValueError(f&#x27;Formato não suportado: {path}&#x27;)
+   71  
+   72  # Write gpkg
+   73  def write_gpkg(gdf,path,layer=&#x27;zoneamento&#x27;):
+   74      path=Path(path);tmp=path.with_name(path.stem+&#x27;.tmp.gpkg&#x27;)
+   75      if tmp.exists():raise FileExistsError(f&#x27;Arquivo temporário anterior: {tmp}&#x27;)
+   76      epsg=gdf.crs.to_epsg();cols=[x for x in gdf if x!=gdf.geometry.name and x.lower() not in (&#x27;fid&#x27;,&#x27;ogc_fid&#x27;)]
+   77      def q(s):return &#x27;&quot;&#x27;+s.replace(&#x27;&quot;&#x27;,&#x27;&quot;&quot;&#x27;)+&#x27;&quot;&#x27;
+   78      def sqltype(s):return &#x27;INTEGER&#x27; if pd.api.types.is_integer_dtype(s) or pd.api.types.is_bool_dtype(s) else &#x27;REAL&#x27; if pd.api.types.is_numeric_dtype(s) else &#x27;TEXT&#x27;
+   79      with sqlite3.connect(tmp) as c:
+   80          c.executescript(&#x27;&#x27;&#x27;PRAGMA application_id=1196444487; PRAGMA user_version=10300;
+   81          CREATE TABLE gpkg_spatial_ref_sys(srs_name TEXT NOT NULL,srs_id INTEGER NOT NULL PRIMARY KEY,organization TEXT NOT NULL,organization_coordsys_id INTEGER NOT NULL,definition TEXT NOT NULL,description TEXT);
+   82          CREATE TABLE gpkg_contents(table_name TEXT NOT NULL PRIMARY KEY,data_type TEXT NOT NULL,identifier TEXT UNIQUE,description TEXT DEFAULT &#x27;&#x27;,last_change DATETIME NOT NULL DEFAULT (strftime(&#x27;%Y-%m-%dT%H:%M:%fZ&#x27;,&#x27;now&#x27;)),min_x DOUBLE,min_y DOUBLE,max_x DOUBLE,max_y DOUBLE,srs_id INTEGER);
+   83          CREATE TABLE gpkg_geometry_columns(table_name TEXT NOT NULL,column_name TEXT NOT NULL,geometry_type_name TEXT NOT NULL,srs_id INTEGER NOT NULL,z TINYINT NOT NULL,m TINYINT NOT NULL,PRIMARY KEY(table_name,column_name));&#x27;&#x27;&#x27;)
+   84          for srid,name,org,definition in [(-1,&#x27;Undefined Cartesian&#x27;,&#x27;NONE&#x27;,&#x27;undefined&#x27;),(0,&#x27;Undefined geographic&#x27;,&#x27;NONE&#x27;,&#x27;undefined&#x27;),(4326,&#x27;WGS 84&#x27;,&#x27;EPSG&#x27;,CRS.from_epsg(4326).to_wkt()),(epsg,str(gdf.crs),&#x27;EPSG&#x27;,gdf.crs.to_wkt())]:
+   85              c.execute(&#x27;INSERT OR IGNORE INTO gpkg_spatial_ref_sys VALUES(?,?,?,?,?,?)&#x27;,(name,srid,org,srid,definition,&#x27;&#x27;))
+   86          c.execute(f&#x27;CREATE TABLE {q(layer)}(fid INTEGER PRIMARY KEY AUTOINCREMENT,geom BLOB,&#x27;+&#x27;,&#x27;.join(q(x)+&#x27; &#x27;+sqltype(gdf[x]) for x in cols)+&#x27;)&#x27;)
+   87          c.execute(&#x27;INSERT INTO gpkg_contents(table_name,data_type,identifier,min_x,min_y,max_x,max_y,srs_id) VALUES(?,?,?,?,?,?,?,?)&#x27;,(layer,&#x27;features&#x27;,layer,*map(float,gdf.total_bounds),epsg))
+   88          c.execute(&#x27;INSERT INTO gpkg_geometry_columns VALUES(?,?,?,?,?,?)&#x27;,(layer,&#x27;geom&#x27;,&#x27;GEOMETRY&#x27;,epsg,0,0))
+   89          def native(x):
+   90              if pd.isna(x):return None
+   91              if isinstance(x,(np.integer,np.bool_,bool)):return int(x)
+   92              if isinstance(x,np.floating):return float(x)
+   93              return x if isinstance(x,(int,float,str)) else str(x)
+   94          rows=[]
+   95          for _,r in gdf.iterrows():rows.append((b&#x27;GP&#x27;+bytes([0,1])+struct.pack(&#x27;&lt;i&#x27;,epsg)+to_wkb(r.geometry,output_dimension=2),*[native(r[x]) for x in cols]))
+   96          c.executemany(f&#x27;INSERT INTO {q(layer)}(geom,&#x27;+&#x27;,&#x27;.join(map(q,cols))+&#x27;) VALUES(&#x27;+&#x27;,&#x27;.join(&#x27;?&#x27; for _ in range(len(cols)+1))+&#x27;)&#x27;,rows)
+   97      c.close()
+   98      tmp.replace(path)
+   99  
+  100  # Write shp
+  101  def write_shp(gdf,path):
+  102      import shapefile
+  103      from io_utils import _shp_safe_columns,_sanitize_vector_columns
+  104      gdf,aliases=_shp_safe_columns(_sanitize_vector_columns(gdf));cols=[c for c in gdf if c!=gdf.geometry.name]
+  105      with shapefile.Writer(str(path),shapeType=shapefile.POLYGON,encoding=&#x27;utf-8&#x27;) as w:
+  106          for col in cols:
+  107              s=gdf[col]
+  108              if pd.api.types.is_bool_dtype(s):w.field(col,&#x27;L&#x27;)
+  109              elif pd.api.types.is_numeric_dtype(s):w.field(col,&#x27;N&#x27;,size=24,decimal=8)
+  110              else:w.field(col,&#x27;C&#x27;,size=254)
+  111          from shapely.geometry import MultiPolygon
+  112          for _,r in gdf.iterrows():
+  113              geom=r.geometry
+  114              if geom.geom_type==&#x27;MultiPolygon&#x27;:geom=MultiPolygon([orient(p,sign=-1) for p in geom.geoms])
+  115              elif geom.geom_type==&#x27;Polygon&#x27;:geom=orient(geom,sign=-1)
+  116              else:raise ValueError(f&#x27;Shapefile requer polígonos: {geom.geom_type}&#x27;)
+  117              w.shape(mapping(geom));w.record(*[None if pd.isna(r[c]) else r[c].item() if isinstance(r[c],np.generic) else r[c] for c in cols])
+  118      Path(path).with_suffix(&#x27;.prj&#x27;).write_text(gdf.crs.to_wkt(version=&#x27;WKT1_ESRI&#x27;))
+  119      Path(path).with_suffix(&#x27;.cpg&#x27;).write_text(&#x27;UTF-8&#x27;)
+  120      pd.DataFrame([{&#x27;campo_original&#x27;:a,&#x27;campo_shp&#x27;:b} for a,b in aliases.items()]).to_csv(Path(path).with_name(Path(path).stem+&#x27;_campos.csv&#x27;),index=False,encoding=&#x27;utf-8-sig&#x27;)</code></pre></article></html>
