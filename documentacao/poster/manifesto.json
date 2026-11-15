@@ -1,0 +1,211 @@
+{
+  "session": "12",
+  "source_sha256": "195cd6e5bfc3ce8c53840352d7a6d19cd9ebd3c61289f9eb9b857d5182b04ef3",
+  "panels": [
+    {
+      "id": "intro",
+      "titulo": "Introdução e objetivo",
+      "bbox": [
+        0.008,
+        0.205,
+        0.499,
+        0.328
+      ],
+      "pixels": [
+        1900,
+        357
+      ],
+      "src": "figuras/intro.svg"
+    },
+    {
+      "id": "metodo",
+      "titulo": "Metodologia: do campo modelado à gestão",
+      "bbox": [
+        0.008,
+        0.331,
+        0.499,
+        0.505
+      ],
+      "pixels": [
+        1900,
+        504
+      ],
+      "src": "figuras/metodo.svg"
+    },
+    {
+      "id": "quintis",
+      "titulo": "Relative annual concentrations",
+      "bbox": [
+        0.046,
+        0.532,
+        0.225,
+        0.747
+      ],
+      "pixels": [
+        1074,
+        968
+      ],
+      "src": "figuras/quintis.svg"
+    },
+    {
+      "id": "perfis",
+      "titulo": "Joint concentration profiles",
+      "bbox": [
+        0.286,
+        0.532,
+        0.443,
+        0.747
+      ],
+      "pixels": [
+        942,
+        968
+      ],
+      "src": "figuras/perfis.svg"
+    },
+    {
+      "id": "densidade",
+      "titulo": "Emission density by zone",
+      "bbox": [
+        0.046,
+        0.748,
+        0.258,
+        0.96
+      ],
+      "pixels": [
+        1272,
+        954
+      ],
+      "src": "figuras/densidade.svg"
+    },
+    {
+      "id": "cortes",
+      "titulo": "High-emission thresholds and spatial stability",
+      "bbox": [
+        0.277,
+        0.748,
+        0.473,
+        0.96
+      ],
+      "pixels": [
+        1176,
+        954
+      ],
+      "src": "figuras/cortes.svg"
+    },
+    {
+      "id": "grupo",
+      "titulo": "Main contributing source group",
+      "bbox": [
+        0.532,
+        0.235,
+        0.71,
+        0.456
+      ],
+      "pixels": [
+        1068,
+        994
+      ],
+      "src": "figuras/grupo.svg"
+    },
+    {
+      "id": "contribuicoes",
+      "titulo": "Received contributions in priority regions",
+      "bbox": [
+        0.774,
+        0.235,
+        0.992,
+        0.452
+      ],
+      "pixels": [
+        1308,
+        976
+      ],
+      "src": "figuras/contribuicoes.svg"
+    },
+    {
+      "id": "matriz",
+      "titulo": "Emission × concentration",
+      "bbox": [
+        0.532,
+        0.463,
+        0.71,
+        0.68
+      ],
+      "pixels": [
+        1068,
+        976
+      ],
+      "src": "figuras/matriz.svg"
+    },
+    {
+      "id": "regioes",
+      "titulo": "Proposed management regions",
+      "bbox": [
+        0.775,
+        0.463,
+        0.966,
+        0.68
+      ],
+      "pixels": [
+        1146,
+        976
+      ],
+      "src": "figuras/regioes.svg"
+    },
+    {
+      "id": "conclusoes",
+      "titulo": "Conclusões",
+      "bbox": [
+        0.507,
+        0.687,
+        0.995,
+        0.814
+      ],
+      "pixels": [
+        1900,
+        371
+      ],
+      "src": "figuras/conclusoes.svg"
+    },
+    {
+      "id": "apoio",
+      "titulo": "Agradecimentos e referências",
+      "bbox": [
+        0.507,
+        0.814,
+        0.996,
+        0.958
+      ],
+      "pixels": [
+        1900,
+        420
+      ],
+      "src": "figuras/apoio.svg"
+    },
+    {
+      "id": "referencias",
+      "titulo": "Referências do pôster",
+      "bbox": [
+        0.008,
+        0.963,
+        0.997,
+        0.998
+      ],
+      "pixels": [
+        1900,
+        50
+      ],
+      "src": "figuras/referencias.svg"
+    }
+  ],
+  "pdfs": [
+    {
+      "file": "Guia_preparacao_Session12_PT_EN.pdf",
+      "sha256": "8a50e3e12956fff37d1956179e410a4dcd41ace4ccf8e30dd14b79f3c29e7e8e"
+    },
+    {
+      "file": "Roteiro_Session12_PT_EN.pdf",
+      "sha256": "f344946bc137b255715a4b374099bb27e9f732ff96c75ac84a67c5d6685efa91"
+    }
+  ]
+}

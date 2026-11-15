@@ -13,6 +13,7 @@ def run():
     shutil.copytree(ROOT/'documentacao/codigos',TARGET/'codigos',dirs_exist_ok=True)
     code_index=TARGET/'codigos/index.html'
     code_index.write_text(code_index.read_text(encoding='utf8').replace('../../visualizador/','../visualizador/'),encoding='utf8')
+    shutil.copytree(ROOT/'documentacao/poster',TARGET/'poster',dirs_exist_ok=True)
     downloads=TARGET/'downloads';downloads.mkdir(exist_ok=True)
     for source in [ROOT/'_book/word/Dissertacao_Congonhas.docx',ROOT/'artigo/_book/word/Artigo_CMAS_Congonhas.docx']:
         assert source.is_file(),source
