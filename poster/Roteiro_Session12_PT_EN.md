@@ -2,7 +2,7 @@
 
 Sessão 12 do CMAS
 
-Este material prepara a apresentação do pôster corrente, conferido em 14 de novembro de 2026. Há uma versão de aproximadamente 90 segundos para iniciar a conversa e outra de aproximadamente cinco minutos para percorrer os resultados. Os tempos são sugestões de ensaio. Os números pertencem ao cenário já modelado e não representam uma nova simulação após a banca.
+Este material prepara a apresentação do pôster corrente, conferido em 18 de novembro de 2026. Há uma versão de aproximadamente 90 segundos para iniciar a conversa e outra de aproximadamente cinco minutos para percorrer os resultados. Os tempos são sugestões de ensaio. Os números pertencem ao cenário já modelado e não representam uma nova simulação após a banca.
 
 O título mantido do resumo simples é “ATTAINMENT-STATUS SCREENING OF PARTICULATE MATTER TO SUPPORT AIR QUALITY MANAGEMENT IN A MINING-INFLUENCED MUNICIPALITY”. Na explicação oral, esclareça que os painéis atuais desenvolvem uma classificação relativa para gestão. A análise de atendimento aos padrões legais continua como diagnóstico separado.
 
@@ -65,6 +65,10 @@ We retained the title of the submitted abstract. In the current poster, we devel
 
 In the methods, we used a 2023 emissions inventory and existing AERMOD results for meteorological conditions from 2021 to 2023. This means that the same inventory was evaluated under three years of dispersion conditions. The regional network contains 1,497 receptors, including 1,008 within the municipal analytical footprint. We analyse these receptors first and then relate the results to all 311 zoning records, allowing different conditions to coexist within the same zone.
 
+For interpretation, we keep three levels separate. The emission inventory describes the sources and their assumed rates. AERMOD estimates transport and dilution under the meteorological conditions. The spatial analysis then summarises those predictions into relative classes, source contributions and candidate management regions. A change in a clustering method does not correct the emissions or the atmospheric model. It changes the way the same modelled information is organised.
+
+The annual indicator preserves the three native annual means, rather than averaging only the largest daily or hourly values. In the joint-profile analysis, hourly and daily maxima deliberately describe different features of the concentration field. We therefore state which indicator enters each map. Neither the quintile boundaries nor the k-means labels should be interpreted as health thresholds.
+
 The first map shows the average of the three native annual PM2.5 means. We divided this field into quintiles, with cuts of approximately 21.2, 29.4, 43.9 and 72.3 micrograms per cubic metre. These classes identify relatively lower and higher concentrations within this scenario. They are not legal air quality standards, and a lower relative class does not necessarily indicate clean air.
 
 The second map addresses a different question. It combines six indicators: one-hour maxima, 24-hour maxima and annual means for both PM10 and PM2.5. After transformation and standardisation, we compared clustering solutions. The displayed solution has two groups, containing 744 and 264 receptors, with a silhouette of 0.481. This measures the internal separation of the profiles. It does not measure the accuracy of AERMOD concentrations.
@@ -74,6 +78,10 @@ Next, emission density represents annual emitted mass per unit area. Inventoried
 The emission-concentration matrix helps distinguish areas with high local emissions from areas receiving high concentrations. This matters because atmospheric transport can carry pollution into areas with lower inventoried emissions. Source attribution adds the contribution received from each group, keeping concentration shares distinct from emitted mass.
 
 Finally, the management map identifies 202 receiving-priority receptors, organised into 14 contiguous regions. These regions cover 52.4 square kilometres and intersect 137 zoning records. Gerdau and Urban Total account for approximately 74.7% and 16.5% of the modelled annual concentration in this receiving support. Urban Total combines roads, urban nuclei and railways. It describes inventoried processes rather than automatically assigning municipal responsibility.
+
+The management interpretation is also conditional on the modelled scenario. Source contributions describe the concentration received at the selected support, not the percentage of total inventoried mass emitted by a company. Overlapping aggregate groups cannot be added as though they were independent sources. For example, Urban Total already combines the urban subgroups represented in the inventory.
+
+We are continuing to investigate temporal emission assumptions and the atmospheric representation, including conditions associated with weaker nocturnal dilution. A constant source rate can interact with a shallow or weakly mixed layer and produce higher near-ground concentrations without demonstrating that the real emission increased at night. Existing station-based diagnostics in the wider Congonhas project are distinct from the relative screening shown here. Refinement will require an explicitly documented rerun and a comparison on compatible observed-model time and space support; a lower plotted percentile alone is not a correction of the underlying simulation.
 
 The study makes the distinction between emission, reception and territorial organisation more explicit, providing a basis for targeted monitoring and investigation. Operational use requires further testing of temporal emission profiles, comparison with observations and evaluation of boundary stability. We acknowledge CAPES and the institutions, companies and Mover Program team listed on the poster.
 
