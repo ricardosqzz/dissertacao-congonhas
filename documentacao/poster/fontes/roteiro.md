@@ -2,7 +2,7 @@
 
 Sessão 12 do CMAS
 
-Este material prepara a apresentação do pôster corrente, conferido em 18 de novembro de 2026. Há uma versão de aproximadamente 90 segundos para iniciar a conversa e outra de aproximadamente cinco minutos para percorrer os resultados. Os tempos são sugestões de ensaio. Os números pertencem ao cenário já modelado e não representam uma nova simulação após a banca.
+Este material prepara a apresentação do pôster corrente, conferido em 19 de novembro de 2026. Há uma versão de aproximadamente 90 segundos para iniciar a conversa e outra de aproximadamente cinco minutos para percorrer os resultados. Os tempos são sugestões de ensaio. Os números pertencem ao cenário já modelado e não representam uma nova simulação após a banca.
 
 O título mantido do resumo simples é “ATTAINMENT-STATUS SCREENING OF PARTICULATE MATTER TO SUPPORT AIR QUALITY MANAGEMENT IN A MINING-INFLUENCED MUNICIPALITY”. Na explicação oral, esclareça que os painéis atuais desenvolvem uma classificação relativa para gestão. A análise de atendimento aos padrões legais continua como diagnóstico separado.
 
@@ -113,3 +113,10 @@ The study makes the distinction between emission, reception and territorial orga
 ## Fontes e conferência
 
 Roteiro baseado no PPTX corrente da Sessão 12, na auditoria do pôster de 09/11/2026 e nas tabelas das análises pós-banca. Consulte o guia de preparação para o fundamento dos indicadores e as respostas ampliadas. O roteiro não altera os resultados nem os textos do seminário encerrado.
+
+
+## Complemento sobre a implementação para perguntas
+
+**Português.** O processamento foi desenvolvido em Python. NumPy e pandas organizam os cálculos e as tabelas. SciPy executa k-means, Ward, distâncias e identificação de componentes conectados; GeoPandas, Shapely e PyProj sustentam as operações espaciais. Moran, silhueta e os testes dos cortes são rotinas próprias documentadas. O k-means é não supervisionado e compara seis indicadores transformados e padronizados. Ele organiza perfis semelhantes, sem calibrar o AERMOD ou definir limites legais. As regiões contíguas de gestão são construídas depois e não equivalem aos grupos estatísticos.
+
+**English.** We implemented the analysis in Python, using NumPy and pandas for numerical arrays and tables, SciPy for clustering and neighbourhood operations, and GeoPandas, Shapely and PyProj for spatial processing. K-means is unsupervised and compares six log-transformed, standardised concentration indicators. Moran statistics, silhouette and emission-cut testing are project-specific routines. These methods organise existing model outputs; they do not recalibrate AERMOD. The contiguous management regions are built separately from the statistical clusters.

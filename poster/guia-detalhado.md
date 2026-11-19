@@ -1,6 +1,6 @@
 # Guia de estudo do pôster e da metodologia de Congonhas
 
-Este guia reúne a metodologia completa já documentada e uma leitura detalhada de cada painel do pôster CMAS, incluindo os grupos contribuintes, a estabilidade dos limiares e um roteiro de apresentação. Os resultados pertencem ao cenário existente e não representam uma nova simulação calibrada. Revisão de 09/11/2026.
+Este guia reúne a metodologia completa já documentada e uma leitura detalhada de cada painel do pôster CMAS, incluindo os grupos contribuintes, a estabilidade dos limiares e um roteiro de apresentação. Os resultados pertencem ao cenário existente e não representam uma nova simulação calibrada. Revisão explicativa de 19/11/2026. Os produtos científicos foram preservados.
 
 Este guia explica o que cada etapa produz, como os cálculos são realizados e como os resultados devem ser interpretados. A pesquisa procura verificar o que a análise conjunta de concentrações, emissões e organização espacial acrescenta ao diagnóstico por zoneamento. Além de localizar áreas prioritárias, precisa mostrar em que condições essa classificação é estável e quais limitações ainda dependem de novos dados ou de outra execução do modelo.
 
@@ -335,3 +335,76 @@ O agradecimento da CAPES segue a formulação oficial em inglês, Finance Code 0
 
 
 Interpretação da silhueta e definição do índice: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html . O detalhamento numérico dos perfis está em Perfis_conjuntos_estatisticas.csv e os dados dos boxplots em Cortes_emissao_boxplot_PM25.csv, na pasta corrente do pôster.
+
+
+## Bibliotecas e programas utilizados
+
+O processamento foi organizado em Python, com bibliotecas diferentes para organizar as tabelas, manipular geometrias, realizar a análise estatística e produzir as figuras. A conferência de 19/11/2026 foi feita nos scripts que alimentam o cenário geral e o pôster corrente. A biblioteca efetivamente usada para os agrupamentos é a **SciPy**. A descrição do método deve citar essa implementação, em vez de atribuir a execução a outra biblioteca de aprendizado de máquina.
+
+| Biblioteca ou programa | Operação importante | Papel no trabalho |
+| --- | --- | --- |
+| NumPy | `log1p`, médias, desvios, quantis e geração aleatória | Organiza matrizes numéricas, transforma e padroniza os seis indicadores, calcula quintis e sustenta as permutações estatísticas. |
+| pandas | Leitura, junção, agrupamento e agregação de tabelas | Relaciona receptores, poluentes, períodos, fontes e zonas. Produz tabelas de cortes, contribuições e auditoria. |
+| SciPy para agrupamentos | `cluster.vq.kmeans2`, `hierarchy.linkage` e `fcluster` | Executa k-means e o agrupamento hierárquico Ward, comparando K de 2 a 6. |
+| SciPy para distâncias e vizinhança | `spatial.distance.cdist` e `spatial.cKDTree` | Calcula distâncias entre perfis e identifica vizinhos geográficos. A distância entre perfis usa indicadores padronizados; a geográfica usa coordenadas projetadas. |
+| SciPy para grafos | Matrizes esparsas e `csgraph.connected_components` | Representa relações de vizinhança com economia de memória e reúne células contíguas com a mesma função de gestão. |
+| GeoPandas | Leitura e operações entre camadas vetoriais | Relaciona receptores, células, município e zoneamento, mantendo geometrias e atributos associados. |
+| Shapely | Voronoi, interseção, limites e validade geométrica | Constrói e recorta suportes espaciais, verifica contatos e calcula as áreas usadas nas sínteses territoriais. |
+| PyProj | Sistemas de coordenadas e medidas geodésicas | Apoia a correspondência entre coordenadas projetadas e geográficas e a construção das referências de distância na cartografia. |
+| Matplotlib | Figuras, mapas, boxplots, cores e escalas | Desenha os produtos do pôster. Uma mudança de paleta ou escala de cores modifica a apresentação, sem recalcular as concentrações. |
+| AERMOD e seus pré-processadores | Simulação atmosférica externa ao Python | Fornecem as concentrações usadas no estudo. A análise em Python lê e reorganiza os resultados, sem substituir o cálculo de dispersão do modelo. |
+| python-docx e ReportLab | Documentos de preparação e apoio | Organizam materiais em Word e PDF. São ferramentas de edição e publicação, sem participação na classificação ambiental. |
+
+Nas camadas raster complementares do projeto, como uso da terra e relevo, o Rasterio permite ler, reprojetar e recortar pixels. O Pillow é usado na preparação de prévias e imagens de apoio. Essas ferramentas não definem os grupos estatísticos do painel de perfis conjuntos. O AERMET prepara a meteorologia utilizada pelo AERMOD, e o AERMAP fornece o tratamento de terreno correspondente. São programas do sistema de modelagem, diferentes das bibliotecas que processam seus resultados.
+
+Os cálculos de Moran, silhueta, índice de Rand ajustado e acurácia balanceada são **rotinas próprias**, apoiadas em NumPy e SciPy. Não foram chamados, nesta cadeia do pôster, os algoritmos de scikit-learn, PySAL, esda, libpysal ou GeoDa. Isso não invalida o método, mas exige documentar sua implementação e os parâmetros adotados. Os nomes dessas outras ferramentas não devem ser apresentados como se correspondessem à execução realizada.
+
+### O que significa usar aprendizado de máquina neste estudo
+
+O k-means é um método de **aprendizado não supervisionado**. Cada receptor entra como uma linha de uma matriz, e cada indicador de concentração entra como uma coluna. O algoritmo procura grupos cujos integrantes tenham perfis semelhantes no conjunto dessas colunas. Não recebe uma classificação correta previamente conhecida e não aprende a prever as medições das estações.
+
+As seis colunas são os máximos de 1 h, os máximos de 24 h e as médias anuais dos dois poluentes. Para cada valor x, aplica-se `log1p(x)`, equivalente a ln(1 + x). Isso reduz a influência numérica de extremos muito grandes e permite representar zeros. Em seguida, cada coluna transformada é centralizada pela sua média e dividida pelo seu desvio-padrão. Assim, uma coluna não domina a distância apenas por apresentar números maiores. Os mapas e as tabelas de concentração continuam disponíveis em µg/m³.
+
+No k-means, a distância é euclidiana nesse espaço transformado e padronizado. O algoritmo atribui receptores aos centros mais próximos e atualiza os centros. A função `kmeans2` foi chamada com inicialização k-means++, 100 iterações por execução e dez inicializações para cada K. Entre essas dez execuções, o código conserva aquela com menor soma de distâncias quadráticas aos centros. A semente aleatória é definida no script para permitir a reprodução dos testes.
+
+Ward é uma alternativa hierárquica. Ele começa com unidades separadas e as reúne progressivamente, procurando limitar o aumento da variabilidade interna. A árvore é produzida por `linkage(method='ward')`, e `fcluster` extrai as soluções com diferentes números de grupos. A comparação com k-means permite verificar se uma interpretação depende apenas de uma forma de agrupamento. Nenhum dos dois métodos exige contiguidade geográfica dos integrantes.
+
+### Como foi escolhida a solução com dois grupos
+
+Foram comparadas dez soluções, combinando dois métodos e cinco valores de K, de 2 a 6. A silhueta foi calculada por uma função própria a partir da matriz de distâncias. Para um receptor i, a(i) é a distância média aos demais integrantes do próprio grupo e b(i) é a menor distância média a outro grupo. A silhueta é s(i) = [b(i) − a(i)] / max[a(i), b(i)]. O valor final é a média entre os receptores.
+
+O intervalo possível vai de −1 a 1. Um resultado positivo indica maior proximidade média ao próprio grupo. O zero indica uma situação de fronteira, e valores negativos sugerem que outro grupo seria mais próximo. A solução selecionada foi k-means com K = 2, silhueta 0,4807 e grupos de 744 e 264 receptores. A solução Ward com K = 2 apresentou aproximadamente 0,4026. Essa comparação favorece a separação interna da solução exibida entre as alternativas testadas, sem demonstrar que existem exatamente duas regiões naturais ou que o AERMOD esteja validado.
+
+Os rótulos dos grupos são reorganizados pelo perfil médio padronizado para facilitar a leitura. O número do grupo é uma identificação, não uma unidade física, um percentil ou um grau normativo de risco. Um mesmo grupo estatístico pode aparecer em locais separados do município.
+
+### Como Moran e o correlograma entram na interpretação
+
+O Moran global examina se valores semelhantes tendem a ocorrer próximos. A matriz principal considera os oito vizinhos mais próximos, identificados por `cKDTree`, com peso igual a 1/8 em cada linha. Essa vizinhança não representa direção do vento. A análise usa a concentração transformada por log1p e compara a estatística observada com 999 permutações dos valores entre posições. O pseudo-valor p inclui a configuração observada no numerador e no denominador, permitindo resolução mínima de 0,001.
+
+O Moran local verifica o contraste entre cada receptor e a média de seus vizinhos. As classes alto-alto e baixo-baixo indicam associação entre valores de mesmo sinal em relação à média. Alto-baixo e baixo-alto indicam contrastes locais. O código realiza 999 reamostragens condicionais da vizinhança, sem reposição dentro de cada amostra, e aplica a correção Benjamini-Hochberg aos valores p dos receptores do campo analisado. As classes significativas usam q ≤ 0,05. Na versão bivariada, o valor da concentração no receptor é confrontado com a emissão dos vizinhos, explicitando a ordem das duas variáveis.
+
+O correlograma repete a avaliação por faixas de distância para investigar até onde permanece a semelhança espacial. Sua saída principal é um gráfico de associação por distância, acompanhado de tabela. Ele não é uma nova pluma e não define sozinho o tamanho ideal de uma região administrativa. Embora tenha sido retirado do pôster final para preservar a legibilidade, continua disponível nos resultados completos.
+
+### Como os cortes e a estabilidade foram calculados
+
+O corte de emissão é ajustado por uma rotina própria que testa divisões crescentes da densidade e maximiza a acurácia balanceada. Essa medida corresponde a metade da soma entre sensibilidade e especificidade. A seleção exige observações dos dois lados do corte, evitando divisões com menos de cinco observações ou de 5% da amostra em um dos lados. Trata-se de um classificador simples ajustado ao alvo definido pelas concentrações modeladas, diferente do agrupamento não supervisionado.
+
+Para avaliar a transferência espacial, os receptores foram organizados em blocos de 2 km e de 4 km. Em cada escala, os blocos são distribuídos entre cinco partições com semente definida. O corte é ajustado com quatro partições e avaliado na partição reservada. Os percentis que definem o alvo são os do campo municipal de referência; não são recalculados a cada treino. Portanto, o teste avalia a separação desse alvo fixo em locais reservados, sem constituir uma validação temporal ou uma comparação com dados observados.
+
+A sensibilidade espacial também compara vizinhanças de 4, 8 e 12 receptores e suportes deslocados. O índice de Rand ajustado, implementado no projeto, compara a concordância entre atribuições descontando a concordância esperada ao acaso. Ele responde à estabilidade de uma partição, enquanto a silhueta responde à separação interna. Nenhuma dessas medidas representa o erro de concentração em µg/m³.
+
+As regiões de gestão são construídas em outra etapa. O GeoPandas e o Shapely identificam células da mesma função que compartilham um segmento de fronteira, e a função `connected_components` do SciPy reúne os componentes conectados. Contato apenas por um vértice não basta na regra adotada. Por isso as 14 prioridades receptoras contíguas não equivalem aos dois grupos do k-means.
+
+### Onde conferir a implementação
+
+O arquivo `cenario_geral_pos_banca.py` organiza a leitura e a execução do cenário geral. O arquivo `analisar_espacial_direcoes.py` contém a comparação dos agrupamentos, os cálculos espaciais e a construção das regiões, reutilizados no cenário completo. `revisao_espacial_pos_banca.py` reúne as funções de vizinhança, Moran, silhueta e concordância. `complementar_quintis_gestao.py` contém os ajustes dos cortes e suas partições espaciais. A cartografia do pôster é organizada por `revisar_poster_20261109.py` e `cartografia_apendices.py`.
+
+Esses arquivos estão em `E:/projeto/codigo`, com cópias e fichas no guia de códigos do visualizador. O registro desta conferência relaciona funções, linhas e resumos digitais dos arquivos. As versões de bibliotecas observadas em 19/11/2026 descrevem o ambiente consultado nesta revisão, sem substituir um registro das versões efetivamente instaladas quando cada resultado antigo foi calculado.
+
+### Explicação técnica curta em inglês
+
+The analysis was implemented in Python. NumPy and pandas handle numerical arrays and tables, while GeoPandas, Shapely and PyProj support the spatial operations. We used SciPy for k-means, Ward clustering, distances, nearest neighbours and connected components. K-means was run on six log-transformed and standardised concentration indicators, comparing K from two to six with ten initialisations per K. The selected two-group solution had a silhouette of 0.481. Moran statistics, permutation tests, balanced accuracy and the emission-cut procedure were implemented in project-specific routines. These are post-processing and exploratory methods; they do not recalibrate AERMOD. Matplotlib produces the maps and charts, and the contiguous management regions are distinct from the statistical clusters.
+
+### Documentação das ferramentas
+
+As funções de agrupamento são descritas na documentação oficial do [k-means do SciPy](https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html) e do [Ward em linkage](https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html). Consulte também as referências de [log1p](https://numpy.org/doc/stable/reference/generated/numpy.log1p.html), [quantile](https://numpy.org/doc/stable/reference/generated/numpy.quantile.html), [junções espaciais do GeoPandas](https://geopandas.org/en/stable/docs/reference/api/geopandas.sjoin.html), [Voronoi no Shapely](https://shapely.readthedocs.io/en/stable/reference/shapely.voronoi_polygons.html), [transformações no PyProj](https://pyproj4.github.io/pyproj/stable/api/transformer.html), [componentes conectados](https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csgraph.connected_components.html) e [normalização de cores no Matplotlib](https://matplotlib.org/stable/users/explain/colors/colormapnorms.html). Essas páginas explicam as ferramentas; os parâmetros específicos do estudo são os descritos nos scripts e nas tabelas de auditoria.

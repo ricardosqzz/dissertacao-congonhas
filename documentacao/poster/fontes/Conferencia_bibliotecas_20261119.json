@@ -1,0 +1,357 @@
+{
+  "conferencia": "2026-11-19",
+  "escopo": "Documentação do cenário já calculado, sem reexecução científica",
+  "scripts": [
+    {
+      "arquivo": "cenario_geral_pos_banca.py",
+      "pasta": "codigo",
+      "sha256": "224a99dfec6a8affd1f2e9a2f15ed7cfafffe2a73a290c2739470128e62c810c",
+      "bibliotecas": [
+        "analisar_espacial_direcoes",
+        "caminhos_congonhas",
+        "config",
+        "geopandas",
+        "groups",
+        "json",
+        "medias_horarias_verificadas",
+        "numpy",
+        "out_aermod_reader",
+        "pandas",
+        "pathlib",
+        "post_amostragem",
+        "re",
+        "sys"
+      ],
+      "funcoes": [
+        {
+          "nome": "excluded_days",
+          "linha": 52,
+          "fim": 59
+        },
+        {
+          "nome": "peak_from_valid",
+          "linha": 62,
+          "fim": 67
+        },
+        {
+          "nome": "load_general",
+          "linha": 70,
+          "fim": 141
+        },
+        {
+          "nome": "run",
+          "linha": 144,
+          "fim": 146
+        }
+      ]
+    },
+    {
+      "arquivo": "analisar_espacial_direcoes.py",
+      "pasta": "codigo",
+      "sha256": "385cb1eb2e39c41ec8fa3ca086af9908fdfeb9152e3741096c72aac5a6f66675",
+      "bibliotecas": [
+        "caminhos_congonhas",
+        "complementar_quintis_gestao",
+        "config",
+        "geopandas",
+        "groups",
+        "json",
+        "medias_horarias_verificadas",
+        "numpy",
+        "out_aermod_reader",
+        "pandas",
+        "pathlib",
+        "post_amostragem",
+        "revisao_espacial_pos_banca",
+        "scipy",
+        "shapely",
+        "sys"
+      ],
+      "funcoes": [
+        {
+          "nome": "dump",
+          "linha": 99,
+          "fim": 100
+        },
+        {
+          "nome": "peak_data",
+          "linha": 103,
+          "fim": 152
+        },
+        {
+          "nome": "partition",
+          "linha": 155,
+          "fim": 165
+        },
+        {
+          "nome": "silhouette_fast",
+          "linha": 168,
+          "fim": 175
+        },
+        {
+          "nome": "clustering",
+          "linha": 178,
+          "fim": 190
+        },
+        {
+          "nome": "run",
+          "linha": 193,
+          "fim": 343
+        }
+      ]
+    },
+    {
+      "arquivo": "revisao_espacial_pos_banca.py",
+      "pasta": "codigo",
+      "sha256": "f837102cfea7d41fb8408f406e8b6385144be1eecf6cb4d729f65028098942a1",
+      "bibliotecas": [
+        "caminhos_congonhas",
+        "config",
+        "geopandas",
+        "groups",
+        "hashlib",
+        "json",
+        "math",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "scipy",
+        "shapely",
+        "sys"
+      ],
+      "funcoes": [
+        {
+          "nome": "save_json",
+          "linha": 81,
+          "fim": 82
+        },
+        {
+          "nome": "bh",
+          "linha": 85,
+          "fim": 87
+        },
+        {
+          "nome": "weights",
+          "linha": 90,
+          "fim": 93
+        },
+        {
+          "nome": "moran",
+          "linha": 96,
+          "fim": 103
+        },
+        {
+          "nome": "local_moran",
+          "linha": 106,
+          "fim": 121
+        },
+        {
+          "nome": "silhouette",
+          "linha": 124,
+          "fim": 131
+        },
+        {
+          "nome": "ari",
+          "linha": 134,
+          "fim": 138
+        },
+        {
+          "nome": "relative_quartile",
+          "linha": 141,
+          "fim": 142
+        },
+        {
+          "nome": "relative_quintile",
+          "linha": 145,
+          "fim": 147
+        },
+        {
+          "nome": "cells_for",
+          "linha": 150,
+          "fim": 155
+        },
+        {
+          "nome": "emission_allocation",
+          "linha": 158,
+          "fim": 178
+        },
+        {
+          "nome": "stump",
+          "linha": 181,
+          "fim": 185
+        },
+        {
+          "nome": "thresholds",
+          "linha": 188,
+          "fim": 199
+        },
+        {
+          "nome": "main",
+          "linha": 202,
+          "fim": 303
+        }
+      ]
+    },
+    {
+      "arquivo": "complementar_quintis_gestao.py",
+      "pasta": "codigo",
+      "sha256": "8dbf8165971b969aa55ccf142e7ed3ff4e39283248960f6bdd8fe5b1cb6efd73",
+      "bibliotecas": [
+        "caminhos_congonhas",
+        "config",
+        "geopandas",
+        "groups",
+        "json",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "revisao_espacial_pos_banca",
+        "scipy",
+        "sys"
+      ],
+      "funcoes": [
+        {
+          "nome": "binary_cut",
+          "linha": 49,
+          "fim": 57
+        },
+        {
+          "nome": "balanced_accuracy",
+          "linha": 60,
+          "fim": 62
+        },
+        {
+          "nome": "estimate_cuts",
+          "linha": 65,
+          "fim": 75
+        },
+        {
+          "nome": "run",
+          "linha": 78,
+          "fim": 125
+        }
+      ]
+    },
+    {
+      "arquivo": "revisar_poster_20261109.py",
+      "pasta": "codigo",
+      "sha256": "2737c03594e032621900d60e6a163b135cb42313bc752aa2552e8030b65ab24d",
+      "bibliotecas": [
+        "caminhos_congonhas",
+        "cartografia_apendices",
+        "geopandas",
+        "groups",
+        "hashlib",
+        "json",
+        "matplotlib",
+        "numpy",
+        "openpyxl",
+        "pandas",
+        "pathlib",
+        "pyproj",
+        "revisar_poster_e_guias_20261108",
+        "shutil",
+        "svg_compativel_word",
+        "sys",
+        "xml"
+      ],
+      "funcoes": [
+        {
+          "nome": "archive",
+          "linha": 67,
+          "fim": 75
+        },
+        {
+          "nome": "run",
+          "linha": 78,
+          "fim": 177
+        }
+      ]
+    },
+    {
+      "arquivo": "cartografia_apendices.py",
+      "pasta": "codigo",
+      "sha256": "e41e350fbd572072c8e9fd8e1c9a3c4cb43050fe4cdebeaa4db71c2f62e65f78",
+      "bibliotecas": [
+        "caminhos_congonhas",
+        "config",
+        "geopandas",
+        "groups",
+        "matplotlib",
+        "numpy",
+        "pathlib",
+        "pyproj",
+        "rosa_vento_seletor",
+        "scipy",
+        "shapely",
+        "sys",
+        "textwrap",
+        "vector_portable"
+      ],
+      "funcoes": [
+        {
+          "nome": "rounded_scale_ticks",
+          "linha": 64,
+          "fim": 73
+        },
+        {
+          "nome": "centered_legend",
+          "linha": 76,
+          "fim": 91
+        },
+        {
+          "nome": "render",
+          "linha": 94,
+          "fim": 361
+        }
+      ]
+    },
+    {
+      "arquivo": "mapas_complementares.py",
+      "pasta": "codigo",
+      "sha256": "44f4022913e053744c2795f3f690bfd03c2cdfbd10a86c7ff655d19e15ff2350",
+      "bibliotecas": [
+        "aermod_sources",
+        "alocacao_territorial_emissoes",
+        "caminhos_congonhas",
+        "cartografia_apendices",
+        "config",
+        "geopandas",
+        "html",
+        "io_utils",
+        "json",
+        "landuse",
+        "mapa_maximas_24h",
+        "matplotlib",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "rasterio",
+        "scipy",
+        "shapely",
+        "standards",
+        "sys",
+        "vector_portable"
+      ],
+      "funcoes": [
+        {
+          "nome": "run",
+          "linha": 76,
+          "fim": 191
+        }
+      ]
+    }
+  ],
+  "versoes_ambiente_consultado": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5",
+    "geopandas": "1.1.4",
+    "shapely": "2.1.2",
+    "pyproj": "3.7.2",
+    "matplotlib": "3.11.1",
+    "rasterio": "1.5.1"
+  },
+  "ressalva_versoes": "Ambiente consultado na revisão; não comprova as versões de todas as execuções históricas."
+}
